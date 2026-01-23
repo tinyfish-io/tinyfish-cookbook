@@ -13,10 +13,11 @@ https://github.com/user-attachments/assets/ee1d7f23-6bbd-4b88-92e0-4811382cbb77
 The app calls the TinyFish SSE endpoint to run a web agent on each selected sportsbook URL. The agent navigates the site, finds the requested match, and extracts the moneyline odds:
 
 ```typescript
+
 const response = await fetch("https://mino.ai/v1/automation/run-sse", {
   method: "POST",
   headers: {
-    "X-API-Key": process.env.NEXT_PUBLIC_MINO_API_KEY || "",
+    "X-API-Key": process.env.NEXT_PUBLIC_MINO_API_KEY,
     "Content-Type": "application/json",
   },
   body: JSON.stringify({
@@ -39,7 +40,7 @@ The response streams SSE events including a `STREAMING_URL` (live view of the ag
 ### Prerequisites
 
 - Node.js 18+ (or Bun)
-- A TinyFish API key ([get one here](https://tinyfish.io))
+- A TinyFish API key ([get one here](https://mino.ai/api-keys))
 
 ### Setup
 

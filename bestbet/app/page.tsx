@@ -5,6 +5,7 @@ import Image from "next/image";
 import { AnimatePresence } from "framer-motion";
 import MoneyParticle from "./components/MoneyParticle";
 import SportsbookSelector, { type Sportsbook } from "./components/SportsbookSelector";
+import { runMinoSSE } from "./webagent";
 
 const placeholdersBySport: Record<string, string> = {
   soccer: "Galatasaray vs Atletico Madrid",
@@ -178,19 +179,11 @@ export default function Home() {
   };
 
   const fetchSportsbook = async (sportsbook: Sportsbook) => {
-    try {
-      const response = await fetch("https://mino.ai/v1/automation/run-sse", {
-        method: "POST",
-        headers: {
-          "X-API-Key": process.env.NEXT_PUBLIC_MINO_API_KEY || "",
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          url: sportsbook.url,
-          goal: `You are extracting current betting market data from this sports betting webpage.
+    const sportName = sport.charAt(0).toUpperCase() + sport.slice(1);
+    const goal = `You are extracting current betting market data from this sports betting webpage.
 
 CONTEXT:
-- Sport: ${sport.charAt(0).toUpperCase() + sport.slice(1)}
+- Sport: ${sportName}
 - Current Date: ${getCurrentDate()}
 - Match: ${match}
 
@@ -201,10 +194,10 @@ Focus only on "Pre-match" or "Upcoming" games. If live games are present, priori
 STEP 1 - LOCATE BETTING ODDS PAGE (if required):
 - If the page does not show betting odds, locate the button or text for "Odds" or "Betting Odds"
 - This may be nested within sidebars, menu icons, or navigation bars
-- Select the category that matches ${sport.charAt(0).toUpperCase() + sport.slice(1)}
+- Select the category that matches ${sportName}
 
 STEP 2 - GAME AND BET TYPE INPUT (if required):
-- If the page lists multiple sports, select ${sport.charAt(0).toUpperCase() + sport.slice(1)}
+- If the page lists multiple sports, select ${sportName}
 - Locate the match: "${match}"
 - If multiple betting types are available, select Moneyline
 - Click select/continue/expand/all games to proceed
@@ -226,68 +219,51 @@ STEP 4 - RETURN RESULT:
     "draw": "+270",
     "away_wins": "+105"
   }
-}`,
-        }),
+}`;
+
+    try {
+      const resultJson = await runMinoSSE(sportsbook.url, goal, {
+        onStreamingUrl: (url) => {
+          setStreamUrls((prev) => ({ ...prev, [sportsbook.name]: url }));
+        },
+        onComplete: (data) => {
+          setStreamUrls((prev) => {
+            const updated = { ...prev };
+            delete updated[sportsbook.name];
+            return updated;
+          });
+
+          if (data?.error) {
+            setResults((prev) => ({
+              ...prev,
+              [sportsbook.name]: {
+                success: false,
+                data: {
+                  error: data.error as string,
+                  reason: (data.reason as string) || "Unknown error",
+                },
+              },
+            }));
+          } else if (data?.betting_odds) {
+            setResults((prev) => ({
+              ...prev,
+              [sportsbook.name]: {
+                success: true,
+                data: data as unknown as OddsResult,
+              },
+            }));
+          }
+        },
       });
 
-      const reader = response.body?.getReader();
-      if (!reader) return;
-
-      const decoder = new TextDecoder();
-
-      while (true) {
-        const { done, value } = await reader.read();
-        if (done) break;
-
-        const chunk = decoder.decode(value);
-        console.log(`[${sportsbook.name}]`, chunk);
-
-        const lines = chunk.split("\n");
-        for (const line of lines) {
-          if (line.startsWith("data: ")) {
-            try {
-              const data = JSON.parse(line.slice(6));
-              if (data.type === "STREAMING_URL" && data.streamingUrl) {
-                setStreamUrls((prev) => ({
-                  ...prev,
-                  [sportsbook.name]: data.streamingUrl,
-                }));
-              } else if (data.type === "COMPLETE") {
-                // Remove stream URL
-                setStreamUrls((prev) => {
-                  const updated = { ...prev };
-                  delete updated[sportsbook.name];
-                  return updated;
-                });
-
-                // Store result
-                const resultJson = data.resultJson;
-                if (resultJson?.error) {
-                  setResults((prev) => ({
-                    ...prev,
-                    [sportsbook.name]: {
-                      success: false,
-                      data: {
-                        error: resultJson.error,
-                        reason: resultJson.reason || "Unknown error",
-                      },
-                    },
-                  }));
-                } else if (resultJson?.betting_odds) {
-                  setResults((prev) => ({
-                    ...prev,
-                    [sportsbook.name]: {
-                      success: true,
-                      data: resultJson as OddsResult,
-                    },
-                  }));
-                }
-              }
-            } catch {
-              // Not valid JSON, skip
-            }
-          }
-        }
+      if (!resultJson) {
+        setResults((prev) => ({
+          ...prev,
+          [sportsbook.name]: {
+            success: false,
+            data: { error: "No Response", reason: "No result returned from API" },
+          },
+        }));
       }
     } catch (error) {
       console.error(`[${sportsbook.name}] Error:`, error);
