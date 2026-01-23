@@ -1,6 +1,6 @@
 # The TinyFish Cookbook
 
-**Turn the web into your API.**
+<img width="1034" height="407" alt="CKBOOK" src="https://github.com/user-attachments/assets/ce4fccb9-70b8-4023-8022-4e8e3b244fbe" />
 
 [Website](https://tinyfish.ai/) | [Docs](https://docs.mino.ai/) | [Discord](https://discord.gg/cv3JS4t4) | [License](LICENSE) | [X](https://x.com/Tiny_Fish) | [LinkedIn](https://www.linkedin.com/company/tinyfish-ai/) | [Threads](https://www.threads.com/@tinyfish_ai) | [Instagram](https://www.instagram.com/tinyfish_ai/)
 
@@ -129,4 +129,7 @@ Got something cool you built with TinyFish? We want it in here! Check out our [C
 
 ---
 
-Built with <3 by the TinyFish community.
+<img src="https://github.com/user-attachments/assets/2cf004f0-0065-4f21-9835-12ac693964f1" width="100%" />
+
+
+
