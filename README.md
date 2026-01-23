@@ -1,52 +1,128 @@
-# TinyFish Cookbook 🐟🍳
+# The TinyFish Cookbook
 
-Welcome to the **TinyFish Cookbook** — a growing collection of mini-projects, demos, and real-world use cases built with the [TinyFish](https://tinyfish.io) web agent.
+**Turn the web into your API.**
 
-Think of this as a recipe book, except instead of food, it's full of cool automations that people from all over the world have cooked up. Browse around, get inspired, steal ideas (legally), and build something awesome.
+[Website](https://tinyfish.ai/) | [Docs](https://docs.mino.ai/) | [Discord](https://discord.gg/cv3JS4t4) | [License](LICENSE) | [X](https://x.com/Tiny_Fish) | [LinkedIn](https://www.linkedin.com/company/tinyfish-ai/) | [Threads](https://www.threads.com/@tinyfish_ai) | [Instagram](https://www.instagram.com/tinyfish_ai/)
+
+---
+
+## About This Repository
+
+Welcome to the **TinyFish Cookbook!** This is a growing collection of recipes, demos, and automations built with TinyFish.
+
+Think of this like a recipe book for the web. Whether you want to build an automated travel agent, a job application bot, or a market research tool, you can grab a recipe here, tweak the ingredients, and start cooking.
 
 ## What is TinyFish?
 
-TinyFish is an AI-powered web agent. Point it at a website, tell it what to do, and watch it browse, click, fill forms, extract data, and get things done — all through a simple API.
+TinyFish is a **web agents API** that lets you treat real websites like programmable surfaces. Instead of juggling headless browsers, selectors, proxies, and weird edge cases, you call a single API with a goal and some URLs and get back clean JSON. It handles navigation, forms, filters, dynamic content, and multi-step flows across many sites at once, so you can focus on product logic instead of browser plumbing.
 
-## What's in the Cookbook?
+The same enterprise-grade infrastructure used in large production environments is now exposed directly to developers.
 
-Each folder at the root of this repo is a standalone project. Dive into any one of them to see what people have built:
+## Power Features in one API
 
-| Project | Description |
-|---------|-------------|
-| *Your project here!* | *Be the first to contribute* 🚀 |
+- **Any website as an API** — Turn ordinary websites (including ones without official APIs) into programmable surfaces for your apps.
+- **Natural language -> structured JSON** — Send a URL (or many) plus a natural language goal, get back clean JSON in the shape you specify.
+- **Real browser automation** — Navigate real websites in real time. We handle complex flows like multi-step bookings, form filling, filters, calendars, and dynamic JavaScript content.
+- **Built-in Stealth** — Every request runs in a stealth browser profile with rotating proxies to reduce the chance of triggering anti-bot defenses. (No extra charge for proxy data).
+- **Production-grade Logs** — Every run comes with detailed observability so you can debug, monitor, and actually trust what the agents did.
+- **Flexible Integration** — Use it as a direct HTTP API, through our visual Playground, or as an MCP server inside tools like Claude and Cursor.
 
-> As projects get added, this table will grow. Check back often!
+## The Recipes
 
-## Getting Started
+Each folder in this repo is a standalone project. Dive in to see how to solve real-world problems.
 
-Want to try one out? Each project has its own README with setup instructions. Just:
+| Recipe | Description |
+|--------|-------------|
+| [bestbet](./bestbet) | Sports betting odds comparison tool |
+
+> More recipes added weekly!
+
+## Getting Started with the API
+
+You don't need to install heavy SDKs. TinyFish works with standard HTTP requests.
+
+### 1. Get your API Key
+
+Sign up on [tinyfish.ai](https://tinyfish.ai) and grab your API key.
+
+### 2. Run a Command
+
+Here is how to run a simple automation agent:
+
+#### cURL
 
 ```bash
-git clone https://github.com/tinyfish-io/TinyFish-cookbook.git
-cd TinyFish-cookbook/<project-name>
-# Follow the project's README from there!
+curl -N -X POST https://mino.ai/v1/automation/run-sse \
+  -H "X-API-Key: $MINO_API_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "url": "https://agentql.com",
+    "goal": "Find all AgentQL subscription plans and their prices. Return result in json format"
+  }'
+```
+
+#### Python
+
+```python
+import json
+import os
+import requests
+
+response = requests.post(
+    "https://mino.ai/v1/automation/run-sse",
+    headers={
+        "X-API-Key": os.getenv("MINO_API_KEY"),
+        "Content-Type": "application/json",
+    },
+    json={
+        "url": "https://agentql.com",
+        "goal": "Find all AgentQL subscription plans and their prices. Return result in json format",
+    },
+    stream=True,
+)
+
+for line in response.iter_lines():
+    if line:
+        line_str = line.decode("utf-8")
+        if line_str.startswith("data: "):
+            event = json.loads(line_str[6:])
+            print(event)
+```
+
+#### TypeScript
+
+```typescript
+const response = await fetch("https://mino.ai/v1/automation/run-sse", {
+  method: "POST",
+  headers: {
+    "X-API-Key": process.env.MINO_API_KEY,
+    "Content-Type": "application/json",
+  },
+  body: JSON.stringify({
+    url: "https://agentql.com",
+    goal: "Find all AgentQL subscription plans and their prices. Return result in json format",
+  }),
+});
+
+const reader = response.body.getReader();
+const decoder = new TextDecoder();
+
+while (true) {
+  const { done, value } = await reader.read();
+  if (done) break;
+  console.log(decoder.decode(value));
+}
 ```
 
 ## Contributing
 
-Got something cool you built with TinyFish? We want it in here! Whether it's a weekend hack, a partner integration, or something beautifully over-engineered — all are welcome.
-
-Check out our [Contributing Guide](CONTRIBUTING.md) for the full rundown on how to submit your project.
-
-Hang out in our [discord](https://discord.gg/GQfVydYU) to discuss a potential idea and get help from our awesome engineers. 
-
-**TL;DR:**
-1. Fork this repo
-2. Add your project folder at the root
-3. Include a README with a demo, code snippets, and setup instructions
-4. Open a PR and we'll take it from there!
+Got something cool you built with TinyFish? We want it in here! Check out our [Contributing Guide](CONTRIBUTING.md) for the full rundown on how to submit your project.
 
 ## Community & Support
 
-- 💬 [Join us on Discord](https://discord.gg/GQfVydYU) — ask questions, share what you're building, hang out
-- 🐟 Learn more at [tinyfish.io](https://tinyfish.io)
+- [Join us on Discord](https://discord.gg/cv3JS4t4) — ask questions, share what you're building, hang out
+- Learn more at [tinyfish.ai](https://tinyfish.ai)
 
 ---
 
-Built with 🐟 by the TinyFish community
+Built with <3 by the TinyFish community.
