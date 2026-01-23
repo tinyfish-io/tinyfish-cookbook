@@ -114,7 +114,11 @@ while (true) {
 }
 ```
 
-## Contributing
+## Contributors
+
+<a href="https://github.com/tinyfish-io/TinyFish-cookbook/graphs/contributors">
+  <img src="https://contrib.rocks/image?repo=tinyfish-io/TinyFish-cookbook" />
+</a>
 
 Got something cool you built with TinyFish? We want it in here! Check out our [Contributing Guide](CONTRIBUTING.md) for the full rundown on how to submit your project.
 
