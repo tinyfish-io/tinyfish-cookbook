@@ -83,8 +83,8 @@ After completing the steps, verify that the expected outcome is met. Return a JS
 
 1. Clone the repository:
 ```bash
-git clone https://github.com/pranavjana/mino-qa
-cd mino-qa
+git clone https://github.com/tinyfish-io/TinyFish-cookbook
+cd TinyFish-cookbook/fast-qa
 ```
 
 2. Install dependencies:

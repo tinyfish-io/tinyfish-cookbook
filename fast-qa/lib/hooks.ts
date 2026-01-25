@@ -277,6 +277,14 @@ export function useKeyboardShortcut(
   callback: () => void,
   modifiers: { ctrl?: boolean; meta?: boolean; shift?: boolean; alt?: boolean } = {}
 ) {
+  // Use a ref to store the callback to avoid stale closures
+  const callbackRef = useRef(callback);
+  
+  // Update the ref whenever callback changes
+  useEffect(() => {
+    callbackRef.current = callback;
+  }, [callback]);
+
   useEffect(() => {
     function handleKeyDown(event: KeyboardEvent) {
       const { ctrl, meta, shift, alt } = modifiers;
@@ -288,13 +296,13 @@ export function useKeyboardShortcut(
 
       if (event.key.toLowerCase() === key.toLowerCase() && modifierMatch) {
         event.preventDefault();
-        callback();
+        callbackRef.current();
       }
     }
 
     window.addEventListener('keydown', handleKeyDown);
     return () => window.removeEventListener('keydown', handleKeyDown);
-  }, [key, callback, modifiers]);
+  }, [key, modifiers.ctrl, modifiers.meta, modifiers.shift, modifiers.alt]);
 }
 
 /**

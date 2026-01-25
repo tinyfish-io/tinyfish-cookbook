@@ -321,10 +321,15 @@ export function QAProvider({ children }: { children: ReactNode }) {
     }
   }, []);
 
-  // Save state to localStorage on change
+  // Save state to localStorage on change (debounced)
   useEffect(() => {
     if (typeof window !== 'undefined' && state.lastUpdated && !state.isFirstLoad) {
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+      // Debounce saves to avoid excessive writes
+      const saveTimeout = setTimeout(() => {
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+      }, 300);
+      
+      return () => clearTimeout(saveTimeout);
     }
   }, [state]);
 
