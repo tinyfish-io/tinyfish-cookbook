@@ -6,9 +6,11 @@ Fast QA is a no-code QA testing platform where users describe tests in plain Eng
 
 ---
 
-## Demo Video
+## Demo
 
-*[Video/GIF to be added]*
+![Fast QA Dashboard - Parallel Test Execution](./demo-screenshot.jpg)
+
+*Parallel test execution with live browser previews and real-time SSE streaming*
 
 ---
 
