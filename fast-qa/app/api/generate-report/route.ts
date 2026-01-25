@@ -27,15 +27,25 @@ export async function POST(request: NextRequest) {
       );
     }
 
+    // Sanitize PII from description and extractedData before sending to third-party
+    const sanitizePII = (text: string | undefined): string => {
+      if (!text) return '';
+      // Remove email addresses, phone numbers, and credit card patterns
+      return text
+        .replace(/\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Z|a-z]{2,}\b/g, '[EMAIL_REDACTED]')
+        .replace(/\b\d{3}[-.]?\d{3}[-.]?\d{4}\b/g, '[PHONE_REDACTED]')
+        .replace(/\b\d{4}[\s-]?\d{4}[\s-]?\d{4}[\s-]?\d{4}\b/g, '[CARD_REDACTED]');
+    };
+
     const report = await generateBugReport(
       {
         title: testCase.title,
-        description: testCase.description,
+        description: sanitizePII(testCase.description),
         expectedOutcome: testCase.expectedOutcome,
       },
       {
         error: failedTest.error,
-        extractedData: failedTest.extractedData,
+        extractedData: sanitizePII(JSON.stringify(failedTest.extractedData)),
       },
       projectUrl
     );

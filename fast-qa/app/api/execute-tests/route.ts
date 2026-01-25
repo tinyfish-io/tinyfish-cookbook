@@ -42,7 +42,10 @@ export async function POST(request: NextRequest) {
   (async () => {
     try {
       const body: ExecuteTestsRequest = await request.json();
-      const { testCases, websiteUrl, parallelLimit = 3, settings } = body;
+      let { testCases, websiteUrl, parallelLimit = 3, settings } = body;
+      
+      // Validate and sanitize parallelLimit to prevent infinite loops
+      parallelLimit = Math.max(1, Math.min(10, Math.floor(Number(parallelLimit) || 3)));
 
       if (!testCases || testCases.length === 0) {
         await sendEvent({

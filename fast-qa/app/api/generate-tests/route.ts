@@ -99,7 +99,7 @@ Generate a list of test cases based on this input. Cover the main functionality,
     const parsed = JSON.parse(jsonMatch[0]);
     const validated = bulkGenerateSchema.parse(parsed);
 
-    return NextResponse.json({ tests: validated.testCases });
+    return NextResponse.json({ testCases: validated.testCases });
   } catch (error) {
     console.error('Error generating tests:', error);
     return NextResponse.json(

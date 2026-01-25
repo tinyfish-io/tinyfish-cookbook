@@ -309,9 +309,13 @@ export default function DashboardPage() {
                     onSelect={() => handleSelectProject(project)}
                     onEdit={() => handleEditProject(project)}
                     onDelete={() => handleDeleteProject(project.id)}
-                    onRunTests={() => {
+                    onRunTests={async () => {
                       handleSelectProject(project);
-                      // Select all tests for the project and run
+                      const projectTests = getTestCasesForProject(project.id);
+                      if (projectTests.length === 0) return;
+                      startTestRun(project.id, projectTests.map(t => t.id));
+                      setActiveTab('execution');
+                      await executeTests(projectTests, project.websiteUrl, state.settings.parallelLimit);
                     }}
                   />
                 ))}
