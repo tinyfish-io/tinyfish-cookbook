@@ -10,7 +10,7 @@ Real-time Singapore HDB resale deal finder that uses the **Source â†’ Extract â†
 
 ## Demo
 
-*[Demo video/screenshot to be added]*
+![HDB Deal Sniper Demo](demo.jpg)
 
 ---
 
