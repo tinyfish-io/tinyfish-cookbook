@@ -17,6 +17,7 @@ Waifu Deal Sniper lets users search for anime figures across **AmiAmi**, **Merca
 ## 🎬 Demo
 
 <video src="./attachments/demo.mp4" controls width="600"></video>
+
 **Commands examples:**
 - `rem bunny` - Search AmiAmi for Rem bunny figures
 - `mercari miku` - Search Mercari US for Miku figures
