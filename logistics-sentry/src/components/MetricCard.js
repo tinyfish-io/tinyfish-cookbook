@@ -41,7 +41,7 @@ export function MetricCard({ title, value, subtitle, icon: Icon, trend, variant 
                         trend.isPositive ? "text-success bg-success/10 border-success/20" : "text-destructive bg-destructive/10 border-destructive/20"
                     )}>
                         {trend.isPositive ? <TrendingUp className="h-2.5 w-2.5" /> : <TrendingDown className="h-2.5 w-2.5" />}
-                        {trend.value}%
+                        {trend.value ?? 0}%
                     </div>
                 )}
             </div>

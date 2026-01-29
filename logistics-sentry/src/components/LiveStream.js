@@ -5,15 +5,15 @@ import { cn } from "@/lib/utils";
 
 import { motion, AnimatePresence } from "framer-motion";
 
+const PHASES = [
+    { id: "SURFACE_SCAN", label: "Dashboard Scan" },
+    { id: "SOURCE_VERIFICATION", label: "Audit Logs" },
+    { id: "BUSINESS_CONTEXT", label: "Sales Analysis" },
+    { id: "SYNTHESIS", label: "Final Synthesis" }
+];
+
 export function LiveStream({ events = [], isRunning, currentPhase }) {
     const scrollRef = useRef(null);
-
-    const phases = [
-        { id: "SURFACE_SCAN", label: "Dashboard Scan" },
-        { id: "SOURCE_VERIFICATION", label: "Audit Logs" },
-        { id: "BUSINESS_CONTEXT", label: "Sales Analysis" },
-        { id: "SYNTHESIS", label: "Final Synthesis" }
-    ];
 
     useEffect(() => {
         if (scrollRef.current) {
@@ -61,7 +61,7 @@ export function LiveStream({ events = [], isRunning, currentPhase }) {
                 <AnimatePresence>
                     {events.map((event, i) => (
                         <motion.div
-                            key={i}
+                            key={event.id || i}
                             initial={{ opacity: 0, x: -10 }}
                             animate={{ opacity: 1, x: 0 }}
                             className="flex gap-3 px-2 py-1 rounded hover:bg-primary/5 transition-colors"

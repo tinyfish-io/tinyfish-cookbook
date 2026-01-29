@@ -173,7 +173,7 @@ You are a Logistics Intelligence Scout. Your job is to extract DETAILED operatio
   "operational_status": "NORMAL" | "DISRUPTED" | "UNKNOWN",
   "signals": [
     {
-      "summary": "Detailed finding with numbers/quotes if avaiable",
+      "summary": "Detailed finding with numbers/quotes if available",
       "severity": "LOW" | "MEDIUM" | "HIGH",
       "date": "YYYY-MM-DD",
       "category": "METRIC" | "QUOTE" | "STATUS"
@@ -251,9 +251,11 @@ function synthesizeRisk(context, findings) {
         if (f.findings && f.findings.signals) {
             f.findings.signals.forEach(s => {
                 // Formatting the signal text to be more readable if it's a metric
-                let formattedSignal = s.summary;
-                if (s.category === "METRIC") formattedSignal = `[METRIC] ${s.summary}`;
-                if (s.category === "QUOTE") formattedSignal = `"${s.summary}"`;
+                const safeSummary = (typeof s.summary === 'string' && s.summary) ? s.summary : '';
+                let formattedSignal = safeSummary || "No summary available";
+
+                if (s.category === "METRIC") formattedSignal = `[METRIC] ${safeSummary}`;
+                if (s.category === "QUOTE") formattedSignal = `"${safeSummary}"`;
 
                 signals.push({
                     source: f.source,
@@ -281,9 +283,9 @@ function synthesizeRisk(context, findings) {
                     recencyBuckets.unknown += 1;
                 }
 
-                if (s.severity !== "LOW") {
+                if (s.severity !== "LOW" && safeSummary) {
                     // Try to infer cause from summary keywords
-                    const text = s.summary.toLowerCase();
+                    const text = safeSummary.toLowerCase();
                     if (text.includes("congestion") || text.includes("anchor") || text.includes("dwell")) primaryCauses.add("CONGESTION");
                     if (text.includes("strike") || text.includes("labor") || text.includes("union")) primaryCauses.add("LABOR");
                     if (text.includes("weather") || text.includes("storm") || text.includes("fog") || text.includes("wind")) primaryCauses.add("WEATHER");

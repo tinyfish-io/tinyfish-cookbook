@@ -5,9 +5,45 @@ export const dynamic = "force-dynamic";
 export async function POST(req) {
     try {
         const { urls } = await req.json();
+        const MAX_URLS = 10;
 
         if (!urls || !Array.isArray(urls)) {
             return new Response(JSON.stringify({ error: "URLs must be an array" }), {
+                status: 400,
+                headers: { "Content-Type": "application/json" },
+            });
+        }
+
+        const validUrls = urls
+            .map(u => typeof u === 'string' ? u.trim() : '')
+            .filter(u => u.length > 0);
+
+        if (validUrls.length === 0) {
+            return new Response(JSON.stringify({ error: "No valid URLs provided" }), {
+                status: 400,
+                headers: { "Content-Type": "application/json" },
+            });
+        }
+
+        if (validUrls.length > MAX_URLS) {
+            return new Response(JSON.stringify({ error: `Too many URLs. Max limit is ${MAX_URLS}` }), {
+                status: 400,
+                headers: { "Content-Type": "application/json" },
+            });
+        }
+
+        // Validate URL format
+        const invalidUrls = [];
+        for (const url of validUrls) {
+            try {
+                new URL(url);
+            } catch {
+                invalidUrls.push(url);
+            }
+        }
+
+        if (invalidUrls.length > 0) {
+            return new Response(JSON.stringify({ error: `Invalid URL format for: ${invalidUrls.join(', ')}` }), {
                 status: 400,
                 headers: { "Content-Type": "application/json" },
             });
@@ -67,10 +103,13 @@ export async function POST(req) {
                 };
 
                 // Notify start
-                sendEvent({ type: "info", message: `Initiating parallel analysis for ${urls.length} competitors...` });
+                sendEvent({ type: "info", message: `Initiating parallel analysis for ${validUrls.length} competitors...` });
 
-                // Run all agents in parallel
-                const agentPromises = urls.map(async (url) => {
+                const MAX_CONCURRENCY = 5;
+                const results = [];
+
+                // Helper to run a single agent
+                const runAgent = async (url) => {
                     const agentController = new AbortController();
                     agentControllers.set(url, agentController);
                     const timeoutId = setTimeout(() => agentController.abort(), 35000);
@@ -115,10 +154,13 @@ export async function POST(req) {
                         clearTimeout(timeoutId);
                         agentControllers.delete(url);
                     }
-                });
+                };
 
-                // Wait for all agents to complete
-                await Promise.all(agentPromises);
+                // Execute with concurrency limit
+                for (let i = 0; i < validUrls.length; i += MAX_CONCURRENCY) {
+                    const batch = validUrls.slice(i, i + MAX_CONCURRENCY);
+                    await Promise.all(batch.map(url => runAgent(url)));
+                }
 
                 sendEvent({ type: "done", message: "All parallel tasks completed." });
                 controller.close();

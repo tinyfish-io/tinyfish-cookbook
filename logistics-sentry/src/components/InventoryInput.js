@@ -25,8 +25,7 @@ export function InventoryInput({ onInventoryLoaded }) {
                 // In production, use a library like PapaParse
                 const text = reader.result;
                 const lineCount = text.split('\n').filter(line => line.trim().length > 0).length;
-                // Subtract header if CSV
-                const estimatedCount = Math.max(0, lineCount - 1);
+                const estimatedCount = Math.max(0, lineCount - 1); // Subtract header if CSV
 
                 const sourceData = {
                     type: 'file',
@@ -46,14 +45,16 @@ export function InventoryInput({ onInventoryLoaded }) {
             }
         };
 
-        if (file.name.endsWith(".json")) {
-            reader.readAsText(file);
-        } else if (file.name.endsWith(".csv")) {
-            reader.readAsText(file); // Simply reading lines for count
-        } else {
-            // Fallback
-            reader.readAsText(file);
-        }
+        reader.onerror = () => {
+            toast({
+                title: "File Read Error",
+                description: "Failed to read the file. Please try again.",
+                variant: "destructive"
+            });
+        };
+
+        // Unified read call
+        reader.readAsText(file);
     }, [onInventoryLoaded]);
 
     const { getRootProps, getInputProps, isDragActive } = useDropzone({
@@ -104,22 +105,26 @@ export function InventoryInput({ onInventoryLoaded }) {
             <div className="flex items-center border-b border-primary/10">
                 <button
                     onClick={() => setMode("file")}
+                    role="tab"
+                    aria-selected={mode === 'file'}
                     className={cn(
-                        "flex-1 py-3 text-xs font-bold uppercase tracking-widest transition-all flex items-center justify-center gap-2",
-                        mode === "file" ? "bg-primary/5 text-primary" : "text-muted-foreground hover:bg-primary/5"
+                        "flex-1 py-2 text-xs font-bold uppercase tracking-wider rounded-lg transition-all",
+                        mode === 'file' ? "bg-primary text-white shadow-md" : "text-muted-foreground hover:bg-primary/5"
                     )}
                 >
-                    <UploadCloud className="h-4 w-4" /> Upload Manifest
+                    Upload Manifest
                 </button>
                 <div className="w-[1px] h-full bg-primary/10" />
                 <button
                     onClick={() => setMode("url")}
+                    role="tab"
+                    aria-selected={mode === 'url'}
                     className={cn(
-                        "flex-1 py-3 text-xs font-bold uppercase tracking-widest transition-all flex items-center justify-center gap-2",
-                        mode === "url" ? "bg-primary/5 text-primary" : "text-muted-foreground hover:bg-primary/5"
+                        "flex-1 py-2 text-xs font-bold uppercase tracking-wider rounded-lg transition-all",
+                        mode === 'url' ? "bg-primary text-white shadow-md" : "text-muted-foreground hover:bg-primary/5"
                     )}
                 >
-                    <LinkIcon className="h-4 w-4" /> Connect URL
+                    Connect Feed
                 </button>
             </div>
 

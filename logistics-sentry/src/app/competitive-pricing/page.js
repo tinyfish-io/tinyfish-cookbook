@@ -1,5 +1,5 @@
 "use client";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import {
     Search,
     Globe,
@@ -27,9 +27,15 @@ export default function PricingIntelligence() {
     const [competitors, setCompetitors] = useState([]);
     const [logs, setLogs] = useState([]);
     const [isMounted, setIsMounted] = useState(false);
+    const abortControllerRef = useRef(null);
 
     useEffect(() => {
         setIsMounted(true);
+        return () => {
+            if (abortControllerRef.current) {
+                abortControllerRef.current.abort();
+            }
+        };
     }, []);
 
     const handleRunAnalysis = async (e) => {
@@ -39,6 +45,11 @@ export default function PricingIntelligence() {
         if (urlList.length === 0) {
             toast({ title: "Error", description: "Please enter at least one URL." });
             return;
+        }
+
+        // Cancel previous run if any
+        if (abortControllerRef.current) {
+            abortControllerRef.current.abort();
         }
 
         setIsRunning(true);
@@ -54,14 +65,21 @@ export default function PricingIntelligence() {
 
         toast({ title: "Scale Audit Initiated", description: `Researching ${urlList.length} competitors in parallel...` });
 
+        const controller = new AbortController();
+        abortControllerRef.current = controller;
+
         try {
             const response = await fetch("/api/pricing/run", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({ urls: urlList }),
+                signal: controller.signal
             });
 
-            if (!response.ok) throw new Error("Failed to start analysis");
+            if (!response.ok) {
+                const errData = await response.json();
+                throw new Error(errData.error || "Failed to start analysis");
+            }
 
             const reader = response.body.getReader();
             const decoder = new TextDecoder();
@@ -71,69 +89,86 @@ export default function PricingIntelligence() {
                 const { done, value } = await reader.read();
                 if (done) break;
 
-                buffer += decoder.decode(value, { stream: true });
-                const lines = buffer.split("\n");
-                buffer = lines.pop();
+                const chunk = decoder.decode(value, { stream: true });
+                buffer += chunk;
 
-                for (const line of lines) {
-                    if (line.startsWith("data: ")) {
-                        try {
-                            const data = JSON.parse(line.slice(6));
+                const parts = buffer.split("\n\n");
+                buffer = parts.pop() || "";
 
-                            // Log events
-                            if (data.message) {
-                                setLogs(prev => [{
-                                    id: Date.now() + Math.random(),
-                                    type: data.type || "info",
-                                    url: data.competitor_url,
-                                    message: data.message,
-                                    time: new Date().toLocaleTimeString()
-                                }, ...prev].slice(0, 50));
-                            }
+                for (const part of parts) {
+                    const lines = part.split("\n");
+                    for (const line of lines) {
+                        if (line.startsWith("data: ")) {
+                            try {
+                                const data = JSON.parse(line.slice(6));
 
-                            // Update competitor state
-                            if (data.competitor_url) {
-                                setCompetitors(prev => prev.map(c => {
-                                    if (c.url === data.competitor_url) {
-                                        if (data.phase === "PRICING_DISCOVERY") return { ...c, status: "scanning" };
-                                        if (data.phase === "DATA_EXTRACTION") return { ...c, status: "extracting" };
+                                // Log events
+                                if (data.message) {
+                                    setLogs(prev => [{
+                                        id: Date.now() + Math.random(),
+                                        type: data.type || "info",
+                                        url: data.competitor_url,
+                                        message: data.message,
+                                        time: new Date().toLocaleTimeString()
+                                    }, ...prev].slice(0, 50));
+                                }
 
-                                        // Final result from agent
-                                        if (data.competitor_name) {
-                                            return {
-                                                ...c,
-                                                status: "completed",
-                                                name: data.competitor_name,
-                                                model: data.pricing_model,
-                                                tiers: data.tiers || [],
-                                                unitCost: data.unit_cost_normalized,
-                                                standing: data.our_standing_vs_competitor,
-                                                reasoning: data.reasoning
-                                            };
+                                // Update competitor state
+                                if (data.competitor_url) {
+                                    setCompetitors(prev => prev.map(c => {
+                                        if (c.url === data.competitor_url) {
+                                            if (data.phase === "PRICING_DISCOVERY") return { ...c, status: "scanning" };
+                                            if (data.phase === "DATA_EXTRACTION") return { ...c, status: "extracting" };
+
+                                            // Final result from agent
+                                            if (data.competitor_name) {
+                                                return {
+                                                    ...c,
+                                                    status: "completed",
+                                                    name: data.competitor_name,
+                                                    model: data.pricing_model,
+                                                    tiers: data.tiers || [],
+                                                    unitCost: data.unit_cost_normalized,
+                                                    standing: data.our_standing_vs_competitor,
+                                                    reasoning: data.reasoning
+                                                };
+                                            }
+
+                                            if (data.type === "error") {
+                                                return { ...c, status: "failed", error: data.message };
+                                            }
                                         }
-
-                                        if (data.type === "error") {
-                                            return { ...c, status: "failed", error: data.message };
-                                        }
-                                    }
-                                    return c;
-                                }));
+                                        return c;
+                                    }));
+                                }
+                            } catch (e) {
+                                console.error("Parse error:", e);
                             }
-
-                        } catch (e) {
-                            // Partial chunk
                         }
                     }
                 }
             }
 
-            setIsRunning(false);
             toast({ title: "Analysis Complete", description: "Successfully audited competitive landscape." });
 
         } catch (err) {
+            if (err.name !== 'AbortError') {
+                console.error("Stream error:", err);
+                toast({ title: "Analysis Failed", description: err.message, variant: "destructive" });
+            }
+        } finally {
             setIsRunning(false);
-            toast({ title: "Analysis Failed", description: err.message });
         }
+
+        // Cleanup function for this specific run if component unmounts; 
+        // Note: Ideally we attach this to a ref in useEffect, but for this event handler scope, 
+        // we can just return the abort function if we were binding it to a state.
+        // Since this is an event handler, we should actually store the controller in a ref to cancel on unmount.
+        // For now, I will add the ref logic in a separate step or just assume this is "good enough" for the scope 
+        // but the PR feedback specifically asked for "abort on unmount".
+        // I will add the ref logic in the NEXT tool call to be safe, or just leave it here if I can edit the whole component.
+        // Actually, I can't easily edit the whole component to add a ref without reading more lines. 
+        // I'll stick to fixing the syntax error first.
     };
 
     if (!isMounted) return null;
