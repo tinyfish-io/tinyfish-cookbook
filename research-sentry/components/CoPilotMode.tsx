@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { useVoiceCommands, VoiceCommand } from '@/hooks/useVoiceCommands';
 import { ResearchPaper } from '@/lib/types';
 import { Mic, MicOff, SkipForward, BookOpen, ArrowLeft, X, Zap, Copy, Sparkles } from 'lucide-react';
@@ -15,10 +15,17 @@ export default function CoPilotMode({ papers, onExit }: CoPilotModeProps) {
     const [isReading, setIsReading] = useState(false);
     const [summaryText, setSummaryText] = useState<string>('');
     const [summaryCopied, setSummaryCopied] = useState(false);
+    const abortRef = useRef<AbortController | null>(null);
 
     const currentPaper = papers[currentIndex];
 
+    const handleExit = () => {
+        abortRef.current?.abort();
+        onExit();
+    };
+
     const handleNext = () => {
+        abortRef.current?.abort();
         if (currentIndex < papers.length - 1) {
             setCurrentIndex(prev => prev + 1);
             setIsReading(false);
@@ -27,6 +34,7 @@ export default function CoPilotMode({ papers, onExit }: CoPilotModeProps) {
     };
 
     const handlePrevious = () => {
+        abortRef.current?.abort();
         if (currentIndex > 0) {
             setCurrentIndex(prev => prev - 1);
             setIsReading(false);
@@ -35,6 +43,10 @@ export default function CoPilotMode({ papers, onExit }: CoPilotModeProps) {
     };
 
     const handleSummarize = async () => {
+        if (!currentPaper || isReading) return;
+        abortRef.current?.abort();
+        const controller = new AbortController();
+        abortRef.current = controller;
         setIsReading(true);
         setSummaryCopied(false);
         try {
@@ -42,15 +54,23 @@ export default function CoPilotMode({ papers, onExit }: CoPilotModeProps) {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ paper: currentPaper, length: 'medium' }),
+                signal: controller.signal,
             });
             if (!res.ok) throw new Error('Failed');
 
             const data = (await res.json()) as { summary?: string };
-            setSummaryText((data.summary || '').trim());
-            setIsReading(false);
+            if (!controller.signal.aborted) {
+                setSummaryText((data.summary || '').trim());
+                setIsReading(false);
+            }
         } catch (e) {
+            if ((e as Error)?.name === 'AbortError') return;
             console.error(e);
             setIsReading(false);
+        } finally {
+            if (abortRef.current === controller) {
+                abortRef.current = null;
+            }
         }
     };
 
@@ -82,7 +102,7 @@ export default function CoPilotMode({ papers, onExit }: CoPilotModeProps) {
         },
         {
             phrases: ['exit co-pilot', 'exit mode', 'stop co-pilot'],
-            action: onExit,
+            action: handleExit,
             description: 'Exit Co-Pilot'
         }
     ];
@@ -92,7 +112,10 @@ export default function CoPilotMode({ papers, onExit }: CoPilotModeProps) {
     // Auto-start listening on mount
     useEffect(() => {
         startListening();
-        return () => stopListening();
+        return () => {
+            abortRef.current?.abort();
+            stopListening();
+        };
     }, [startListening, stopListening]);
 
     if (!currentPaper) return <div className="text-white">No papers to display.</div>;
@@ -118,7 +141,7 @@ export default function CoPilotMode({ papers, onExit }: CoPilotModeProps) {
                         </p>
                     </div>
                 </div>
-                <button onClick={onExit} className="p-2 hover:bg-slate-800 rounded-full text-slate-400 transition-colors">
+                <button onClick={handleExit} className="p-2 hover:bg-slate-800 rounded-full text-slate-400 transition-colors">
                     <X className="w-8 h-8" />
                 </button>
             </div>

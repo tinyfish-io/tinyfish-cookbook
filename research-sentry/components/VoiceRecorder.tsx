@@ -20,6 +20,7 @@ export default function VoiceRecorder({ onRecordingComplete, disabled }: VoiceRe
         setIsSupported(checkMicrophoneSupport());
         return () => {
             if (timerRef.current) clearInterval(timerRef.current);
+            recorderRef.current?.cancelRecording();
         };
     }, []);
 

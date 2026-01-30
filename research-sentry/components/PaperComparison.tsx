@@ -13,19 +13,34 @@ interface PaperComparisonProps {
 export default function PaperComparison({ papers, onClose }: PaperComparisonProps) {
     const [comparison, setComparison] = useState<ComparisonResult | null>(null);
     const [loading, setLoading] = useState(true);
+    const [error, setError] = useState<string | null>(null);
 
     useEffect(() => {
         const fetchComparison = async () => {
+            setError(null);
             try {
                 const res = await fetch('/api/compare', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ papers }),
                 });
-                const data = await res.json();
+                const data = await res.json().catch(() => ({}));
+                if (!res.ok) {
+                    const message = typeof data?.error === 'string' ? data.error : 'Failed to compare papers.';
+                    setComparison(null);
+                    setError(message);
+                    return;
+                }
+                if (!data || !Array.isArray(data.points) || typeof data.summary !== 'string') {
+                    setComparison(null);
+                    setError('Comparison response was invalid.');
+                    return;
+                }
                 setComparison(data);
             } catch (e) {
                 console.error(e);
+                setComparison(null);
+                setError('Failed to load comparison.');
             } finally {
                 setLoading(false);
             }
@@ -108,7 +123,7 @@ export default function PaperComparison({ papers, onClose }: PaperComparisonProp
                             </div>
                         </div>
                     ) : (
-                        <div className="text-center text-red-400">Failed to load comparison.</div>
+                        <div className="text-center text-red-400">{error || 'Failed to load comparison.'}</div>
                     )}
                 </div>
             </div>

@@ -136,7 +136,9 @@ async function scrapeWithMino(
 
     console.log(`[TinyFish] ${source} found ${result.length} papers via web automation`);
 
-    return result.map((p: any) => {
+    return result
+        .filter((p: any) => p && typeof p === 'object')
+        .map((p: any) => {
         // Case-insensitive key lookup helper
         const getV = (keys: string[]) => {
             const lowerKeys = keys.map(k => k.toLowerCase());
@@ -192,7 +194,7 @@ async function scrapeWithMino(
             citations: p.citations || p.citationCount || p.downloads || 0,
             doi: doi
         };
-    });
+        });
 }
 
 // Scraper Wrappers

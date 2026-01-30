@@ -17,9 +17,16 @@ export interface TrackedPaper {
     };
 }
 
-const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY! });
+const getOpenAI = () => {
+    const apiKey = process.env.OPENAI_API_KEY;
+    if (!apiKey) {
+        throw new Error('OPENAI_API_KEY is not configured');
+    }
+    return new OpenAI({ apiKey });
+};
 
 export async function analyzeCitationTrend(paper: ResearchPaper): Promise<TrackedPaper> {
+    const openai = getOpenAI();
     // Simulating citation analysis with AI since we don't have historical data access in this demo
     const prompt = `Analyze the potential citation impact of this research paper:
   Title: "${paper.title}"
@@ -42,7 +49,19 @@ export async function analyzeCitationTrend(paper: ResearchPaper): Promise<Tracke
         response_format: { type: 'json_object' },
     });
 
-    const analysis = JSON.parse(response.choices[0].message.content!);
+    const choice = response.choices?.[0];
+    if (!choice) {
+        throw new Error('OpenAI returned no choices');
+    }
+    if (choice.finish_reason === 'length') {
+        throw new Error('OpenAI response was truncated');
+    }
+    let analysis: any;
+    try {
+        analysis = JSON.parse(choice.message.content ?? '{}');
+    } catch (error) {
+        throw new Error('OpenAI returned invalid JSON');
+    }
 
     return {
         id: paper.id,

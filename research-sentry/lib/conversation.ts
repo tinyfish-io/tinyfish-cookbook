@@ -28,15 +28,25 @@ export async function generateConversationResponse(
     ...history.map(m => ({ role: m.role as 'user' | 'assistant' | 'system', content: m.content }))
   ];
 
-  const response = await openai.chat.completions.create({
-    model: 'gpt-4o',
-    messages: messages as any,
-    temperature: 0.7,
-    max_tokens: 500,
-  });
+  let response;
+  try {
+    response = await openai.chat.completions.create({
+      model: 'gpt-4o',
+      messages: messages as any,
+      temperature: 0.7,
+      max_tokens: 500,
+    });
+  } catch (err) {
+    console.error('OpenAI conversation error', err);
+    return {
+      content: "I couldn't generate a response.",
+      relatedPapers: context?.papers,
+    };
+  }
 
+  const content = response?.choices?.[0]?.message?.content;
   return {
-    content: response.choices[0].message.content || "I couldn't generate a response.",
+    content: content || "I couldn't generate a response.",
     // in a real implementation, we might extract new paper references here
     relatedPapers: context?.papers // maintain context
   };
