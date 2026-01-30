@@ -84,53 +84,56 @@ export function researchArea(
         buffer = lines.pop() || '';
 
         for (const line of lines) {
-          if (line.startsWith('data: ')) {
-            const jsonStr = line.slice(6).trim();
-            if (jsonStr === '[DONE]') continue;
+          if (!line.startsWith('data: ')) continue;
 
-            try {
-              const event = JSON.parse(jsonStr);
+          const jsonStr = line.slice(6).trim();
+          if (jsonStr === '[DONE]') continue;
 
-              if (event.type === 'STATUS') {
-                onStatus({
-                  areaId: area.id,
-                  areaName: area.name,
-                  status: 'researching',
-                  currentAction: event.message,
-                });
-              } else if (event.type === 'SCREENSHOT' && event.data?.streamingUrl) {
-                onStatus({
-                  areaId: area.id,
-                  areaName: area.name,
-                  status: 'researching',
-                  streamingUrl: event.data.streamingUrl,
-                });
-              } else if (event.type === 'COMPLETE') {
-                if (!completed) {
-                  completed = true;
-                  clearTimeout(timeoutId);
-                  onComplete({
-                    areaId: area.id,
-                    areaName: area.name,
-                    status: 'complete',
-                    analysis: event.data?.analysis,
-                  });
-                }
-              } else if (event.type === 'ERROR') {
-                if (!completed) {
-                  completed = true;
-                  clearTimeout(timeoutId);
-                  onError(event.message || 'Unknown error');
-                }
-              }
-            } catch {
-              // Ignore parse errors
+          try {
+            const event = JSON.parse(jsonStr);
+
+            // 🔹 streamingUrl is event-agnostic
+            if (event.data?.streamingUrl) {
+              onStatus({
+                areaId: area.id,
+                areaName: area.name,
+                status: 'researching',
+                streamingUrl: event.data.streamingUrl,
+              });
             }
+
+            if (event.type === 'STATUS') {
+              onStatus({
+                areaId: area.id,
+                areaName: area.name,
+                status: 'researching',
+                currentAction: event.message,
+              });
+            } else if (event.type === 'COMPLETE') {
+              if (!completed) {
+                completed = true;
+                clearTimeout(timeoutId);
+                onComplete({
+                  areaId: area.id,
+                  areaName: area.name,
+                  status: 'complete',
+                  analysis: event.data?.analysis,
+                });
+              }
+            } else if (event.type === 'ERROR') {
+              if (!completed) {
+                completed = true;
+                clearTimeout(timeoutId);
+                onError(event.message || 'Unknown error');
+              }
+            }
+          } catch {
+            // Ignore parse errors
           }
         }
       }
 
-      // If stream ends without COMPLETE, provide fallback
+      // Fallback if stream ends without COMPLETE
       if (!completed) {
         completed = true;
         clearTimeout(timeoutId);
@@ -149,24 +152,22 @@ export function researchArea(
         });
       }
     } catch (error) {
-      if ((error as Error).name !== 'AbortError') {
-        if (!completed) {
-          completed = true;
-          clearTimeout(timeoutId);
-          onComplete({
-            areaId: area.id,
-            areaName: area.name,
-            status: 'complete',
-            analysis: {
-              suitability: 'moderate',
-              suitabilityScore: 5,
-              summary: `Could not complete full research for ${area.name}. ${area.whyRecommended}`,
-              pros: [area.whyRecommended],
-              cons: ['Research incomplete'],
-              risks: [],
-            },
-          });
-        }
+      if ((error as Error).name !== 'AbortError' && !completed) {
+        completed = true;
+        clearTimeout(timeoutId);
+        onComplete({
+          areaId: area.id,
+          areaName: area.name,
+          status: 'complete',
+          analysis: {
+            suitability: 'moderate',
+            suitabilityScore: 5,
+            summary: `Could not complete full research for ${area.name}. ${area.whyRecommended}`,
+            pros: [area.whyRecommended],
+            cons: ['Research incomplete'],
+            risks: [],
+          },
+        });
       }
     }
   };
