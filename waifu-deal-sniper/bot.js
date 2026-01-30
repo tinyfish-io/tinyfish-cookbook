@@ -773,12 +773,18 @@ async function handleMessage(message, content) {
   const username = message.author.username;
   const discordId = message.author.id;
   
+  console.log(`   → handleMessage called with: "${content}"`);
+  
   // Get or create user
   const user = db.getOrCreateUser(discordId, username);
+  console.log(`   → User: ${user ? 'found/created' : 'NULL'}`);
+  
   db.updateUserActivity(discordId);
   
   const isNew = db.isNewUser(discordId);
   const parsed = parseMessage(content);
+  
+  console.log(`   → Parsed intent: ${parsed.intent}, query: ${parsed.query || 'none'}`);
   
   try {
     switch (parsed.intent) {
@@ -1558,12 +1564,15 @@ client.on('messageCreate', async (message) => {
     if (isDM || isMentioned) {
       // Remove bot mention from content if present
       const cleanContent = message.content.replace(/<@!?\d+>/g, '').trim();
+      console.log(`   → Clean content: "${cleanContent}"`);
       if (cleanContent || isDM) {
         await handleMessage(message, cleanContent || message.content);
+        console.log(`   → handleMessage completed`);
       }
     }
   } catch (error) {
     console.error('Message handler error:', error);
+    console.error('Stack:', error.stack);
     try {
       await message.reply("😵 Something went wrong! Try again?").catch(() => {});
     } catch (e) {
