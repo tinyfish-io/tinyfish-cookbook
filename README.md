@@ -34,6 +34,7 @@ Each folder in this repo is a standalone project. Dive in to see how to solve re
 | Recipe | Description |
 |--------|-------------|
 | [bestbet](./bestbet) | Sports betting odds comparison tool |
+| [tinyskills](./tinyskills) | Multi-source AI skill guide generator |
 
 > More recipes added weekly!
 
