@@ -12,14 +12,6 @@ Welcome to the **TinyFish Cookbook!** This is a growing collection of recipes, d
 
 Think of this like a recipe book for the web. Whether you want to build an automated travel agent, a job application bot, or a market research tool, you can grab a recipe here, tweak the ingredients, and start cooking.
 
-## Star History
-
-<p align="center">
-  <a href="https://www.star-history.com/#tinyfish-io/tinyfish-cookbook&type=date">
-    <img src="https://api.star-history.com/svg?repos=tinyfish-io/tinyfish-cookbook&type=date&legend=top-left" alt="Star History Chart">
-  </a>
-</p>
-
 ## What is TinyFish?
 
 TinyFish is a **web agents API** that lets you treat real websites like programmable surfaces. Instead of juggling headless browsers, selectors, proxies, and weird edge cases, you call a single API with a goal and some URLs and get back clean JSON. It handles navigation, forms, filters, dynamic content, and multi-step flows across many sites at once, so you can focus on product logic instead of browser plumbing.
@@ -127,6 +119,14 @@ while (true) {
 }
 ```
 
+## Star History
+
+<p align="center">
+  <a href="https://www.star-history.com/#tinyfish-io/tinyfish-cookbook&type=date">
+    <img src="https://api.star-history.com/svg?repos=tinyfish-io/tinyfish-cookbook&type=date&legend=top-left" alt="Star History Chart">
+  </a>
+</p>
+
 ## Contributors
 
 <a href="https://github.com/tinyfish-io/TinyFish-cookbook/graphs/contributors">
@@ -134,6 +134,7 @@ while (true) {
 </a>
 
 Got something cool you built with TinyFish? We want it in here! Check out our [Contributing Guide](CONTRIBUTING.md) for the full rundown on how to submit your project.
+
 
 ## Community & Support
 
