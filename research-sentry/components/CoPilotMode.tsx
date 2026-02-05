@@ -121,7 +121,7 @@ export default function CoPilotMode({ papers, onExit }: CoPilotModeProps) {
     if (!currentPaper) return <div className="text-white">No papers to display.</div>;
 
     return (
-        <div className="fixed inset-0 bg-slate-950 z-50 flex flex-col p-8 md:p-16">
+        <div className="fixed inset-0 bg-slate-950 z-50 flex flex-col p-8 md:p-16 overflow-y-auto">
             {/* Header */}
             <div className="flex justify-between items-start mb-8">
                 <div className="flex items-center gap-4">

@@ -23,6 +23,8 @@ export default function Home() {
     const [trackingPaperId, setTrackingPaperId] = useState<string | null>(null);
     const [searchTopic, setSearchTopic] = useState<string>('');
     const [searchSources, setSearchSources] = useState<SourceType[]>([]);
+    const [voiceTranscript, setVoiceTranscript] = useState<string | null>(null);
+    const [voicePreviewResults, setVoicePreviewResults] = useState<SearchResult | null>(null);
 
     const handleTextSearch = async (query: string, sources: SourceType[]) => {
         setLoading(true);
@@ -57,6 +59,8 @@ export default function Home() {
         setSelectedPapers(new Set());
         setSearchTopic('Voice Discovery Pattern');
         setSearchSources(['arxiv', 'pubmed', 'semantic_scholar']);
+        setVoiceTranscript(null);
+        setVoicePreviewResults(null);
 
         try {
             const formData = new FormData();
@@ -72,7 +76,13 @@ export default function Home() {
             }
 
             const data = await response.json();
-            setResults(data);
+            const transcript = typeof data?.transcript === 'string' ? data.transcript.trim() : '';
+            if (transcript) {
+                setVoiceTranscript(transcript);
+                setVoicePreviewResults(data);
+            } else {
+                setResults(data);
+            }
         } catch (err) {
             setError(err instanceof Error ? err.message : 'An error occurred during voice search');
         } finally {
@@ -274,6 +284,39 @@ export default function Home() {
                         {error && !loading && (
                             <div className="max-w-4xl mx-auto mb-8">
                                 <ErrorMessage message={error} onRetry={retrySearch} />
+                            </div>
+                        )}
+
+                        {!loading && voiceTranscript && voicePreviewResults && !results && (
+                            <div className="max-w-4xl mx-auto animate-fade-in">
+                                <div className="bg-slate-900/60 border border-slate-700/60 rounded-2xl p-6 shadow-xl">
+                                    <div className="text-xs text-slate-400 uppercase tracking-widest font-bold mb-2">
+                                        Voice Transcript
+                                    </div>
+                                    <div className="text-white text-lg leading-relaxed mb-4">
+                                        “{voiceTranscript}”
+                                    </div>
+                                    <div className="flex items-center justify-end gap-3">
+                                        <button
+                                            onClick={() => {
+                                                setVoiceTranscript(null);
+                                                setVoicePreviewResults(null);
+                                            }}
+                                            className="px-4 py-2 rounded-lg text-slate-400 hover:text-white hover:bg-slate-800/60 transition-colors"
+                                        >
+                                            Cancel
+                                        </button>
+                                        <button
+                                            onClick={() => {
+                                                setResults(voicePreviewResults);
+                                                setVoicePreviewResults(null);
+                                            }}
+                                            className="px-4 py-2 rounded-lg bg-emerald-600 hover:bg-emerald-500 text-white font-semibold transition-colors"
+                                        >
+                                            Continue to Results
+                                        </button>
+                                    </div>
+                                </div>
                             </div>
                         )}
 
