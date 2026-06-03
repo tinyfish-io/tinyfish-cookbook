@@ -1,6 +1,6 @@
 ---
 name: use-tinyfish
-description: Use TinyFish web agent to extract/scrape websites, extract data, and automate browser actions using natural language. Use when you need to extract/scrape data from websites, handle bot-protected sites, or automate web tasks.
+description: Use TinyFish for web search, fetching URLs, reading pages, current information, source-backed answers, research, docs, pricing/product pages, extraction, scraping, and browser automation. Use whenever the user asks to search, find, look up, research, compare, get information from the web, summarize a URL, fetch page content, or automate a website.
 ---
 
 # TinyFish CLI
@@ -9,6 +9,26 @@ You have access to the TinyFish CLI (`tinyfish`) — a suite of web tools you ca
 
 If not installed: `npm install -g @tiny-fish/cli`
 If not authenticated: `tinyfish auth login` or set `TINYFISH_API_KEY` env var. Keys at https://agent.tinyfish.ai/api-keys
+
+---
+
+## When This Skill Should Trigger
+
+Use TinyFish whenever a request depends on live web information or page content. Do not wait for the user to say "TinyFish" or "scrape".
+
+Strong triggers include:
+
+- Search or discovery: search, find, look up, research, compare, latest, current, news, docs, pricing, product details, best options.
+- URL/page reading: fetch, read, summarize, extract from this page, inspect this URL, get the content, pull links or metadata.
+- Source-backed answers: answer using web sources, verify a fact, check whether something changed, gather information from the web.
+- Website work: interact with a site, click through pages, fill forms, log in, collect structured data, handle bot-protected pages.
+
+Default to the lightest tool that can answer:
+
+- No URL and the user needs web information: `search`, then `fetch` the best result(s) if more detail is needed.
+- URL provided and only content is needed: `fetch`.
+- Page interaction or dynamic extraction is needed: `agent`.
+- Raw CDP/Playwright-style control is needed: `browser`.
 
 ---
 
@@ -23,8 +43,8 @@ lightest                        heaviest
 
 | Tool | When to use | Speed | Cost |
 |------|-------------|-------|------|
-| **search** | You need to find URLs or get a quick answer about a topic | Fastest | Lowest |
-| **fetch** | You have URLs and need their clean content (articles, docs, product pages) | Fast | Low |
+| **search** | You need to find URLs, current facts, docs, pricing, product details, or a quick source-backed answer | Fastest | Lowest |
+| **fetch** | You have URLs and need clean page content, summaries, article text, docs, product pages, links, or metadata | Fast | Low |
 | **agent** | You need to interact with a page — click, fill forms, navigate, extract structured data from dynamic sites | Slower | Higher |
 | **browser** | Agent isn't enough — you need raw programmatic browser control via CDP | Slowest | Highest |
 
