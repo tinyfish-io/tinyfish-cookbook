@@ -160,7 +160,7 @@ tenders-finder/
 
 ## Tech Stack
 
-- **Framework:** Next.js 15 (App Router), TypeScript, Tailwind CSS
+- **Framework:** Next.js 16 (App Router), TypeScript, Tailwind CSS
 - **Browser Agents:** TinyFish SDK (`client.agent.stream`)
 - **Icons:** Lucide React
 - **Deployment:** Vercel
