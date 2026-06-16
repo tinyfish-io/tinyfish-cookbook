@@ -60,22 +60,11 @@ function SkeletonReportCard() {
 // ===========================================
 function calcGradeScore(spot: WingSpot): number {
     let score = 50;
-    if (spot.price_per_wing !== null) {
-        if (spot.price_per_wing <= 1.0) score += 25;
-        else if (spot.price_per_wing <= 1.5) score += 15;
-        else if (spot.price_per_wing <= 2.0) score += 5;
+    if (spot.rating != null) {
+        if (spot.rating >= 4.5) score += 25;
+        else if (spot.rating >= 4.0) score += 15;
+        else if (spot.rating >= 3.5) score += 5;
         else score -= 10;
-    } else if (spot.estimated_price_per_wing != null) {
-        if (spot.estimated_price_per_wing <= 1.0) score += 12;
-        else if (spot.estimated_price_per_wing <= 1.5) score += 8;
-        else if (spot.estimated_price_per_wing <= 2.0) score += 3;
-        else score -= 5;
-    }
-    if (spot.deal_text) score += 10;
-    if (spot.delivery_time_mins !== null) {
-        if (spot.delivery_time_mins <= 20) score += 10;
-        else if (spot.delivery_time_mins <= 35) score += 5;
-        else score -= 5;
     }
     if (spot.status === 'green') score += 15;
     else if (spot.status === 'yellow') score += 5;
@@ -88,41 +77,17 @@ function calcGradeScore(spot: WingSpot): number {
 // ===========================================
 function findBestDealIndex(spots: WingSpot[]): number {
     if (spots.length === 0) return -1;
-
     let bestIdx = -1;
     let bestScore = -Infinity;
-
     spots.forEach((spot, idx) => {
-        // Only open spots qualify
         if (spot.status === 'red') return;
-
-        let score = 50;
-        if (spot.price_per_wing !== null) {
-            if (spot.price_per_wing <= 1.0) score += 25;
-            else if (spot.price_per_wing <= 1.5) score += 15;
-            else if (spot.price_per_wing <= 2.0) score += 5;
-            else score -= 10;
-        } else if (spot.estimated_price_per_wing != null) {
-            if (spot.estimated_price_per_wing <= 1.0) score += 12;
-            else if (spot.estimated_price_per_wing <= 1.5) score += 8;
-            else if (spot.estimated_price_per_wing <= 2.0) score += 3;
-            else score -= 5;
-        }
-        if (spot.deal_text) score += 10;
-        if (spot.delivery_time_mins !== null) {
-            if (spot.delivery_time_mins <= 20) score += 10;
-            else if (spot.delivery_time_mins <= 35) score += 5;
-        }
-        if (spot.status === 'green') score += 15;
-        else if (spot.status === 'yellow') score += 5;
+        const score = calcGradeScore(spot);
         if (score > bestScore) {
             bestScore = score;
             bestIdx = idx;
         }
     });
-
-    // Only mark as best deal if score is above threshold
-    return bestScore >= 75 ? bestIdx : -1;
+    return bestScore >= 65 ? bestIdx : -1;
 }
 
 // ===========================================
@@ -214,11 +179,9 @@ export function TradingCardGrid({ spots, isLoading, compareIds, onToggleCompare 
                         >
                             <ScoutingReportCard
                                 spot={spot}
-                                index={index}
-                                isBestDeal={index === bestDealIdx}
-                                autoFetchDeals={autoFetchDealIds.has(spot.id)}
-                                isCompareSelected={compareIds?.has(spot.id)}
-                                onToggleCompare={onToggleCompare ? () => onToggleCompare(spot.id) : undefined}
+                                rank={index + 1}
+                                isSelected={compareIds?.has(spot.id)}
+                                onSelect={onToggleCompare ? () => onToggleCompare(spot.id) : undefined}
                             />
                         </motion.div>
                     );
