@@ -5,6 +5,7 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import { useParams } from "next/navigation";
 import Image from "next/image";
 import Link from "next/link";
+import ReactMarkdown from "react-markdown";
 import { ArrowLeftIcon, CheckIcon, ExternalLinkIcon } from "@/components/Icons";
 import SendToInboxModal from "@/components/SendToInboxModal";
 import type { BriefingEvent } from "@/lib/demo-data";
@@ -41,10 +42,15 @@ export default function BriefingPage() {
   const [copied, setCopied] = useState(false);
   const [reelError, setReelError] = useState(false);
   const [showSendModal, setShowSendModal] = useState(false);
+  const [isDark, setIsDark] = useState(false);
   const pollRef = useRef<ReturnType<typeof setInterval> | null>(null);
   const scrollRef = useRef<HTMLDivElement>(null);
   const stopAutoScrollRef = useRef(false);
   const lastScrollYRef = useRef(0);
+
+  useEffect(() => {
+    setIsDark(document.documentElement.classList.contains("theme-dark"));
+  }, []);
 
   useEffect(() => {
     const onScroll = () => {
@@ -221,15 +227,36 @@ export default function BriefingPage() {
               </button>
             </div>
           </>
+        ) : run.status === "processing" ? (
+          <>
+            <div className="mt-[18px] flex items-center gap-3">
+              <span className="inline-flex items-center gap-[7px] rounded-full border border-[#F24E1E]/40 bg-[#F24E1E]/10 px-[13px] py-1.5">
+                <span className="status-dot-running size-2 rounded-full bg-[#F24E1E]" />
+                <span className="text-[12px] font-bold tracking-[0.02em] text-[#F24E1E]">PROCESSING</span>
+              </span>
+              <span className="font-mono text-[12px] text-[var(--c-text-subtle)]">run {shortId}</span>
+            </div>
+            <h1 className="mt-[14px] max-w-[720px] text-[25px] font-extrabold leading-[1.2] tracking-[-0.02em] text-[var(--c-text)]">{run.query}</h1>
+            <div className="mx-auto mt-[26px] max-w-[720px] space-y-4">
+              <div className="flex justify-end">
+                <div className="max-w-[80%] rounded-[18px_18px_6px_18px] bg-[var(--c-hover-2)] px-4 py-[11px] text-[14.5px] text-[var(--c-text-muted)]">{run.query}</div>
+              </div>
+              <div className="space-y-[13px]">
+                {run.timeline && run.timeline.length > 0 ? (
+                  <>
+                    <TimelineView events={run.timeline} isDark={isDark} />
+                    <StatusHistory cards={run.statusHistory} isDark={isDark} />
+                  </>
+                ) : (
+                  <StatusHistory cards={run.statusHistory} fallback={run.statusMessage} isDark={isDark} />
+                )}
+                <div ref={scrollRef} />
+              </div>
+            </div>
+          </>
         ) : (
           <>
             <div className="mt-[18px] flex items-center gap-3">
-              {run.status === "processing" ? (
-                <span className="inline-flex items-center gap-[7px] rounded-full border border-[#F24E1E]/40 bg-[#F24E1E]/10 px-[13px] py-1.5">
-                  <span className="status-dot-running size-2 rounded-full bg-[#F24E1E]" />
-                  <span className="text-[12px] font-bold tracking-[0.02em] text-[#F24E1E]">PROCESSING</span>
-                </span>
-              ) : null}
               <span className="font-mono text-[12px] text-[var(--c-text-subtle)]">run {shortId}</span>
             </div>
             <h1 className="mt-[14px] max-w-[720px] text-[25px] font-extrabold leading-[1.2] tracking-[-0.02em] text-[var(--c-text)]">{run.query}</h1>
@@ -271,7 +298,7 @@ export default function BriefingPage() {
                 <div className="mt-6 rounded-[14px] border border-[var(--c-border)] bg-[var(--c-surface)] p-[18px]">
                   <h2 className="mb-3 text-[12px] font-bold uppercase tracking-[0.08em] text-[var(--c-text-subtle)]">Source video</h2>
                   <div className="flex items-center gap-[10px]">
-                    <Image src="/brand/icon-videodb.png" alt="" width={18} height={18} className="size-[18px] rounded-[4px] flex-none" />
+                    <Image src={isDark ? "/brand/icon-videodb-dark.png" : "/brand/icon-videodb.png"} alt="" width={18} height={18} className="size-[18px] rounded-[4px] flex-none" />
                     <a
                       href={run.selectedVideo?.url || "#"}
                       target="_blank"
@@ -305,6 +332,107 @@ export default function BriefingPage() {
         open={showSendModal}
         onClose={() => setShowSendModal(false)}
       />
+    </div>
+  );
+}
+
+function StatusHistory({ cards, fallback, isDark }: { cards?: Array<{ ts: string; msg: string }>; fallback?: string; isDark: boolean }) {
+  if (cards && cards.length > 0) {
+    return (
+      <>
+        {cards.map((entry, i) => {
+          const isActive = i === cards.length - 1;
+          return (
+            <div key={i} className="flex items-center gap-[10px] rounded-[14px] border border-[var(--c-border)] bg-[var(--c-surface)] p-[15px]">
+              <div className="flex items-center gap-[10px] flex-1">
+                {isActive ? (
+                  <span className="size-[18px] flex-none rounded-full border-2 border-[var(--c-border)] border-t-[#F24E1E] animate-spin" />
+                ) : (
+                  <Image src={isDark ? "/brand/icon-videodb-dark.png" : "/brand/icon-videodb.png"} alt="" width={18} height={18} className="size-[18px] rounded-[4px] flex-none" />
+                )}
+                <span className="text-[13.5px] font-bold text-[var(--c-text)]">{entry.msg}</span>
+              </div>
+            </div>
+          );
+        })}
+      </>
+    );
+  }
+  return (
+    <div className="flex items-center gap-[10px] rounded-[14px] border border-[var(--c-border)] bg-[var(--c-surface)] p-[15px]">
+      <div className="flex items-center gap-[10px] flex-1">
+        <span className="size-[18px] flex-none rounded-full border-2 border-[var(--c-border)] border-t-[#F24E1E] animate-spin" />
+        <span className="text-[13.5px] font-bold text-[var(--c-text)]">{fallback || "Creating your highlight..."}</span>
+      </div>
+    </div>
+  );
+}
+
+function TimelineView({ events, isDark }: { events: TimelineEvent[]; isDark: boolean }) {
+  const items: Array<{ type: "text"; text: string } | { type: "tool"; tc: TimelineEvent["toolCall"] }> = [];
+  let textBuf = "";
+
+  for (const ev of events) {
+    if (ev.type === "text-delta" && ev.text) {
+      textBuf += ev.text;
+    } else {
+      if (textBuf.trim()) { items.push({ type: "text", text: textBuf.trim() }); textBuf = ""; }
+      if (ev.type === "tool" && ev.toolCall) {
+        items.push({ type: "tool", tc: ev.toolCall });
+      }
+    }
+  }
+  if (textBuf.trim()) items.push({ type: "text", text: textBuf.trim() });
+
+  return (
+    <div className="space-y-[13px]">
+      {items.map((item, i) => {
+        if (item.type === "text") {
+          return (
+            <div key={i} className="flex items-start gap-[10px]">
+              <div className="text-[14px] leading-relaxed text-[var(--c-text-muted)] prose-sm prose-invert prose-p:my-1 prose-strong:text-[var(--c-text)] prose-em:text-[var(--c-text-muted)] [&_p]:mb-1.5 [&_ol]:my-2 [&_ol]:pl-5 [&_li]:mb-1 [&_li]:pl-0.5">
+                <ReactMarkdown>{item.text}</ReactMarkdown>
+              </div>
+            </div>
+          );
+        }
+        const tc = item.tc!;
+        const isTinyFish = tc.name.includes("TinyFish");
+        return (
+          <div key={i} className="rounded-[14px] border border-[var(--c-border)] bg-[var(--c-surface)] overflow-hidden">
+            {isTinyFish ? (
+              <>
+                <div className="flex items-center gap-[10px] border-b border-[var(--c-border)] px-4 py-[13px]">
+                  <Image src={isDark ? "/brand/icon-tinyfish-dark.png" : "/brand/icon-tinyfish.png"} alt="" width={18} height={18} className="size-[18px] rounded-[4px] flex-none" />
+                  <span className="text-[13.5px] font-bold text-[var(--c-text)]">TinyFish · {tc.summary}</span>
+                </div>
+                {tc.details && (tc.details as { results?: Array<{ title: string; url: string }> }).results?.[0] ? (
+                  <div className="px-4 py-[13px]">
+                    <p className="text-[11px] font-bold tracking-[0.06em] text-[var(--c-text-subtle)]">SELECTED SOURCE</p>
+                    <a
+                      href={(tc.details as { results?: Array<{ title: string; url: string }> }).results?.[0]?.url || "#"}
+                      target="_blank"
+                      rel="noreferrer"
+                      className="mt-1.5 inline-block text-[14px] font-semibold text-[#F24E1E] hover:underline"
+                    >
+                      {(tc.details as { results?: Array<{ title: string }> }).results?.[0]?.title}
+                    </a>
+                  </div>
+                ) : null}
+              </>
+            ) : (
+              <div className="flex items-center gap-[10px] px-4 py-[13px]">
+                {tc.status === "done" ? (
+                  <Image src={isDark ? "/brand/icon-videodb-dark.png" : "/brand/icon-videodb.png"} alt="" width={18} height={18} className="size-[18px] rounded-[4px] flex-none" />
+                ) : (
+                  <span className="size-[18px] rounded-full border-2 border-[var(--c-border)] border-t-[#F24E1E] animate-spin" />
+                )}
+                <span className="text-[13.5px] font-bold text-[var(--c-text)]">VideoDB · {tc.summary}</span>
+              </div>
+            )}
+          </div>
+        );
+      })}
     </div>
   );
 }

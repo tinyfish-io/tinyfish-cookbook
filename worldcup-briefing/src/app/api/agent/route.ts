@@ -226,11 +226,13 @@ export async function POST(request: NextRequest) {
   }
 
   try {
+    const isFreeRun = !sessionToken;
     await db.insert(runs).values({
       id: runId,
       query: prompt,
       status: "processing",
       apiKeyHash,
+      mode: isFreeRun ? "free" : null,
       statusMessage: "Got it! Cooking up your soccer reel...",
     });
   } catch (err) {
@@ -247,6 +249,24 @@ export async function POST(request: NextRequest) {
     const result = streamText({
       model: getModel(),
       stopWhen: stepCountIs(7),
+      // DeepSeek (via OpenRouter) intermittently returns tool arguments as a
+      // JSON-encoded *string* instead of an object, so schema validation fails
+      // at the root ("expected object"). Re-parse the stringified payload and
+      // hand the model's intended object back to the SDK.
+      experimental_repairToolCall: async ({ toolCall }) => {
+        try {
+          let value: unknown = toolCall.input;
+          for (let i = 0; i < 4 && typeof value === "string"; i++) {
+            value = JSON.parse(value);
+          }
+          if (value && typeof value === "object") {
+            return { ...toolCall, input: JSON.stringify(value) };
+          }
+        } catch {
+          // Fall through: unrepairable, let the deterministic fallback handle it.
+        }
+        return null;
+      },
       system: AGENT_SYSTEM_PROMPT,
       prompt: `User request: ${prompt}
 

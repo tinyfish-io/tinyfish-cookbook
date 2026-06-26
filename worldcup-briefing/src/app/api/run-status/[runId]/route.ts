@@ -46,7 +46,7 @@ export async function GET(
 
     const row = rows[0];
 
-    if (!row.isPublic && row.status !== "completed") {
+    if (!row.isPublic && row.status !== "completed" && row.mode !== "free") {
       const sessionToken = request.headers.get("x-session-token");
       if (!sessionToken) {
         return NextResponse.json({ error: "Run not found" }, { status: 404 });
