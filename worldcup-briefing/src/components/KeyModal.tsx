@@ -70,6 +70,7 @@ export default function KeyModal({
             </div>
             <input
               id="tf-key"
+              suppressHydrationWarning
               type="password"
               value={tfKey}
               onChange={(e) => onTfKeyChange(e.target.value)}
@@ -94,6 +95,7 @@ export default function KeyModal({
             </div>
             <input
               id="vdb-key"
+              suppressHydrationWarning
               type="password"
               value={vdbKey}
               onChange={(e) => onVdbKeyChange(e.target.value)}

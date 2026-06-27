@@ -43,6 +43,13 @@
       "when": 1750775400000,
       "tag": "0005_white_zeigeist",
       "breakpoints": true
+    },
+    {
+      "idx": 6,
+      "version": "7",
+      "when": 1782199000000,
+      "tag": "0006_add_run_status_columns",
+      "breakpoints": true
     }
   ]
 }

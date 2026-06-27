@@ -3,10 +3,20 @@ import { generateText } from "ai";
 import { logger } from "@/lib/logger";
 
 export function getModel() {
+  return getModelById(process.env.OPENROUTER_MODEL || "deepseek/deepseek-chat");
+}
+
+// A dedicated, stronger model for picking the best video out of the TinyFish
+// candidates — the single most quality-sensitive decision in the pipeline.
+export function getVideoSelectorModel() {
+  return getModelById(process.env.VIDEO_SELECTOR_MODEL || "openai/gpt-5.4-mini");
+}
+
+export function getModelById(modelId: string) {
   const apiKey = process.env.OPEN_ROUTER_API_KEY;
   if (!apiKey) throw new Error("OPEN_ROUTER_API_KEY is not configured");
   const llm = createOpenAI({ apiKey, baseURL: "https://openrouter.ai/api/v1" });
-  return llm.chat(process.env.OPENROUTER_MODEL || "deepseek/deepseek-chat");
+  return llm.chat(modelId);
 }
 
 export async function llmGenerateJson(

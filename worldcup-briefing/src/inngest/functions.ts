@@ -284,7 +284,10 @@ export const createReel = inngest.createFunction(
     await setStatus(`Waiting for scene index to build...`);
 
     let indexReady = false;
-    const maxAttempts = 40;
+    // Indexing a full match can take well over ten minutes; give it up to ~20m.
+    // Retries of the same video reuse the cached index (videoCache.intentIndexIds),
+    // so a timed-out index that finishes server-side is picked up on the next run.
+    const maxAttempts = 80;
     for (let attempt = 0; attempt < maxAttempts && !indexReady; attempt += 1) {
       const checkResult = await step.run(`check-index-${attempt}`, async () => {
         const conn = connect(vdbApiKey);

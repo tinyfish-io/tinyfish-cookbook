@@ -1,5 +1,8 @@
 import { TinyFish } from "@tiny-fish/sdk";
+import { generateText } from "ai";
 import { connect, type Connection, type Collection, type Video } from "videodb";
+import { getVideoSelectorModel } from "@/lib/llm";
+import { logger } from "@/lib/logger";
 import { normalizeYouTubeUrl } from "@/lib/normalize-url";
 import {
   buildDemoBriefing,
@@ -218,6 +221,56 @@ function sleep(ms: number) {
   return new Promise((resolve) => setTimeout(resolve, ms));
 }
 
+// The heuristic confidence score is a coarse first pass; the actual video pick
+// is the most quality-sensitive decision in the pipeline, so hand the shortlist
+// to an LLM (GPT-5.4 mini by default) to choose the best one and move it to the
+// front. Falls back to the heuristic ordering on any error or missing key.
+async function selectBestVideo(
+  query: string,
+  candidates: VideoCandidate[],
+): Promise<VideoCandidate[]> {
+  if (candidates.length <= 1 || !process.env.OPEN_ROUTER_API_KEY) return candidates;
+
+  const list = candidates
+    .map(
+      (c, i) =>
+        `${i}. title="${c.title}" | type=${c.videoType} | duration=${c.duration || "unknown"} | source=${c.source}`,
+    )
+    .join("\n");
+
+  try {
+    const { text } = await generateText({
+      model: getVideoSelectorModel(),
+      temperature: 0,
+      maxOutputTokens: 200,
+      system:
+        "You pick the single best source video for compiling a highlight reel of specific football moments. " +
+        "Choose the candidate that (1) clearly matches the exact teams/match the user asked for, " +
+        "(2) is most likely to actually contain the requested moments (goals, fouls, cards, etc.), and " +
+        "(3) is a watchable highlights or extended-highlights video rather than a multi-hour full broadcast — " +
+        "long full matches are slow and unreliable to index, so prefer extended highlights when they cover the same match. " +
+        "Reject shorts, reactions, previews, press conferences, and unrelated matches. " +
+        'Respond ONLY with strict JSON: {"index": <number>, "reason": "<short>"}.',
+      prompt: `User request: "${query}"\n\nCandidates:\n${list}`,
+    });
+
+    const raw = text.trim().replace(/^```(?:json)?\s*/i, "").replace(/\s*```$/i, "");
+    const parsed = JSON.parse(raw) as { index?: number };
+    const idx = typeof parsed.index === "number" ? parsed.index : -1;
+    if (idx >= 0 && idx < candidates.length) {
+      const chosen = candidates[idx];
+      logger.info({ query, chosen: chosen.title }, "LLM selected video");
+      return [chosen, ...candidates.filter((_, i) => i !== idx)];
+    }
+  } catch (err) {
+    logger.error(
+      { err: err instanceof Error ? err.message : String(err) },
+      "selectBestVideo failed; falling back to heuristic ranking",
+    );
+  }
+  return candidates;
+}
+
 export async function searchWorldCupVideos(
   query: string,
   tfApiKey?: string,
@@ -239,11 +292,14 @@ export async function searchWorldCupVideos(
         .sort((a, b) => b.confidence - a.confidence)
         .slice(0, 6);
 
+      // Let the LLM pick the best candidate and surface it as results[0].
+      const ranked = results.length > 0 ? await selectBestVideo(query, results) : results;
+
       return {
         mode: "live",
         query,
         source: "TinyFish Search API",
-        results: results.length > 0 ? results : searchDemoVideos(query),
+        results: ranked.length > 0 ? ranked : searchDemoVideos(query),
       };
     } catch (error) {
       const msg = error instanceof Error ? error.message : "";
@@ -333,9 +389,9 @@ export async function discoverVideo(topic: string) {
 }
 
 async function waitForSceneIndex(video: Video, sceneIndexId: string) {
-  // Indexing a full highlight video can take a couple of minutes; the index
-  // may also not appear in listSceneIndex immediately after creation.
-  const maxAttempts = 40;
+  // Indexing a full match can take well over ten minutes; the index may also
+  // not appear in listSceneIndex immediately after creation.
+  const maxAttempts = 90;
   for (let attempt = 0; attempt < maxAttempts; attempt += 1) {
     const indexes = await video.listSceneIndex();
     const index = indexes.find((item) => item.sceneIndexId === sceneIndexId);
@@ -639,21 +695,38 @@ export async function runVideoDbBriefing(
   }
 
   const video = uploaded as Video;
-  onProgress?.("Indexing visual scenes — this takes a minute or two");
-  const sceneIndexId = await video.indexVisuals({
-    prompt: intent.indexPrompt,
-    batchConfig: {
-      type: "time",
-      value: intent.eventType === "fouls" ? 4 : 6,
-      frameCount: 3,
-      selectFrames: ["first", "middle", "last"],
-    },
-    name: `world-cup-${intent.eventType}-${Date.now()}`,
-  });
-  if (!sceneIndexId) {
-    throw new Error("VideoDB indexVisuals did not return a scene index id");
+
+  // VideoDB caches uploads by URL, so a retry resolves to the same video. Reuse
+  // an already-completed scene index for this event type instead of kicking off
+  // a fresh (slow, costly) re-index every time — indexing a full match can take
+  // longer than the client wait window, and the server-side index survives it.
+  const existingIndex = (await video.listSceneIndex()).find(
+    (item) =>
+      item.name?.startsWith(`world-cup-${intent.eventType}-`) &&
+      ["done", "completed", "ready"].includes((item.status || "").toLowerCase()),
+  );
+
+  let sceneIndexId: string | undefined;
+  if (existingIndex) {
+    onProgress?.("Reusing existing visual scene index");
+    sceneIndexId = existingIndex.sceneIndexId;
+  } else {
+    onProgress?.("Indexing visual scenes — this takes a minute or two");
+    sceneIndexId = await video.indexVisuals({
+      prompt: intent.indexPrompt,
+      batchConfig: {
+        type: "time",
+        value: intent.eventType === "fouls" ? 4 : 6,
+        frameCount: 3,
+        selectFrames: ["first", "middle", "last"],
+      },
+      name: `world-cup-${intent.eventType}-${Date.now()}`,
+    });
+    if (!sceneIndexId) {
+      throw new Error("VideoDB indexVisuals did not return a scene index id");
+    }
+    await waitForSceneIndex(video, sceneIndexId);
   }
-  await waitForSceneIndex(video, sceneIndexId);
 
   return searchShotsAndCompileReel(
     video,

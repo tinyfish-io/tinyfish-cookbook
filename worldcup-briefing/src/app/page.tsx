@@ -298,6 +298,7 @@ export default function Home() {
             <form onSubmit={handleSubmit} className="flex items-center gap-[10px] rounded-full border border-[var(--c-border)] bg-[var(--c-surface)] py-2 pl-5 pr-2 shadow-[0_8px_30px_rgba(0,0,0,0.4)] focus-within:border-[#F24E1E]/50 transition-colors duration-200">
               <input
                 ref={inputRef}
+                suppressHydrationWarning
                 type="text"
                 value={prompt}
                 aria-label="Search for match moments"

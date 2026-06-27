@@ -400,7 +400,7 @@ export default function OnboardingStepper({
                                 Get key →
                               </a>
                             </div>
-                            <input id="stepper-tf-key" type="password" value={tfKey} onChange={(e) => setTfKey(e.target.value)}
+                            <input id="stepper-tf-key" suppressHydrationWarning type="password" value={tfKey} onChange={(e) => setTfKey(e.target.value)}
                               placeholder="sk-..." autoComplete="off" disabled={keysValidating}
                               className="ds-input w-full disabled:cursor-not-allowed disabled:opacity-40" />
                           </div>
@@ -411,7 +411,7 @@ export default function OnboardingStepper({
                                 Get key →
                               </a>
                             </div>
-                            <input id="stepper-vdb-key" type="password" value={vdbKey} onChange={(e) => setVdbKey(e.target.value)}
+                            <input id="stepper-vdb-key" suppressHydrationWarning type="password" value={vdbKey} onChange={(e) => setVdbKey(e.target.value)}
                               placeholder="sk-..." autoComplete="off" disabled={keysValidating}
                               className="ds-input w-full disabled:cursor-not-allowed disabled:opacity-40" />
                           </div>

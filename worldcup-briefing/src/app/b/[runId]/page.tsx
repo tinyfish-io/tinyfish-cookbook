@@ -2,7 +2,7 @@
 /* eslint-disable react-hooks/set-state-in-effect */
 
 import { useCallback, useEffect, useRef, useState } from "react";
-import { useParams } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
 import Image from "next/image";
 import Link from "next/link";
 import ReactMarkdown from "react-markdown";
@@ -35,9 +35,11 @@ type RunDetail = {
 
 export default function BriefingPage() {
   const params = useParams();
+  const router = useRouter();
   const runId = params.runId as string;
   const [run, setRun] = useState<RunDetail | null>(null);
   const [loading, setLoading] = useState(true);
+  const [retrying, setRetrying] = useState(false);
   const [notFound, setNotFound] = useState(false);
   const [copied, setCopied] = useState(false);
   const [reelError, setReelError] = useState(false);
@@ -73,6 +75,7 @@ export default function BriefingPage() {
       const res = await fetch(`/api/run-status/${runId}`, { headers });
       if (res.status === 404) { setNotFound(true); setLoading(false); return; }
       const data = await res.json();
+      if (!res.ok || !data?.runId) { setNotFound(true); setLoading(false); return; }
       setRun(data);
       setLoading(false);
       return data;
@@ -125,6 +128,55 @@ export default function BriefingPage() {
       return;
     }
     window.open(run.playerUrl, "_blank");
+  }
+
+  async function retryRun() {
+    const query = run?.query;
+    if (!query || retrying) return;
+    setRetrying(true);
+    try {
+      const headers: Record<string, string> = { "Content-Type": "application/json" };
+      const sessionToken = localStorage.getItem("session_token");
+      if (sessionToken) headers["x-session-token"] = sessionToken;
+
+      const res = await fetch("/api/agent", {
+        method: "POST",
+        headers,
+        body: JSON.stringify({ prompt: query }),
+      });
+
+      // No usable session / free runs exhausted — fall back to the key modal.
+      if (!res.ok || !res.body) {
+        window.dispatchEvent(new CustomEvent("open-key-modal"));
+        setRetrying(false);
+        return;
+      }
+
+      const reader = res.body.getReader();
+      const decoder = new TextDecoder();
+      let buffer = "";
+      while (true) {
+        const { done, value } = await reader.read();
+        if (done) break;
+        buffer += decoder.decode(value, { stream: true });
+        const lines = buffer.split("\n");
+        buffer = lines.pop() || "";
+        for (const line of lines) {
+          if (!line.trim()) continue;
+          try {
+            const event = JSON.parse(line);
+            if (event.type === "run_id" && event.runId) {
+              reader.cancel();
+              router.push(`/b/${event.runId}`);
+              return;
+            }
+          } catch {}
+        }
+      }
+      setRetrying(false);
+    } catch {
+      setRetrying(false);
+    }
   }
 
   const embedUrl = run?.streamUrl ? `https://console.videodb.io/player?url=${encodeURIComponent(run.streamUrl)}` : undefined;
@@ -216,14 +268,11 @@ export default function BriefingPage() {
               <p className="mt-1.5 text-[13px] text-[var(--c-text-muted)]">{run.errorMessage || "An unexpected error occurred during processing."}</p>
               <button
                 type="button"
-                onClick={() => {
-                  if (typeof window !== "undefined") {
-                    window.dispatchEvent(new CustomEvent("open-key-modal"));
-                  }
-                }}
-                className="mt-[14px] inline-flex items-center rounded-[11px] bg-[#F24E1E] px-4 py-2.5 text-[13px] font-bold text-white shadow-[0_2px_10px_rgba(242,78,30,0.24)] hover:bg-[#D14016]"
+                onClick={retryRun}
+                disabled={retrying}
+                className="mt-[14px] inline-flex items-center rounded-[11px] bg-[#F24E1E] px-4 py-2.5 text-[13px] font-bold text-white shadow-[0_2px_10px_rgba(242,78,30,0.24)] hover:bg-[#D14016] disabled:opacity-60 disabled:cursor-not-allowed"
               >
-                Try again
+                {retrying ? "Retrying…" : "Try again"}
               </button>
             </div>
           </>
