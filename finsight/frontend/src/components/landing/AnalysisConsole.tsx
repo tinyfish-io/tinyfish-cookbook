@@ -41,12 +41,15 @@ export function AnalysisConsole() {
     }
   }, [currentQuery, currentQueryType]);
 
+  const canRun = !isRunning && query.trim().length >= 3;
+
   const handleRun = () => {
+    if (!canRun) return;
     void runQuery(query, queryType);
   };
 
   const handleKeyDown = (e: React.KeyboardEvent) => {
-    if (e.key === 'Enter' && !isRunning) {
+    if (e.key === 'Enter' && canRun) {
       handleRun();
     }
   };
@@ -99,7 +102,7 @@ export function AnalysisConsole() {
 
             <button
               onClick={handleRun}
-              disabled={isRunning || query.trim().length < 3}
+              disabled={!canRun}
               className="flex items-center justify-center gap-2 px-8 py-3 bg-fs-gold text-fs-ink font-mono-fs text-xs uppercase tracking-widest font-bold rounded-lg hover:bg-fs-gold-soft transition-colors disabled:opacity-40 disabled:cursor-not-allowed whitespace-nowrap"
             >
               {isRunning ? (

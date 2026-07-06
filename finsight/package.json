@@ -5,9 +5,9 @@
   "description": "FinSight Vietnam — monorepo dev runner",
   "scripts": {
     "dev": "concurrently --names \"API,UI\" --prefix-colors \"yellow,cyan\" \"npm run dev:api\" \"npm run dev:ui\"",
-    "dev:api": ".\\venv\\Scripts\\uvicorn api.index:app --reload --host 0.0.0.0 --port 8000",
+    "dev:api": "python -m uvicorn api.index:app --reload --host 0.0.0.0 --port 8000",
     "dev:ui": "npm run dev --prefix frontend",
-    "install:all": "pip install -r requirements.txt && pip install uvicorn && npm install --prefix frontend"
+    "install:all": "pip install -r requirements.txt && pip install uvicorn && npm install && npm install --prefix frontend"
   },
   "devDependencies": {
     "concurrently": "^9.1.0"

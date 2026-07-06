@@ -1,11 +1,24 @@
 import httpx
 from typing import Dict, Any, List
-from tenacity import retry, stop_after_attempt, wait_exponential, retry_if_exception_type
+from tenacity import (
+    retry,
+    stop_after_attempt,
+    wait_exponential,
+    retry_if_exception,
+)
 from api.core.config import settings
 from api.core.logger import logger
 
 SEARCH_URL = "https://api.search.tinyfish.ai"
 FETCH_URL = "https://api.fetch.tinyfish.ai"
+
+
+def _is_retryable_tinyfish_error(exc: BaseException) -> bool:
+    if isinstance(exc, httpx.RequestError):
+        return True
+    if isinstance(exc, httpx.HTTPStatusError):
+        return exc.response.status_code >= 500
+    return False
 
 
 class TinyFishClient:
@@ -20,7 +33,7 @@ class TinyFishClient:
     @retry(
         stop=stop_after_attempt(3),
         wait=wait_exponential(multiplier=1, min=2, max=10),
-        retry=retry_if_exception_type((httpx.RequestError, httpx.HTTPStatusError)),
+        retry=retry_if_exception(_is_retryable_tinyfish_error),
         reraise=True,
     )
     async def search(self, query: str, limit: int = 5) -> List[Dict[str, Any]]:
@@ -52,7 +65,7 @@ class TinyFishClient:
     @retry(
         stop=stop_after_attempt(3),
         wait=wait_exponential(multiplier=1, min=2, max=10),
-        retry=retry_if_exception_type((httpx.RequestError, httpx.HTTPStatusError)),
+        retry=retry_if_exception(_is_retryable_tinyfish_error),
         reraise=True,
     )
     async def fetch(self, target_url: str) -> str:

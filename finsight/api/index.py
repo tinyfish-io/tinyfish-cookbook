@@ -1,5 +1,6 @@
 import asyncio
 import json
+import re
 import httpx
 from fastapi import FastAPI, HTTPException, Request
 from fastapi.responses import JSONResponse, StreamingResponse
@@ -37,9 +38,13 @@ async def http_exception_handler(request: Request, exc: HTTPException):
         content={"error": {"code": "HTTP_ERROR", "message": str(exc.detail)}},
     )
 
+def _sanitize_log_path(path: str) -> str:
+    return re.sub(r"[\r\n\x00-\x1f\x7f]", "", path)
+
 @app.exception_handler(Exception)
 async def global_exception_handler(request: Request, exc: Exception):
-    logger.exception(f"Unhandled exception during request to {request.url.path}")
+    safe_path = _sanitize_log_path(request.url.path)
+    logger.exception(f"Unhandled exception during request to {safe_path}")
     return JSONResponse(
         status_code=500,
         content={"error": {"code": "INTERNAL_SERVER_ERROR", "message": "An unexpected error occurred."}}
@@ -124,8 +129,8 @@ async def health_check():
     }
 
 @app.post("/api/v1/intelligence/query/stream")
-async def query_intelligence_stream(request: QueryRequest):
-    logger.info(f"Received streaming query: {request.query_type}")
+async def query_intelligence_stream(http_request: Request, body: QueryRequest):
+    logger.info(f"Received streaming query: {body.query_type}")
     _ensure_api_configured()
     queue: asyncio.Queue = asyncio.Queue()
 
@@ -138,8 +143,8 @@ async def query_intelligence_stream(request: QueryRequest):
         try:
             result = await asyncio.wait_for(
                 agent_workflows.process_query(
-                    query=request.query,
-                    query_type=request.query_type,
+                    query=body.query,
+                    query_type=body.query_type,
                     emitter=emitter,
                 ),
                 timeout=settings.workflow_timeout_seconds,
@@ -154,9 +159,16 @@ async def query_intelligence_stream(request: QueryRequest):
                     },
                 }
             )
-        except Exception as exc:
+        except asyncio.CancelledError:
+            raise
+        except Exception:
             logger.exception("Streaming intelligence workflow failed")
-            await queue.put({"type": "error", "data": {"message": str(exc)}})
+            await queue.put(
+                {
+                    "type": "error",
+                    "data": {"message": "Analysis failed. Please try again."},
+                }
+            )
         finally:
             await queue.put(None)
 
@@ -164,12 +176,23 @@ async def query_intelligence_stream(request: QueryRequest):
         task = asyncio.create_task(run_workflow())
         try:
             while True:
-                item = await queue.get()
+                if await http_request.is_disconnected():
+                    task.cancel()
+                    break
+                try:
+                    item = await asyncio.wait_for(queue.get(), timeout=1.0)
+                except asyncio.TimeoutError:
+                    continue
                 if item is None:
                     break
                 yield f"data: {json.dumps(item)}\n\n"
         finally:
-            await task
+            if not task.done():
+                task.cancel()
+            try:
+                await task
+            except asyncio.CancelledError:
+                pass
 
     return StreamingResponse(
         event_generator(),
@@ -181,30 +204,41 @@ async def query_intelligence_stream(request: QueryRequest):
 async def query_intelligence(request: QueryRequest):
     logger.info(f"Received query request: {request.query_type}")
     return await _run_intelligence_query(request.query, request.query_type)
-@app.get("/api/v1/intelligence/query")
-async def get_intelligence_query(query: str, query_type: str = "general"):
-    """Legacy GET endpoint for quick testing"""
-    logger.info(f"Received GET query request: {query_type}")
-    return await _run_intelligence_query(
-        query,
-        QueryType(query_type) if query_type in [q.value for q in QueryType] else QueryType.GENERAL,
-    )
 
 @app.get("/api/v1/market/ticker")
 async def get_market_ticker():
-    response_hcmc = await agent_workflows.process_query(
-        query="Current average commercial real estate rent per square meter in Ho Chi Minh City District 1",
-        query_type=QueryType.REAL_ESTATE
-    )
-    
-    response_hanoi = await agent_workflows.process_query(
-        query="Current average commercial real estate rent per square meter in Hanoi Hoan Kiem District",
-        query_type=QueryType.REAL_ESTATE
-    )
-    
+    _ensure_api_configured()
+
+    async def _ticker_query(query: str) -> QueryResponse:
+        return await asyncio.wait_for(
+            agent_workflows.process_query(query=query, query_type=QueryType.REAL_ESTATE),
+            timeout=settings.workflow_timeout_seconds,
+        )
+
+    try:
+        response_hcmc, response_hanoi = await asyncio.gather(
+            _ticker_query(
+                "Current average commercial real estate rent per square meter in Ho Chi Minh City District 1"
+            ),
+            _ticker_query(
+                "Current average commercial real estate rent per square meter in Hanoi Hoan Kiem District"
+            ),
+        )
+    except asyncio.TimeoutError as exc:
+        raise HTTPException(
+            status_code=504,
+            detail="Market ticker data timed out.",
+        ) from exc
+
     return {
         "ticker_data": [
-            {"label": "HCMC D1 RENT", "value": response_hcmc.results[0].summary[:50] if response_hcmc.results else "Fetching..."},
-            {"label": "HANOI HOAN KIEM RENT", "value": response_hanoi.results[0].summary[:50] if response_hanoi.results else "Fetching..."}
+            {
+                "label": "HCMC D1 RENT",
+                "value": response_hcmc.results[0].summary[:50] if response_hcmc.results else "Fetching...",
+            },
+            {
+                "label": "HANOI HOAN KIEM RENT",
+                "value": response_hanoi.results[0].summary[:50] if response_hanoi.results else "Fetching...",
+            },
         ]
     }
