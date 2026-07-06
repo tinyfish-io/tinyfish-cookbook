@@ -26,6 +26,12 @@ def check(name: str, ok: bool, detail: str = "") -> None:
         print(f"  FAIL  {name}" + (f" — {detail}" if detail else ""))
 
 
+def body_detail(body: dict | str, key: str | None = None, fallback: str = "") -> str:
+    if isinstance(body, dict):
+        return str(body.get(key, fallback)) if key else fallback
+    return str(body)[:120] if body else ""
+
+
 def get(path: str) -> tuple[int, dict | str]:
     req = urllib.request.Request(f"{BACKEND}{path}")
     try:
@@ -83,26 +89,28 @@ print("\n=== MónAI Smoke Test ===\n")
 
 print("Backend")
 code, health = get("/health")
-check("GET /health", code == 200 and health.get("status") == "ok", health.get("service", ""))
+health_ok = code == 200 and isinstance(health, dict) and health.get("status") == "ok"
+check("GET /health", health_ok, body_detail(health, "service"))
 
 code, emerging = get("/api/trends/emerging?location=TP.HCM&category=beverage")
+emerging_ok = code == 200 and isinstance(emerging, dict) and "emerging_trends" in emerging
 check(
     "GET /api/trends/emerging",
-    code == 200 and "emerging_trends" in emerging,
-    f"{len(emerging.get('emerging_trends', []))} trends",
+    emerging_ok,
+    f"{len(emerging.get('emerging_trends', []))} trends" if emerging_ok else body_detail(emerging),
 )
 
 code, forecast = get("/api/trends/forecast?trend_name=Salt+Coffee&location=Da+Nang")
-check("GET /api/trends/forecast", code == 200 and "forecast" in forecast)
+check("GET /api/trends/forecast", code == 200 and isinstance(forecast, dict) and "forecast" in forecast)
 
 code, regional = get("/api/trends/regional?region_a=Ha+Noi&region_b=TP.HCM&category=beverage")
-check("GET /api/trends/regional", code == 200 and "comparison" in regional)
+check("GET /api/trends/regional", code == 200 and isinstance(regional, dict) and "comparison" in regional)
 
 code, menu = post(
     "/api/analysis/menu-gap",
     {"current_menu_items": ["Ca phe sua da"], "location": "Ha Noi", "competitor_urls": []},
 )
-check("POST /api/analysis/menu-gap", code == 200 and "menu_gap_analysis" in menu)
+check("POST /api/analysis/menu-gap", code == 200 and isinstance(menu, dict) and "menu_gap_analysis" in menu)
 
 code, suppliers = post(
     "/api/suppliers/discover",
@@ -112,13 +120,13 @@ code, suppliers = post(
         "location": "TP.HCM",
     },
 )
-check("POST /api/suppliers/discover", code == 200 and "suppliers" in suppliers)
+check("POST /api/suppliers/discover", code == 200 and isinstance(suppliers, dict) and "suppliers" in suppliers)
 
 code, outreach = post(
     "/api/suppliers/outreach",
     {"supplier_info": "Saigon Matcha Co", "product_needs": "500kg matcha monthly"},
 )
-check("POST /api/suppliers/outreach", code == 200 and "rfq_template" in outreach)
+check("POST /api/suppliers/outreach", code == 200 and isinstance(outreach, dict) and "rfq_template" in outreach)
 
 print("\nFrontend (via Vite dev server)")
 for path in ["/", "/dashboard"]:

@@ -1,6 +1,7 @@
-from fastapi import APIRouter, HTTPException
+from fastapi import APIRouter
 from pydantic import BaseModel
 
+from app.http_errors import raise_internal_error
 from app.services.ai_client import analyze_data, has_openai
 from app.services.report_builder import build_menu_gap_report
 from app.services.response_parser import normalize_payload, parse_llm_json
@@ -88,4 +89,4 @@ async def analyze_menu_gap(request: MenuGapRequest):
             "report": build_menu_gap_report(analysis if isinstance(analysis, dict) else {}),
         }
     except Exception as e:
-        raise HTTPException(status_code=500, detail=str(e)) from e
+        raise_internal_error(e, context="menu gap analysis")

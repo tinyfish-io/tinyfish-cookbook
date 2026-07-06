@@ -89,6 +89,8 @@ def build_emerging_report(location: str, trends: list[dict[str, Any]]) -> dict[s
         for t in trends[:5]
     ]
 
+    why_text = _paragraphs(top.get("why_it_matters") or top.get("description") or "")
+
     return _report_shell(
         headline=f"Emerging F&B Trends — {location}",
         subtitle=f"{len(trends)} high-velocity signals · Updated from live TinyFish web intelligence",
@@ -108,11 +110,9 @@ def build_emerging_report(location: str, trends: list[dict[str, Any]]) -> dict[s
         sections=[
             {
                 "title": f"Why {top_name} leads",
-                "paragraphs": [_paragraphs(top.get("why_it_matters") or top.get("description") or "")[0]]
-                if top
-                else [],
+                "paragraphs": [why_text[0]] if why_text else [],
             },
-        ],
+        ] if top else [],
         cards=cards,
         bullets=bullets,
         sources=sources,

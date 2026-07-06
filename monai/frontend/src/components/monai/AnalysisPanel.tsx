@@ -1,4 +1,4 @@
-import { useEffect, useId, useState } from "react";
+import { useEffect, useId, useRef, useState } from "react";
 import { Loader2 } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
@@ -88,28 +88,39 @@ export function AnalysisPanel() {
 
   const example = ANALYSIS_EXAMPLES[activeTab];
   const id = (name: string) => `${fieldId}-${name}`;
+  const requestIdRef = useRef(0);
 
   async function runAnalysis(tab: AnalysisCategory, fn: () => Promise<Record<string, unknown>>) {
     if (!isApiConfigured()) {
       setError("API not configured. Set VITE_API_BASE_URL to your Render backend URL.");
       return;
     }
+    const requestId = ++requestIdRef.current;
     setLoadingTab(tab);
     setError(null);
     setResult(null);
     setShowExample(false);
     try {
       const data = await fn();
+      if (requestId !== requestIdRef.current) {
+        return;
+      }
       setResult(data);
       setResultVersion((v) => v + 1);
     } catch (e) {
+      if (requestId !== requestIdRef.current) {
+        return;
+      }
       setError(e instanceof Error ? e.message : "Request failed");
     } finally {
-      setLoadingTab(null);
+      if (requestId === requestIdRef.current) {
+        setLoadingTab(null);
+      }
     }
   }
 
   function handleTabChange(value: string) {
+    requestIdRef.current += 1;
     setActiveTab(value as AnalysisCategory);
     setResult(null);
     setError(null);
@@ -152,7 +163,7 @@ export function AnalysisPanel() {
         </div>
 
         <Tabs value={activeTab} onValueChange={handleTabChange} className="w-full">
-          <TabsList className="mb-6 grid h-auto w-full grid-cols-2 gap-1 md:grid-cols-5">
+          <TabsList className="mb-6 grid h-auto w-full grid-cols-2 gap-1 md:grid-cols-5" aria-disabled={loadingTab !== null}>
             <TabsTrigger value="menu-gap">Menu Gap</TabsTrigger>
             <TabsTrigger value="forecast">Forecast</TabsTrigger>
             <TabsTrigger value="regional">Regional</TabsTrigger>

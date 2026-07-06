@@ -18,7 +18,7 @@ def _get_client() -> AsyncOpenAI:
         api_key = os.getenv("OPENAI_API_KEY")
         if not api_key:
             raise ValueError("OPENAI_API_KEY environment variable not set")
-        _client = AsyncOpenAI(api_key=api_key)
+        _client = AsyncOpenAI(api_key=api_key, timeout=60.0)
     return _client
 
 

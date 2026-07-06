@@ -1,6 +1,6 @@
-from fastapi import APIRouter, HTTPException
+from fastapi import APIRouter
 
-from app.services.ai_client import analyze_data, has_openai
+from app.http_errors import raise_internal_error
 from app.services.report_builder import build_emerging_report, build_forecast_report, build_regional_report
 from app.services.response_parser import normalize_payload, parse_llm_json
 from app.services.search_analysis import (
@@ -50,10 +50,7 @@ async def get_emerging_trends(location: str, category: str = "food and beverage"
         }
 
     except Exception as e:
-        raise HTTPException(status_code=500, detail=str(e)) from e
-
-
-@router.get("/forecast")
+        raise_internal_error(e, context="emerging trends")
 async def forecast_trend(trend_name: str, location: str):
     """Predicts mainstream adoption timeline for an emerging trend."""
     try:
@@ -73,7 +70,7 @@ async def forecast_trend(trend_name: str, location: str):
             ai_response = await analyze_data(prompt, SYSTEM_JSON)
             forecast = parse_llm_json(ai_response)
             if not isinstance(forecast, dict):
-                forecast = {"reasoning": str(ai_response)}
+                forecast = forecast_from_search(search_results, trend_name, location)
         else:
             forecast = forecast_from_search(search_results, trend_name, location)
 
@@ -94,10 +91,7 @@ async def forecast_trend(trend_name: str, location: str):
             "report": build_forecast_report(trend_name, location, forecast if isinstance(forecast, dict) else {}),
         }
     except Exception as e:
-        raise HTTPException(status_code=500, detail=str(e)) from e
-
-
-@router.get("/regional")
+        raise_internal_error(e, context="trend forecast")
 async def compare_regional_trends(region_a: str, region_b: str, category: str = "beverage"):
     """Compares trends between two regions (e.g., Hanoi vs HCMC)."""
     try:
@@ -147,4 +141,4 @@ async def compare_regional_trends(region_a: str, region_b: str, category: str = 
             "report": build_regional_report(comparison if isinstance(comparison, dict) else {}),
         }
     except Exception as e:
-        raise HTTPException(status_code=500, detail=str(e)) from e
+        raise_internal_error(e, context="regional comparison")

@@ -1,6 +1,7 @@
-from fastapi import APIRouter, HTTPException
+from fastapi import APIRouter
 from pydantic import BaseModel
 
+from app.http_errors import raise_internal_error
 from app.services.ai_client import analyze_data, has_openai
 from app.services.report_builder import build_outreach_report, build_suppliers_report
 from app.services.response_parser import normalize_payload, parse_llm_json
@@ -68,10 +69,7 @@ async def discover_suppliers(request: SupplierRequest):
             "report": build_suppliers_report(request.trend_name, suppliers),
         }
     except Exception as e:
-        raise HTTPException(status_code=500, detail=str(e)) from e
-
-
-@router.post("/outreach")
+        raise_internal_error(e, context="supplier discovery")
 async def generate_outreach(request: OutreachRequest):
     """Generates an RFQ and outreach email in Vietnamese and English."""
     try:
@@ -98,4 +96,4 @@ async def generate_outreach(request: OutreachRequest):
             "report": build_outreach_report(rfq if isinstance(rfq, dict) else {}),
         }
     except Exception as e:
-        raise HTTPException(status_code=500, detail=str(e)) from e
+        raise_internal_error(e, context="supplier outreach")
