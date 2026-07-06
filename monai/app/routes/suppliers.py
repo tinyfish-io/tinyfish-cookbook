@@ -70,6 +70,9 @@ async def discover_suppliers(request: SupplierRequest):
         }
     except Exception as e:
         raise_internal_error(e, context="supplier discovery")
+
+
+@router.post("/outreach")
 async def generate_outreach(request: OutreachRequest):
     """Generates an RFQ and outreach email in Vietnamese and English."""
     try:
