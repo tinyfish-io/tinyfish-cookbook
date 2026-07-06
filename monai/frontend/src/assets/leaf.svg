@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 240 80" role="img" aria-label="Banana leaf pattern">
+  <rect width="240" height="80" fill="#275C2A"/>
+  <g opacity="0.55">
+    <ellipse cx="40" cy="40" rx="55" ry="28" fill="#397A3E"/>
+    <ellipse cx="120" cy="40" rx="55" ry="28" fill="#397A3E"/>
+    <ellipse cx="200" cy="40" rx="55" ry="28" fill="#397A3E"/>
+  </g>
+  <g stroke="#F2E9D8" stroke-width="1.5" fill="none" opacity="0.3">
+    <path d="M10 40 Q40 20 70 40 Q40 60 10 40"/>
+    <path d="M90 40 Q120 20 150 40 Q120 60 90 40"/>
+    <path d="M170 40 Q200 20 230 40 Q200 60 170 40"/>
+  </g>
+</svg>

@@ -180,6 +180,7 @@ These use the latest TinyFish SDK and are deployed with live demos you can try r
 | [competitor-scout-cli](./competitor-scout-cli) | Natural-language CLI for researching competitor feature decisions |
 | [logistics-sentry](./logistics-sentry) | Port congestion and carrier-risk tracking |
 | [tenders-finder](./tenders-finder) | Singapore government tender discovery across multiple portals |
+| [monai](./monai) | Vietnam F&B trend intelligence — menu gaps, forecasts, regional compare, supplier discovery ([live demo](https://mon-ai-alpha.vercel.app/)) |
 
 ### Education & Discovery
 
