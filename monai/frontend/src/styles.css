@@ -78,7 +78,7 @@
 
 /* Banana-leaf section divider */
 .leaf-divider {
-  background-image: url("./assets/leaf.jpg");
+  background-image: url("./assets/leaf.webp");
   background-size: cover;
   background-position: center;
   min-height: 0.75rem;

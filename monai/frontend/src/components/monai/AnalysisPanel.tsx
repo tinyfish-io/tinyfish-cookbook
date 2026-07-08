@@ -1,4 +1,4 @@
-import { useEffect, useId, useRef, useState } from "react";
+import { useId, useRef, useState } from "react";
 import { Loader2 } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
@@ -13,8 +13,8 @@ import {
 import { ExampleReportPreview, IntelligenceReportView } from "@/components/monai/IntelligenceReport";
 import { buildClientReport } from "@/lib/buildClientReport";
 import { normalizeResult } from "@/lib/normalizeResult";
+import { getAnalysisPrefills } from "@/lib/analysisDefaults";
 import {
-  checkHealth,
   discoverSuppliers,
   generateOutreach,
   isApiConfigured,
@@ -64,27 +64,28 @@ export function AnalysisPanel() {
   const [error, setError] = useState<string | null>(null);
   const [result, setResult] = useState<unknown>(null);
   const [resultVersion, setResultVersion] = useState(0);
-  const [apiOk, setApiOk] = useState<boolean | null>(null);
   const [activeTab, setActiveTab] = useState<AnalysisCategory>("menu-gap");
   const [showExample, setShowExample] = useState(true);
 
-  const [menuItems, setMenuItems] = useState("Cà phê sữa đá\nBạc xỉu\nTrà đào");
-  const [menuLocation, setMenuLocation] = useState("Hà Nội");
+  const prefill = getAnalysisPrefills();
+
+  const [menuItems, setMenuItems] = useState(prefill.menuItems);
+  const [menuLocation, setMenuLocation] = useState(prefill.menuLocation);
   const [competitorUrls, setCompetitorUrls] = useState("");
 
-  const [trendName, setTrendName] = useState("Matcha Coconut Coffee");
-  const [forecastLocation, setForecastLocation] = useState("TP.HCM");
+  const [trendName, setTrendName] = useState(prefill.trendName);
+  const [forecastLocation, setForecastLocation] = useState(prefill.forecastLocation);
 
-  const [regionA, setRegionA] = useState("Hà Nội");
-  const [regionB, setRegionB] = useState("TP.HCM");
-  const [category, setCategory] = useState("beverage");
+  const [regionA, setRegionA] = useState(prefill.regionA);
+  const [regionB, setRegionB] = useState(prefill.regionB);
+  const [category, setCategory] = useState(prefill.category);
 
-  const [supplierTrend, setSupplierTrend] = useState("Matcha Coconut Coffee");
-  const [ingredients, setIngredients] = useState("matcha powder, coconut cream");
-  const [supplierLocation, setSupplierLocation] = useState("TP.HCM");
+  const [supplierTrend, setSupplierTrend] = useState(prefill.supplierTrend);
+  const [ingredients, setIngredients] = useState(prefill.ingredients);
+  const [supplierLocation, setSupplierLocation] = useState(prefill.supplierLocation);
 
-  const [supplierInfo, setSupplierInfo] = useState("Saigon Matcha Co. — sales@saigonmatcha.vn");
-  const [productNeeds, setProductNeeds] = useState("500kg ceremonial matcha, monthly delivery");
+  const [supplierInfo, setSupplierInfo] = useState(prefill.supplierInfo);
+  const [productNeeds, setProductNeeds] = useState(prefill.productNeeds);
 
   const example = ANALYSIS_EXAMPLES[activeTab];
   const id = (name: string) => `${fieldId}-${name}`;
@@ -128,16 +129,6 @@ export function AnalysisPanel() {
     setLoadingTab(null);
   }
 
-  useEffect(() => {
-    if (!isApiConfigured()) {
-      setApiOk(false);
-      return;
-    }
-    checkHealth()
-      .then(() => setApiOk(true))
-      .catch(() => setApiOk(false));
-  }, []);
-
   return (
     <section id="analysis" className="px-6 py-20">
       <div className="mx-auto max-w-4xl">
@@ -149,13 +140,6 @@ export function AnalysisPanel() {
           <p className="mt-3 text-muted-foreground">
             Menu gaps · forecasts · regional compare · supplier discovery · RFQ outreach
           </p>
-          <div className="mt-4 flex flex-wrap items-center justify-center gap-3 text-sm">
-            <span
-              className={`rounded-full px-3 py-1 ${apiOk ? "bg-cilantro/15 text-cilantro" : apiOk === false ? "bg-chili/10 text-chili" : "bg-muted text-muted-foreground"}`}
-            >
-              API: {apiOk === null ? "checking…" : apiOk ? "connected" : "offline"}
-            </span>
-          </div>
         </div>
 
         <div className="mb-6 text-sm leading-relaxed text-muted-foreground">
@@ -180,6 +164,7 @@ export function AnalysisPanel() {
                     id={id("menu-items")}
                     value={menuItems}
                     onChange={(e) => setMenuItems(e.target.value)}
+                    placeholder="One menu item per line"
                     rows={4}
                     className="mt-2"
                   />
@@ -190,6 +175,7 @@ export function AnalysisPanel() {
                     id={id("menu-location")}
                     value={menuLocation}
                     onChange={(e) => setMenuLocation(e.target.value)}
+                    placeholder="e.g. TP.HCM"
                     className="mt-2"
                   />
                 </div>
@@ -233,6 +219,7 @@ export function AnalysisPanel() {
                     id={id("trend-name")}
                     value={trendName}
                     onChange={(e) => setTrendName(e.target.value)}
+                    placeholder="Trend to research"
                     className="mt-2"
                   />
                 </div>
@@ -261,11 +248,11 @@ export function AnalysisPanel() {
                 <div className="grid gap-4 sm:grid-cols-2">
                   <div>
                     <Label htmlFor={id("region-a")}>Region A</Label>
-                    <Input id={id("region-a")} value={regionA} onChange={(e) => setRegionA(e.target.value)} className="mt-2" />
+                    <Input id={id("region-a")} value={regionA} onChange={(e) => setRegionA(e.target.value)} placeholder="e.g. Hà Nội" className="mt-2" />
                   </div>
                   <div>
                     <Label htmlFor={id("region-b")}>Region B</Label>
-                    <Input id={id("region-b")} value={regionB} onChange={(e) => setRegionB(e.target.value)} className="mt-2" />
+                    <Input id={id("region-b")} value={regionB} onChange={(e) => setRegionB(e.target.value)} placeholder="e.g. TP.HCM" className="mt-2" />
                   </div>
                 </div>
                 <div>
@@ -276,7 +263,15 @@ export function AnalysisPanel() {
                   tab="regional"
                   loadingTab={loadingTab}
                   label="Compare Regions"
-                  onClick={() => runAnalysis("regional", () => runRegionalComparison(regionA, regionB, category))}
+                  onClick={() => {
+                    const a = regionA.trim();
+                    const b = regionB.trim();
+                    if (!a || !b) {
+                      setError("Enter both Region A and Region B before comparing.");
+                      return;
+                    }
+                    runAnalysis("regional", () => runRegionalComparison(a, b, category));
+                  }}
                 />
               </div>
             </TabsContent>
@@ -320,11 +315,11 @@ export function AnalysisPanel() {
               <div className="grid gap-4 rounded-xl border border-border bg-card p-6">
                 <div>
                   <Label htmlFor={id("sup-info")}>Supplier info</Label>
-                  <Textarea id={id("sup-info")} value={supplierInfo} onChange={(e) => setSupplierInfo(e.target.value)} rows={2} className="mt-2" />
+                  <Textarea id={id("sup-info")} value={supplierInfo} onChange={(e) => setSupplierInfo(e.target.value)} placeholder="Supplier name and contact" rows={2} className="mt-2" />
                 </div>
                 <div>
                   <Label htmlFor={id("product-needs")}>Product needs</Label>
-                  <Textarea id={id("product-needs")} value={productNeeds} onChange={(e) => setProductNeeds(e.target.value)} rows={3} className="mt-2" />
+                  <Textarea id={id("product-needs")} value={productNeeds} onChange={(e) => setProductNeeds(e.target.value)} placeholder="Describe products and quantities you need" rows={3} className="mt-2" />
                 </div>
                 <RunButton
                   tab="outreach"

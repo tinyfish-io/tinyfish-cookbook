@@ -47,8 +47,10 @@ async function apiFetch<T>(path: string, init?: RequestInit): Promise<T> {
 
 export type Trend = {
   trend_name: string;
-  growth_rate: string;
+  display_rank?: number;
+  search_rank?: number;
   description: string;
+  publisher?: string;
   region?: string;
 };
 

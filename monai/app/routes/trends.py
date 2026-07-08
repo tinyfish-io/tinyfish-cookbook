@@ -5,11 +5,13 @@ from fastapi import APIRouter
 from app.http_errors import raise_internal_error
 from app.services.ai_client import analyze_data, has_openai
 from app.services.report_builder import build_emerging_report, build_forecast_report, build_regional_report
-from app.services.response_parser import normalize_payload, parse_llm_json
+from app.services.response_parser import normalize_payload, parse_llm_json, strip_fabricated_metrics
 from app.services.search_analysis import (
     as_json_text,
+    build_emerging_search_queries,
     emerging_trends_from_search,
     forecast_from_search,
+    merge_search_results,
     regional_comparison_from_search,
 )
 from app.services.tinyfish_client import search_tinyfish
@@ -26,30 +28,18 @@ SYSTEM_JSON = (
 async def get_emerging_trends(location: str, category: str = "food and beverage"):
     """Detects rapidly growing food trends in a specific location."""
     try:
-        query = f"fastest growing {category} trends in {location} Vietnam TikTok Facebook"
-        purpose = f"Find emerging {category} trends in {location} for a Vietnamese F&B operator"
-        search_results = await search_tinyfish(query, purpose=purpose)
-
-        if has_openai():
-            prompt = (
-                f"Analyze search results about {category} trends in {location}:\n"
-                f"{as_json_text(search_results)}\n\n"
-                "Return a JSON array (max 5 items) with keys:\n"
-                "trend_name, growth_rate (e.g. '+180%'), description (1-2 sentences), "
-                "why_it_matters (1 sentence), signal_strength (1-10), region.\n"
-                "Rank by real adoption potential, not clickbait titles."
-            )
-            ai_response = await analyze_data(prompt, SYSTEM_JSON)
-            parsed = parse_llm_json(ai_response)
-            trends = parsed if isinstance(parsed, list) else emerging_trends_from_search(search_results, location)
-        else:
-            trends = emerging_trends_from_search(search_results, location)
+        queries = build_emerging_search_queries(location, category)
+        datasets = await asyncio.gather(
+            *[search_tinyfish(query, max_results=10) for query in queries]
+        )
+        search_results = merge_search_results(*datasets)
+        trends = emerging_trends_from_search(search_results, location)
 
         return {
             "location": location,
             "category": category,
             "emerging_trends": trends,
-            "report": build_emerging_report(location, trends),
+            "report": build_emerging_report(location, trends, category=category),
         }
 
     except Exception as e:
@@ -68,15 +58,17 @@ async def forecast_trend(trend_name: str, location: str):
                 f"Forecast mainstream adoption of '{trend_name}' in {location}.\n"
                 f"Search data:\n{as_json_text(search_results)}\n\n"
                 "Return JSON with keys:\n"
-                "confidence_score (0-100), projected_mainstream_days (e.g. '30-60'), "
-                "reasoning (3 paragraphs of executive prose, no bullet points), "
-                "key_drivers (array of 3-5 short strings).\n"
-                "Cite operator behavior, social signals, and competitive menu moves where visible."
+                "reasoning (3 paragraphs citing only the supplied search results), "
+                "key_drivers (array of short strings taken from source titles/snippets).\n"
+                "Do not invent confidence scores, percentages, or adoption day counts.\n"
             )
             ai_response = await analyze_data(prompt, SYSTEM_JSON)
             forecast = parse_llm_json(ai_response)
             if not isinstance(forecast, dict):
                 forecast = forecast_from_search(search_results, trend_name, location)
+            else:
+                forecast = strip_fabricated_metrics(forecast)
+                forecast["signal_count"] = len(search_results.get("results", []))
         else:
             forecast = forecast_from_search(search_results, trend_name, location)
 
@@ -130,6 +122,7 @@ async def compare_regional_trends(region_a: str, region_b: str, category: str = 
             ai_response = await analyze_data(prompt, SYSTEM_JSON)
             comparison = parse_llm_json(ai_response)
             if isinstance(comparison, dict):
+                comparison = strip_fabricated_metrics(comparison)
                 comparison.setdefault("region_a", region_a)
                 comparison.setdefault("region_b", region_b)
                 comparison.setdefault("category", category)

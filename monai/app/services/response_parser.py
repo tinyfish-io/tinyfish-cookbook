@@ -4,6 +4,17 @@ import json
 import re
 from typing import Any
 
+FABRICATED_METRIC_KEYS = frozenset(
+    {
+        "confidence_score",
+        "projected_mainstream_days",
+        "timeline",
+        "growth_rate",
+        "adoption_score",
+        "suitability_score",
+    }
+)
+
 
 def parse_llm_json(text: str) -> Any:
     """Extract JSON from raw LLM text, including ```json fenced blocks."""
@@ -42,4 +53,17 @@ def normalize_payload(value: Any) -> Any:
         return [normalize_payload(item) for item in value]
     if isinstance(value, dict):
         return {key: normalize_payload(item) for key, item in value.items()}
+    return value
+
+
+def strip_fabricated_metrics(value: Any) -> Any:
+    """Remove invented scores/timelines from LLM payloads."""
+    if isinstance(value, list):
+        return [strip_fabricated_metrics(item) for item in value]
+    if isinstance(value, dict):
+        return {
+            key: strip_fabricated_metrics(item)
+            for key, item in value.items()
+            if key not in FABRICATED_METRIC_KEYS
+        }
     return value

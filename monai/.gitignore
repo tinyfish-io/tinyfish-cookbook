@@ -1,13 +1,15 @@
 .env
 .env.*
 !.env.example
-!.env.template
 __pycache__/
 *.py[cod]
 *.egg-info/
 .venv/
 venv/
-node_modules/
-dist/
 .pytest_cache/
 .mypy_cache/
+
+# Ad-hoc local testing / scratch output (scripts/smoke_test.py stays tracked)
+_test_*.py
+*_out.json
+trends_out.json

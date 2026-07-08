@@ -124,7 +124,7 @@ check("POST /api/suppliers/discover", code == 200 and isinstance(suppliers, dict
 
 code, outreach = post(
     "/api/suppliers/outreach",
-    {"supplier_info": "Saigon Matcha Co", "product_needs": "500kg matcha monthly"},
+    {"supplier_info": "Example Supplier Co.", "product_needs": "bulk matcha, monthly delivery"},
 )
 check("POST /api/suppliers/outreach", code == 200 and isinstance(outreach, dict) and "rfq_template" in outreach)
 

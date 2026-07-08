@@ -1,8 +1,8 @@
-import banhmi from "@/assets/banhmi.png";
-import banhxeo from "@/assets/banhxeo.png";
-import bunbohue from "@/assets/bunbohue.png";
-import capthrung from "@/assets/capthrung.png";
-import pho from "@/assets/pho.png";
+import banhmi from "@/assets/banhmi.webp";
+import banhxeo from "@/assets/banhxeo.webp";
+import bunbohue from "@/assets/bunbohue.webp";
+import capthrung from "@/assets/capthrung.webp";
+import pho from "@/assets/pho.webp";
 
 export const TICKER_SOURCES = [
   "TikTok",
@@ -30,7 +30,7 @@ export const FEATURES = [
     title: "Viral Trend Forecasting",
     dish: "Cà Phê Trứng",
     description:
-      "AI-powered growth curves predict which coffee and beverage trends will explode next quarter.",
+      "Summarize adoption signals from live web search — reasoning and drivers sourced from TinyFish results.",
     image: capthrung,
     wide: false,
   },
@@ -96,7 +96,7 @@ export const WORKFLOW_STEPS = [
   { layer: "Bánh", label: "Detect", detail: "Monitor TikTok, Facebook, delivery apps 24/7" },
   { layer: "Pâté", label: "Validate", detail: "Cross-reference social signals with sales data" },
   { layer: "Thịt", label: "Analyze", detail: "Menu gap analysis vs. regional competitors" },
-  { layer: "Dưa", label: "Score", detail: "AI confidence scoring and growth forecasting" },
+  { layer: "Dưa", label: "Rank", detail: "Evidence-based ranking from live search signals" },
   { layer: "Rau", label: "Source", detail: "Discover verified suppliers and wholesalers" },
   { layer: "Ớt", label: "RFQ", detail: "Automated outreach and sample negotiation" },
   { layer: "Vỏ", label: "Launch", detail: "Ship the trend before your competitors do" },

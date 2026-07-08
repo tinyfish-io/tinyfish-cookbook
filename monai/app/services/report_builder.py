@@ -69,15 +69,27 @@ def _sources_from_payload(items: list[dict[str, Any]] | None) -> list[dict[str, 
     return out
 
 
-def build_emerging_report(location: str, trends: list[dict[str, Any]]) -> dict[str, Any]:
+def _rank_label(item: dict[str, Any]) -> str:
+    rank = item.get("display_rank") or item.get("search_rank")
+    if rank is not None:
+        return f"#{rank}"
+    return "—"
+
+
+def build_emerging_report(
+    location: str,
+    trends: list[dict[str, Any]],
+    *,
+    category: str = "food and beverage",
+) -> dict[str, Any]:
     top = trends[0] if trends else {}
-    top_name = top.get("trend_name", "Emerging trend")
+    top_name = top.get("trend_name", "—")
     sources = _sources_from_payload(trends)
 
     cards = [
         {
             "title": t.get("trend_name", "Trend"),
-            "subtitle": f"{t.get('growth_rate', 'trending')} · Signal {t.get('signal_strength', '—')}/10",
+            "subtitle": f"{_rank_label(t)} · {t.get('publisher', 'web')}",
             "body": t.get("description") or t.get("why_it_matters") or "",
             "tag": t.get("region", location),
         }
@@ -85,62 +97,51 @@ def build_emerging_report(location: str, trends: list[dict[str, Any]]) -> dict[s
     ]
 
     bullets = [
-        f"**{t.get('trend_name')}** ({t.get('growth_rate', 'trending')}) — {t.get('description', '')}"
+        f"**{t.get('trend_name')}** ({_rank_label(t)}) — {t.get('description', '')}"
         for t in trends[:5]
     ]
 
-    why_text = _paragraphs(top.get("why_it_matters") or top.get("description") or "")
+    why_text = _paragraphs(str(top.get("why_it_matters") or top.get("description") or ""))
+    summary_paragraphs = why_text or (
+        [f"Live TinyFish search returned **{len(trends)}** signals for *{location}*."]
+        if trends
+        else [f"No live search signals were returned for *{location}*."]
+    )
 
     return _report_shell(
         headline=f"Emerging F&B Trends — {location}",
-        subtitle=f"{len(trends)} high-velocity signals · Updated from live TinyFish web intelligence",
-        paragraphs=[
-            f"The **strongest near-term opportunity** in *{location}* is **{top_name}**, "
-            f"backed by top-ranked search and social signals.",
-            "Rather than chasing every signal, **prioritize one hero launch** for a 14-day pilot, "
-            "then expand based on attach rate and margin.",
-            "Use the weekly digest below for your innovation stand-up or category review.",
-        ],
+        subtitle=f"{len(trends)} {category} signals from live TinyFish search",
+        paragraphs=summary_paragraphs,
         metrics=[
             {"label": "Market", "value": location},
-            {"label": "Trends tracked", "value": str(len(trends))},
+            {"label": "Category", "value": category},
+            {"label": "Signals", "value": str(len(trends))},
             {"label": "Top signal", "value": str(top_name)},
-            {"label": "Lead growth rate", "value": str(top.get("growth_rate", "—"))},
+            {"label": "Top rank", "value": _rank_label(top)},
         ],
         sections=[
             {
-                "title": f"Why {top_name} leads",
-                "paragraphs": [why_text[0]] if why_text else [],
+                "title": f"Top signal — {top_name}",
+                "paragraphs": why_text[:1],
             },
-        ] if top else [],
+        ] if top and why_text else [],
         cards=cards,
         bullets=bullets,
         sources=sources,
         actions=[
-            f"Shortlist *{top_name}* for R&D tasting this week.",
-            "Assign one store cluster for a controlled LTO pilot.",
-            "Monitor TikTok and delivery app mentions daily during the pilot.",
+            f"Review source evidence for *{top_name}* before menu changes." if top else "Run another search with a narrower location or category.",
+            "Validate signals against your POS and delivery app data.",
         ],
         ready_to_use=[
             {
-                "label": "Weekly trend digest (email)",
+                "label": "Trend digest (email)",
                 "text": (
-                    f"Subject: Weekly F&B Trend Pulse — {location}\n\n"
+                    f"Subject: F&B trend signals — {location}\n\n"
                     f"Team,\n\n"
-                    f"Here are the top emerging trends for *{location}* this week:\n\n"
+                    f"Live TinyFish search returned {len(trends)} signals for *{location}*:\n\n"
                     + "\n".join(f"• {b.replace('**', '')}" for b in bullets)
-                    + f"\n\n**Recommended focus:** {top_name}\n"
-                    f"**Next step:** 14-day LTO at 3 flagship locations.\n\n"
-                    f"— MónAI Intelligence"
-                ),
-            },
-            {
-                "label": "Innovation stand-up talking points",
-                "text": (
-                    f"1. Top trend: *{top_name}* ({top.get('growth_rate', 'trending')})\n"
-                    f"2. Question: Can we launch an LTO in 10 days?\n"
-                    f"3. Blocker: Ingredient MOQ and prep training\n"
-                    f"4. Decision needed: Pilot city selection"
+                    + (f"\n\nTop signal: {top_name} ({_rank_label(top)})." if top else "")
+                    + "\n\n— MónAI Intelligence"
                 ),
             },
         ],
@@ -148,77 +149,62 @@ def build_emerging_report(location: str, trends: list[dict[str, Any]]) -> dict[s
 
 
 def build_forecast_report(trend: str, location: str, forecast: dict[str, Any]) -> dict[str, Any]:
-    score = forecast.get("confidence_score")
-    days = forecast.get("projected_mainstream_days") or forecast.get("timeline")
+    signal_count = forecast.get("signal_count")
     reasoning = str(forecast.get("reasoning") or forecast.get("summary") or "")
     drivers = forecast.get("key_drivers") or []
     sources = _sources_from_payload(forecast.get("sources"))
 
-    score_label = f"{score}/100" if score is not None else "Pending"
-    days_label = str(days) if days else "TBD"
+    evidence_label = f"{signal_count} signals" if signal_count is not None else "Live search"
     paragraphs = _paragraphs(reasoning) or [
-        f"Live web signals for *{trend}* in *{location}* indicate measurable consumer and operator interest.",
-        "Validate against your POS mix before committing to a national rollout.",
+        f"TinyFish search returned signals for *{trend}* in *{location}*.",
+        "Review linked sources and validate timing with your own store data.",
     ]
 
+    metrics = [
+        {"label": "Trend", "value": trend},
+        {"label": "Location", "value": location},
+    ]
+    if signal_count is not None:
+        metrics.append({"label": "Signals", "value": str(signal_count)})
+
     return _report_shell(
-        headline=f"{trend} — Mainstream Adoption Forecast",
-        subtitle=f"Market: {location} · Confidence {score_label} · Timeline {days_label} days",
+        headline=f"{trend} — Adoption Signal Summary",
+        subtitle=f"Market: {location} · Evidence: {evidence_label}",
         paragraphs=paragraphs,
-        metrics=[
-            {"label": "Trend", "value": trend},
-            {"label": "Location", "value": location},
-            {"label": "Confidence", "value": score_label},
-            {"label": "Mainstream window", "value": f"{days_label} days"},
-        ],
+        metrics=metrics,
         sections=[
             {
-                "title": "Key adoption drivers",
-                "bullets": drivers if drivers else ["Operator menu additions", "Social UGC volume", "Delivery app visibility"],
+                "title": "Source-derived drivers",
+                "bullets": [str(driver) for driver in drivers if driver],
             },
-        ],
+        ] if drivers else [],
         sources=sources,
         actions=[
-            "Brief R&D and procurement within 48 hours.",
-            "Run a 2-week LTO in 3 high-traffic stores.",
-            "Secure hero ingredients before competitor menu saturation.",
-            "Track daily sell-through vs. baseline beverages.",
+            "Review linked sources before changing procurement or menu plans.",
+            "Cross-check social mentions with your own sales data.",
         ],
         ready_to_use=[
             {
                 "label": "Internal product memo",
                 "text": (
-                    f"Subject: {trend} adoption outlook — {location}\n\n"
+                    f"Subject: {trend} — adoption signals ({location})\n\n"
                     f"Team,\n\n"
-                    f"Our intelligence scan estimates **mainstream adoption within {days_label} days** "
-                    f"(confidence **{score_label}**).\n\n"
-                    f"**Executive summary:** {paragraphs[0]}\n\n"
-                    f"**Recommended action:** Brief R&D and procurement this week; run a 2-week LTO pilot "
-                    f"before competitors saturate the category.\n\n"
+                    f"TinyFish returned {evidence_label} for this trend.\n\n"
+                    f"{paragraphs[0]}\n\n"
                     f"— Product Strategy"
                 ),
             },
             {
-                "label": "Leadership Slack update",
+                "label": "Leadership update",
                 "text": (
-                    f"*{trend}* is accelerating in *{location}*. "
-                    f"Forecast: mainstream in ~{days_label} days ({score_label} confidence). "
-                    f"Suggest fast-track tasting + supplier quotes."
-                ),
-            },
-            {
-                "label": "Social teaser (EN + VI)",
-                "text": (
-                    f"EN: Trend alert — {trend} is moving from niche to mainstream in {location}. "
-                    f"Is it on your menu yet?\n\n"
-                    f"VI: Xu hướng mới — {trend} đang bùng nổ tại {location}. Quán bạn đã có món này chưa?"
+                    f"*{trend}* — {evidence_label} in *{location}*. "
+                    f"{paragraphs[0]}"
                 ),
             },
         ],
         bullets=[
-            "Validate with store-level sell-through, not just social hype.",
-            "Secure supply before peak demand window.",
-            "Use LTO pricing to test elasticity before core menu add.",
+            "Use source excerpts below as evidence, not as a forecast timeline.",
+            "Confirm supplier availability before committing to an LTO.",
         ],
     )
 
@@ -233,8 +219,7 @@ def build_regional_report(comparison: dict[str, Any]) -> dict[str, Any]:
     opportunities = comparison.get("expansion_opportunities") or []
 
     paragraphs = _paragraphs(summary) if summary else [
-        f"Side-by-side web intelligence for *{category}* in *{region_a}* versus *{region_b}*.",
-        "Localize 2–3 hero items per city while keeping a stable national core.",
+        f"Side-by-side TinyFish search signals for *{category}* in *{region_a}* versus *{region_b}*.",
     ]
 
     sections = [
@@ -269,28 +254,19 @@ def build_regional_report(comparison: dict[str, Any]) -> dict[str, Any]:
         sources=sources[:8],
         bullets=opportunities if isinstance(opportunities, list) else [],
         actions=[
-            f"Maintain core menu nationally; localize hero LTOs for {region_a} and {region_b}.",
-            "Run A/B pricing tests — northern vs. southern portion sizes may differ.",
-            "Align marketing creative to regional taste language and influencers.",
+            f"Compare lead signals between {region_a} ({lead_a}) and {region_b} ({lead_b}).",
+            "Use source links to validate whether a lead trend fits your brand.",
         ],
         ready_to_use=[
             {
-                "label": "Expansion strategy brief",
+                "label": "Regional signal brief",
                 "text": (
-                    f"Subject: Regional menu strategy — {region_a} vs {region_b}\n\n"
+                    f"Subject: Regional search signals — {region_a} vs {region_b}\n\n"
                     f"**Category:** {category}\n"
                     f"**{region_a} lead:** {lead_a}\n"
                     f"**{region_b} lead:** {lead_b}\n\n"
                     f"{paragraphs[0]}\n\n"
-                    f"**Action:** Keep national core stable; deploy 2–3 localized hero items per region.\n\n"
                     f"— Expansion Team"
-                ),
-            },
-            {
-                "label": "Franchise ops note",
-                "text": (
-                    f"Ops note: Do not force identical LTO calendars in {region_a} and {region_b}. "
-                    f"Pilot {lead_b}-style items in {region_a} only if local social volume supports it."
                 ),
             },
         ],
@@ -319,9 +295,8 @@ def build_menu_gap_report(analysis: dict[str, Any]) -> dict[str, Any]:
     ]
 
     paragraphs = _paragraphs(executive) if executive else [
-        f"Your **{len(menu)}-item menu** was benchmarked against live trend signals in *{location}*.",
-        f"We identified **{len(missing)} actionable gaps** where demand is outpacing your current assortment.",
-        "Focus on **High** priority items first — they have the strongest operator and social proof.",
+        f"Compared **{len(menu)}** menu items against live TinyFish signals in *{location}*.",
+        f"Found **{len(missing)}** gaps where search signals do not overlap your current menu.",
     ]
 
     sources = _sources_from_payload(analysis.get("trend_signals"))
@@ -346,9 +321,8 @@ def build_menu_gap_report(analysis: dict[str, Any]) -> dict[str, Any]:
         bullets=bullets,
         sources=sources,
         actions=[
-            "Pick the top High-priority gap for a 14-day LTO.",
-            "Train baristas/kitchen on prep SOP before launch day.",
-            "Compare pilot attach rate vs. existing bestsellers.",
+            "Review the highest-priority gap using the linked source evidence.",
+            "Compare recommendations against your current menu and margin targets.",
         ],
         ready_to_use=[
             {
@@ -357,17 +331,8 @@ def build_menu_gap_report(analysis: dict[str, Any]) -> dict[str, Any]:
                     f"Chef brief — menu gap review ({location})\n\n"
                     f"**Current core menu:**\n"
                     + "\n".join(f"• {item}" for item in menu)
-                    + "\n\n**Priority additions to evaluate:**\n"
+                    + "\n\n**Gaps from live search:**\n"
                     + "\n".join(f"• {b.replace('**', '')}" for b in bullets)
-                    + "\n\n**Decision:** Select one High-priority item for pilot launch next week."
-                ),
-            },
-            {
-                "label": "Store manager rollout note",
-                "text": (
-                    f"Managers — we're testing a menu gap opportunity in {location}. "
-                    f"Focus on suggestive selling for the new LTO during peak hours. "
-                    f"Report daily units sold vs. target."
                 ),
             },
         ],
@@ -379,7 +344,7 @@ def build_suppliers_report(trend: str, suppliers: list[dict[str, Any]]) -> dict[
     cards = [
         {
             "title": str(s.get("name", "Supplier")),
-            "subtitle": f"Score {s.get('suitability_score', '—')}/10 · {s.get('tier', 'Viable')}",
+            "subtitle": f"Search rank #{s.get('search_rank', '—')}",
             "body": str(s.get("products_offered") or s.get("next_step") or ""),
             "tag": trend,
         }
@@ -387,7 +352,7 @@ def build_suppliers_report(trend: str, suppliers: list[dict[str, Any]]) -> dict[
     ]
 
     bullets = [
-        f"**{s.get('name')}** ({s.get('tier')}, {s.get('suitability_score')}/10) — {s.get('products_offered', '')}"
+        f"**{s.get('name')}** (rank #{s.get('search_rank', '—')}) — {s.get('products_offered', '')}"
         for s in suppliers[:8]
     ]
 
@@ -395,17 +360,14 @@ def build_suppliers_report(trend: str, suppliers: list[dict[str, Any]]) -> dict[
         headline=f"Supplier Shortlist — {trend}",
         subtitle=f"{len(suppliers)} candidates ranked · Top pick: {top.get('name', '—')}",
         paragraphs=[
-            f"Sourcing intelligence for *{trend}* surfaced **{len(suppliers)} supplier candidates** "
-            f"from live wholesale and distributor search results.",
-            "**Contact the top two Preferred/Strong fit options in parallel** to compare MOQ, "
-            "sample lead time, and delivered pricing.",
-            "Keep Backup tier suppliers warm in case primary MOQ exceeds your launch volume.",
+            f"TinyFish search returned **{len(suppliers)}** supplier results for *{trend}*.",
+            "Use search rank and snippets below to shortlist outreach targets.",
         ],
         metrics=[
             {"label": "Trend", "value": trend},
             {"label": "Suppliers found", "value": str(len(suppliers))},
             {"label": "Top pick", "value": str(top.get("name", "—"))},
-            {"label": "Top score", "value": f"{top.get('suitability_score', '—')}/10"},
+            {"label": "Top search rank", "value": f"#{top.get('search_rank', '—')}"},
         ],
         cards=cards,
         bullets=bullets,
@@ -413,20 +375,16 @@ def build_suppliers_report(trend: str, suppliers: list[dict[str, Any]]) -> dict[
             [{"title": s.get("name"), "url": s.get("contact_info"), "snippet": s.get("products_offered")} for s in suppliers]
         ),
         actions=[
-            "Email top 2 suppliers using the RFQ tab.",
-            "Request samples before committing to bulk MOQ.",
-            "Compare delivered cost per kg/unit including VAT.",
+            "Contact suppliers using the RFQ tab when you are ready to source.",
+            "Request quotes and sample policy from the highest-ranked results first.",
         ],
         ready_to_use=[
             {
                 "label": "Procurement outreach (short)",
                 "text": (
                     f"Hello,\n\n"
-                    f"We are launching a **{trend}** line and reviewing bulk ingredient suppliers.\n\n"
-                    f"Could you share:\n"
-                    f"• MOQ and tiered pricing\n"
-                    f"• Sample policy\n"
-                    f"• Monthly delivery capacity\n\n"
+                    f"We are reviewing suppliers for **{trend}**.\n\n"
+                    f"Could you share MOQ, tiered pricing, sample policy, and delivery capacity?\n\n"
                     f"Best regards"
                 ),
             },
@@ -434,9 +392,9 @@ def build_suppliers_report(trend: str, suppliers: list[dict[str, Any]]) -> dict[
                 "label": "Internal sourcing memo",
                 "text": (
                     f"Sourcing memo — {trend}\n\n"
-                    f"Shortlisted {len(suppliers)} suppliers. Top candidate: **{top.get('name', '—')}**.\n\n"
+                    f"TinyFish returned {len(suppliers)} supplier results. "
+                    f"Top listed result: **{top.get('name', '—')}**.\n\n"
                     + "\n".join(f"• {b.replace('**', '')}" for b in bullets[:5])
-                    + "\n\nNext: RFQ sent by EOD; samples requested from top 2."
                 ),
             },
         ],
@@ -453,10 +411,8 @@ def build_outreach_report(rfq: dict[str, Any]) -> dict[str, Any]:
         headline="RFQ & Supplier Outreach",
         subtitle="Bilingual, send-ready templates · Personalize quantities before sending",
         paragraphs=[
-            "These templates are formatted for **immediate supplier outreach**. "
-            "Replace placeholder quantities with your actual MOQ targets.",
-            "Follow up in **3 business days** if you do not receive pricing tiers and sample policy.",
-            "For Vietnamese suppliers, send the **Tiếng Việt** version first; attach English if needed.",
+            "Bilingual RFQ templates generated from your product needs and supplier details.",
+            "Personalize quantities and delivery terms before sending.",
         ],
         sections=[
             {
@@ -470,20 +426,19 @@ def build_outreach_report(rfq: dict[str, Any]) -> dict[str, Any]:
             },
         ],
         actions=[
-            "Send RFQ to top 2 shortlisted suppliers.",
-            "Log responses in procurement tracker.",
-            "Schedule tasting once samples arrive.",
+            "Send the RFQ to your shortlisted suppliers.",
+            "Log responses in your procurement tracker.",
         ],
         ready_to_use=[
             {"label": "Email — English", "text": f"Subject: {subject_en}\n\n{body_en}"},
             {"label": "Email — Tiếng Việt", "text": f"Subject: {subject_vi}\n\n{body_vi}"},
             {
-                "label": "Follow-up (3 days later)",
+                "label": "Follow-up",
                 "text": (
                     f"Subject: Re: {subject_en}\n\n"
-                    f"Hi,\n\nJust following up on our RFQ below. "
+                    f"Hi,\n\nFollowing up on our RFQ below. "
                     f"Could you confirm MOQ and pricing tiers when convenient?\n\n"
-                    f"We're evaluating partners this week.\n\nThank you"
+                    f"Thank you"
                 ),
             },
         ],

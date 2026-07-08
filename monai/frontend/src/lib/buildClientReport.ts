@@ -8,6 +8,11 @@ function paragraphs(text: string): string[] {
     .filter(Boolean);
 }
 
+function rankLabel(item: Record<string, unknown>): string {
+  const rank = item.display_rank ?? item.search_rank;
+  return rank != null ? `#${rank}` : "—";
+}
+
 export function buildClientReport(data: unknown): IntelligenceReport | null {
   if (!data || typeof data !== "object") return null;
   const record = data as Record<string, unknown>;
@@ -21,18 +26,18 @@ export function buildClientReport(data: unknown): IntelligenceReport | null {
     const trend = String(record.trend ?? forecast.trend ?? "Trend");
     const location = String(record.location ?? forecast.location ?? "Market");
     const reasoning = String(forecast.reasoning ?? forecast.summary ?? "");
-    const score = forecast.confidence_score;
-    const days = forecast.projected_mainstream_days;
+    const signalCount = forecast.signal_count;
+    const evidence =
+      signalCount != null ? `${signalCount} TinyFish signals` : "";
 
     return {
-      headline: `${trend} — Mainstream Adoption Forecast`,
-      subtitle: `Market: ${location}${score != null ? ` · Confidence ${score}/100` : ""}${days ? ` · Timeline ${days} days` : ""}`,
+      headline: `${trend} — Adoption Signal Summary`,
+      subtitle: `Market: ${location}${evidence ? ` · ${evidence}` : ""}`,
       paragraphs: paragraphs(reasoning),
       metrics: [
         { label: "Trend", value: trend },
         { label: "Location", value: location },
-        ...(score != null ? [{ label: "Confidence", value: `${score}/100` }] : []),
-        ...(days ? [{ label: "Mainstream window", value: `${days} days` }] : []),
+        ...(evidence ? [{ label: "Signals", value: evidence }] : []),
       ],
       ready_to_use: reasoning
         ? [
@@ -50,10 +55,10 @@ export function buildClientReport(data: unknown): IntelligenceReport | null {
     const location = String(record.location ?? "Market");
     return {
       headline: `Emerging F&B Trends — ${location}`,
-      subtitle: `${trends.length} signals detected`,
+      subtitle: `${trends.length} signals from live search`,
       bullets: trends.map(
         (t) =>
-          `${t.trend_name ?? "Trend"} (${t.growth_rate ?? "trending"}) — ${t.description ?? ""}`,
+          `${t.trend_name ?? "Trend"}${rankLabel(t) !== "—" ? ` (${rankLabel(t)})` : ""} — ${t.description ?? ""}`,
       ),
     };
   }
@@ -83,9 +88,10 @@ export function buildClientReport(data: unknown): IntelligenceReport | null {
     const suppliers = record.suppliers as Array<Record<string, unknown>>;
     return {
       headline: `Supplier Shortlist — ${record.trend ?? "Trend"}`,
-      subtitle: `${suppliers.length} candidates found`,
+      subtitle: `${suppliers.length} candidates from live search`,
       bullets: suppliers.map(
-        (s) => `${s.name} (score ${s.suitability_score ?? "—"}) — ${s.products_offered ?? ""}`,
+        (s) =>
+          `${s.name}${s.search_rank != null ? ` (rank #${s.search_rank})` : ""} — ${s.products_offered ?? ""}`,
       ),
     };
   }

@@ -1,7 +1,7 @@
-import banhmi from "@/assets/banhmi.png";
-import banhxeo from "@/assets/banhxeo.png";
-import capthrung from "@/assets/capthrung.png";
-import pho from "@/assets/pho.png";
+import banhmi from "@/assets/banhmi.webp";
+import banhxeo from "@/assets/banhxeo.webp";
+import capthrung from "@/assets/capthrung.webp";
+import pho from "@/assets/pho.webp";
 
 export function HeroCollage() {
   return (

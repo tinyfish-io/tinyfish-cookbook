@@ -4,7 +4,7 @@ from pydantic import BaseModel
 from app.http_errors import raise_internal_error
 from app.services.ai_client import analyze_data, has_openai
 from app.services.report_builder import build_menu_gap_report
-from app.services.response_parser import normalize_payload, parse_llm_json
+from app.services.response_parser import normalize_payload, parse_llm_json, strip_fabricated_metrics
 from app.services.search_analysis import as_json_text, menu_gap_from_search
 from app.services.tinyfish_client import fetch_tinyfish, search_tinyfish
 
@@ -26,11 +26,11 @@ class MenuGapRequest(BaseModel):
 async def analyze_menu_gap(request: MenuGapRequest):
     """Compares current menu with competitors and emerging trends to find gaps."""
     try:
-        trends_query = f"fastest growing beverage and food trends in {request.location} Vietnam"
-        trends_results = await search_tinyfish(
-            trends_query,
-            purpose=f"Find menu gap opportunities in {request.location}",
+        trends_query = (
+            f"viral trending drinks and street food {request.location} Vietnam "
+            f"TikTok GrabFood ShopeeFood menu"
         )
+        trends_results = await search_tinyfish(trends_query)
 
         competitor_menus = []
         for url in request.competitor_urls[:2]:
@@ -58,8 +58,9 @@ async def analyze_menu_gap(request: MenuGapRequest):
             Return JSON with keys:
             location, current_menu_items, executive_summary (2 sentences),
             missing_opportunities (array max 5). Each opportunity needs:
-            trend, priority (High/Medium/Low), evidence (1-2 sentences),
-            competitor_adoption (1 sentence), recommendation (actionable 1-2 sentences).
+            trend, priority (High/Medium/Low based on search order only), evidence (from snippets),
+            competitor_adoption (from competitor page text when available), recommendation (actionable, no invented timelines).
+            Do not invent confidence scores, percentages, or day counts.
             """
             ai_response = await analyze_data(prompt, SYSTEM_JSON)
             analysis = parse_llm_json(ai_response)
@@ -71,6 +72,7 @@ async def analyze_menu_gap(request: MenuGapRequest):
                     competitor_menus,
                 )
             else:
+                analysis = strip_fabricated_metrics(analysis)
                 analysis.setdefault("trend_signals", [
                     {"title": r.get("title"), "snippet": r.get("snippet"), "url": r.get("url")}
                     for r in trends_results.get("results", [])[:8]
