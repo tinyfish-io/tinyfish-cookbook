@@ -12,6 +12,7 @@ from api.services.pipeline import PipelineEmitter
 from api.core.config import settings
 from api.core.logger import logger
 import openai
+from tinyfish import APIConnectionError, APIStatusError, AuthenticationError, RateLimitError
 
 app = FastAPI(title="FinSight Vietnam API", version="1.0.0")
 
@@ -48,6 +49,58 @@ async def global_exception_handler(request: Request, exc: Exception):
     return JSONResponse(
         status_code=500,
         content={"error": {"code": "INTERNAL_SERVER_ERROR", "message": "An unexpected error occurred."}}
+    )
+
+@app.exception_handler(AuthenticationError)
+async def tinyfish_auth_exception_handler(request: Request, exc: AuthenticationError):
+    logger.error(f"TinyFish authentication error: {exc}")
+    return JSONResponse(
+        status_code=502,
+        content={
+            "error": {
+                "code": "BAD_GATEWAY",
+                "message": "Invalid TinyFish API key. Check TINYFISH_API_KEY in your .env file.",
+            }
+        },
+    )
+
+@app.exception_handler(RateLimitError)
+async def tinyfish_rate_limit_exception_handler(request: Request, exc: RateLimitError):
+    logger.error(f"TinyFish rate limit error: {exc}")
+    return JSONResponse(
+        status_code=502,
+        content={
+            "error": {
+                "code": "BAD_GATEWAY",
+                "message": "TinyFish rate limit exceeded. Please wait and try again.",
+            }
+        },
+    )
+
+@app.exception_handler(APIConnectionError)
+async def tinyfish_connection_exception_handler(request: Request, exc: APIConnectionError):
+    logger.error(f"TinyFish connection error: {exc}")
+    return JSONResponse(
+        status_code=502,
+        content={
+            "error": {
+                "code": "BAD_GATEWAY",
+                "message": "Failed to communicate with an upstream service (TinyFish).",
+            }
+        },
+    )
+
+@app.exception_handler(APIStatusError)
+async def tinyfish_status_exception_handler(request: Request, exc: APIStatusError):
+    logger.error(f"TinyFish API status error: {exc.status_code} — {exc}")
+    message = "An upstream service (TinyFish) returned an error."
+    if exc.status_code == 401:
+        message = "Invalid TinyFish API key. Check TINYFISH_API_KEY in your .env file."
+    elif exc.status_code == 429:
+        message = "TinyFish rate limit exceeded. Please wait and try again."
+    return JSONResponse(
+        status_code=502,
+        content={"error": {"code": "BAD_GATEWAY", "message": message}},
     )
 
 @app.exception_handler(httpx.HTTPStatusError)

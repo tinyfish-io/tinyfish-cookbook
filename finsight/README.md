@@ -18,40 +18,29 @@ Try a preset query on the live demo, or run locally with your own API keys (see 
 
 ## How TinyFish API is Used
 
-FinSight uses the Search + Fetch HTTP APIs (not browser agents) in a multi-stage pipeline: plan search angles → rank sources → concurrent fetch → fact extraction → synthesis. Vietnam editorial domains are prioritized; thin or app-gated pages fail visibly instead of returning placeholder metrics.
+FinSight uses the official **TinyFish Python SDK** (`pip install tinyfish`) for Search + Fetch in a multi-stage pipeline: plan search angles → rank sources → concurrent fetch → fact extraction → synthesis. Vietnam editorial domains are prioritized; thin or app-gated pages fail visibly instead of returning placeholder metrics.
 
 ### Code Snippet
 
 ```python
 # api/services/tinyfish_client.py
+from tinyfish import AsyncTinyFish
 
-SEARCH_URL = "https://api.search.tinyfish.ai"
-FETCH_URL = "https://api.fetch.tinyfish.ai"
+client = AsyncTinyFish()  # reads TINYFISH_API_KEY from env
 
-async def search(self, query: str, limit: int = 5) -> List[Dict[str, Any]]:
-    params = {"query": query, "location": "VN", "language": "vi"}
-    async with httpx.AsyncClient() as client:
-        response = await client.get(
-            SEARCH_URL,
-            headers={"X-API-Key": self.api_key},
-            params=params,
-            timeout=self.timeout,
-        )
-        response.raise_for_status()
-        return response.json().get("results", [])[:limit]
+response = await client.search.query(
+    query="commercial rent District 1 HCMC",
+    location="VN",
+    language="vi",
+)
+for result in response.results:
+    print(result.title, result.url)
 
-async def fetch(self, target_url: str) -> str:
-    payload = {"urls": [target_url], "format": "markdown"}
-    async with httpx.AsyncClient() as client:
-        response = await client.post(
-            FETCH_URL,
-            headers={"X-API-Key": self.api_key},
-            json=payload,
-            timeout=self.timeout,
-        )
-        response.raise_for_status()
-        results = response.json().get("results", [])
-        return results[0].get("text", "") if results else ""
+pages = await client.fetch.get_contents(
+    urls=["https://batdongsan.com.vn/..."],
+    format="markdown",
+)
+print(pages.results[0].text)
 ```
 
 The orchestrator in `api/services/agent_workflows.py` wires Search → Fetch → LLM with source preflight, recovery search passes, and answer-quality gating (`direct` / `partial` / `not_answered`).
@@ -62,7 +51,7 @@ The orchestrator in `api/services/agent_workflows.py` wires Search → Fetch →
 
 ### Prerequisites
 
-- Python 3.10+
+- Python 3.11+
 - Node.js 18+
 - [TinyFish API key](https://agent.tinyfish.ai/api-keys)
 - OpenAI API key (GPT-4o synthesis)
@@ -74,13 +63,9 @@ cp .env.example .env
 ```
 
 ```env
-TINYFISH_API_KEY=your_tinyfish_key_here
-OPENAI_API_KEY=your_openai_key_here
-
-# Optional
-# FINSIGHT_LLM_MODEL=gpt-4o
-# FINSIGHT_ANALYSIS_MODE=deep
-# WORKFLOW_TIMEOUT_SECONDS=120
+# Get your API key at https://agent.tinyfish.ai/api-keys
+TINYFISH_API_KEY=
+OPENAI_API_KEY=
 ```
 
 Frontend (optional, for split deploy):
@@ -160,5 +145,5 @@ graph TD
 
 - **Backend:** Python, FastAPI, Pydantic, Tenacity, httpx
 - **Frontend:** React, TypeScript, Vite, Tailwind CSS
-- **Intelligence:** TinyFish Search + Fetch, OpenAI GPT-4o
+- **Intelligence:** TinyFish Python SDK (Search + Fetch), OpenAI GPT-4o
 - **Deploy:** Vercel (frontend) + Render (API)

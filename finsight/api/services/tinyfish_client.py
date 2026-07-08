@@ -1,34 +1,54 @@
-import httpx
-from typing import Dict, Any, List
+from typing import Any, Dict, List
+
 from tenacity import (
     retry,
     stop_after_attempt,
     wait_exponential,
     retry_if_exception,
 )
+from tinyfish import (
+    APIConnectionError,
+    APITimeoutError,
+    APIStatusError,
+    AsyncTinyFish,
+    InternalServerError,
+    RateLimitError,
+)
+
 from api.core.config import settings
 from api.core.logger import logger
 
-SEARCH_URL = "https://api.search.tinyfish.ai"
-FETCH_URL = "https://api.fetch.tinyfish.ai"
-
 
 def _is_retryable_tinyfish_error(exc: BaseException) -> bool:
-    if isinstance(exc, httpx.RequestError):
+    if isinstance(exc, (APIConnectionError, APITimeoutError, InternalServerError, RateLimitError)):
         return True
-    if isinstance(exc, httpx.HTTPStatusError):
-        return exc.response.status_code >= 500
+    if isinstance(exc, APIStatusError):
+        return exc.status_code >= 500
     return False
+
+
+def _search_result_to_dict(result: Any) -> Dict[str, Any]:
+    if hasattr(result, "model_dump"):
+        return result.model_dump(mode="json")
+    if isinstance(result, dict):
+        return result
+    return {}
 
 
 class TinyFishClient:
     def __init__(self):
-        self.api_key = settings.tinyfish_api_key
-        self.headers = {
-            "X-API-Key": self.api_key,
-            "Content-Type": "application/json",
-        }
-        self.timeout = settings.timeout_seconds
+        self._client: AsyncTinyFish | None = None
+
+    def _get_client(self) -> AsyncTinyFish:
+        if self._client is None:
+            timeout = float(
+                max(settings.timeout_seconds, settings.tinyfish_fetch_timeout_seconds)
+            )
+            kwargs: dict[str, Any] = {"timeout": timeout, "max_retries": 2}
+            if settings.tinyfish_api_key:
+                kwargs["api_key"] = settings.tinyfish_api_key
+            self._client = AsyncTinyFish(**kwargs)
+        return self._client
 
     @retry(
         stop=stop_after_attempt(3),
@@ -37,30 +57,16 @@ class TinyFishClient:
         reraise=True,
     )
     async def search(self, query: str, limit: int = 5) -> List[Dict[str, Any]]:
-        params = {
-            "query": query,
-            "location": "VN",
-            "language": "vi",
-        }
-
         logger.info(f"Initiating TinyFish Search for query: {query}")
-
-        async with httpx.AsyncClient() as client:
-            response = await client.get(
-                SEARCH_URL,
-                headers=self.headers,
-                params=params,
-                timeout=self.timeout,
-            )
-            response.raise_for_status()
-            data = response.json()
-            results = data.get("results", [])
-            if not isinstance(results, list):
-                logger.warning(f"TinyFish Search returned unexpected results type: {type(results)}")
-                results = []
-            normalized = [item for item in results if isinstance(item, dict)]
-            logger.info(f"TinyFish Search returned {len(normalized)} results")
-            return normalized[:limit]
+        client = self._get_client()
+        response = await client.search.query(
+            query=query,
+            location="VN",
+            language="vi",
+        )
+        normalized = [_search_result_to_dict(item) for item in response.results[:limit]]
+        logger.info(f"TinyFish Search returned {len(normalized)} results")
+        return normalized
 
     @retry(
         stop=stop_after_attempt(3),
@@ -69,37 +75,23 @@ class TinyFishClient:
         reraise=True,
     )
     async def fetch(self, target_url: str) -> str:
-        payload = {
-            "urls": [target_url],
-            "format": "markdown",
-        }
-
         logger.info(f"Initiating TinyFish Fetch for URL: {target_url}")
-
-        async with httpx.AsyncClient() as client:
-            response = await client.post(
-                FETCH_URL,
-                headers=self.headers,
-                json=payload,
-                timeout=max(self.timeout, settings.tinyfish_fetch_timeout_seconds),
+        client = self._get_client()
+        response = await client.fetch.get_contents(
+            urls=[target_url],
+            format="markdown",
+        )
+        if response.results:
+            content = response.results[0].text or ""
+            logger.info(
+                f"TinyFish Fetch successful for URL: {target_url} (Length: {len(content)})"
             )
-            response.raise_for_status()
-            data = response.json()
-            results = data.get("results", [])
-            if results:
-                content = results[0].get("text", "") or ""
-                logger.info(
-                    f"TinyFish Fetch successful for URL: {target_url} (Length: {len(content)})"
-                )
-                return content
+            return content
 
-            errors = data.get("errors", [])
-            if errors:
-                err = errors[0]
-                logger.error(
-                    f"TinyFish Fetch failed for {target_url}: {err.get('error')} — {err.get('message', '')}"
-                )
-            return ""
+        if response.errors:
+            err = response.errors[0]
+            logger.error(f"TinyFish Fetch failed for {target_url}: {err.error}")
+        return ""
 
 
 tinyfish_client = TinyFishClient()

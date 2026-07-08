@@ -10,7 +10,13 @@ from api.services.data_quality import is_weak_value
 
 class LLMClient:
     def __init__(self):
-        self.client = AsyncOpenAI(api_key=settings.openai_api_key)
+        self._client: AsyncOpenAI | None = None
+
+    @property
+    def client(self) -> AsyncOpenAI:
+        if self._client is None:
+            self._client = AsyncOpenAI(api_key=settings.openai_api_key)
+        return self._client
 
     @staticmethod
     def _truncate_context(context: str, max_chars: int = 18000) -> str:
