@@ -1,7 +1,8 @@
 # Secrets — never commit
 .env
 .env.*
-!.env.template
+!.env.example
+!frontend/.env.example
 frontend/.env.local
 
 # Python
