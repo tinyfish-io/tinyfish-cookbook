@@ -1,3 +1,13 @@
+import {
+  TinyFish,
+  RunStatus,
+  AuthenticationError,
+  BadRequestError,
+  PermissionDeniedError,
+  APITimeoutError,
+  type AgentRunParams,
+  type ProxyCountryCode,
+} from "@tiny-fish/sdk";
 import { parseEnvNumber } from "@/lib/env";
 
 export type AnsweredInDocs = "true" | "false" | "partial";
@@ -15,23 +25,27 @@ export type TinyFishAnalysis = {
   selfGeneratedQuestions: SelfGeneratedQuestion[];
 };
 
-type TinyFishRunResponse = {
-  result?: unknown;
-  resultJson?: unknown;
-  status?: string;
+export type TinyFishProxyConfig = {
+  enabled: boolean;
+  countryCode?: "US" | "GB" | "CA" | "DE" | "FR" | "JP" | "AU";
 };
+
+export type TinyFishOutputSchema = Record<string, unknown>;
 
 const DEFAULT_BASE_URL = "https://agent.tinyfish.ai";
 const DEFAULT_TIMEOUT_MS = parseEnvNumber("TINYFISH_TIMEOUT_MS", 180000, {
   min: 1000,
 });
 const DEFAULT_MAX_RETRIES = parseEnvNumber("TINYFISH_MAX_RETRIES", 0, { min: 0 });
-const DEFAULT_BACKOFF_MS = parseEnvNumber("TINYFISH_BACKOFF_MS", 500, { min: 0 });
 
 export type RunOptions = {
   timeoutMs?: number;
   maxRetries?: number;
   browserProfile?: "lite" | "stealth";
+  proxyConfig?: TinyFishProxyConfig;
+  useVault?: boolean;
+  credentialItemIds?: string[];
+  outputSchema?: TinyFishOutputSchema;
 };
 
 class TinyFishError extends Error {
@@ -42,24 +56,104 @@ class TinyFishError extends Error {
   }
 }
 
-function isRetryable(error: unknown) {
-  if (error instanceof TinyFishError) {
-    return error.statusCode === 429 || (error.statusCode ?? 0) >= 500;
+function getClient(options: RunOptions = {}): TinyFish {
+  const apiKey = process.env.TINYFISH_API_KEY;
+  if (!apiKey) {
+    throw new Error("Missing TINYFISH_API_KEY");
   }
-  return true;
+
+  return new TinyFish({
+    apiKey,
+    baseURL: process.env.TINYFISH_BASE_URL || DEFAULT_BASE_URL,
+    timeout: options.timeoutMs ?? DEFAULT_TIMEOUT_MS,
+    maxRetries: options.maxRetries ?? DEFAULT_MAX_RETRIES,
+  });
 }
 
 export function buildAnalysisGoal(): string {
   return [
     "Evaluate how well an answer engine could understand and cite this page.",
     "Generate exactly 6 user questions in a stable, deterministic order.",
-    "For each question, return:",
-    "answeredInDocs (true | false | \"partial\"),",
-    "partialAnswer (max 120 chars),",
-    "importance (high | medium).",
-    "Return only JSON:",
-    "{\"selfGeneratedQuestions\":[{\"question\":\"...\",\"answeredInDocs\":\"partial\",\"partialAnswer\":\"...\",\"importance\":\"high\"}]}",
+    "Return only JSON that matches the requested schema.",
+    "For each question, use answeredInDocs exactly as true, false, or partial.",
+    "Keep partialAnswer short and null when the answer is complete.",
   ].join(" ");
+}
+
+function buildAnalysisOutputSchema(): TinyFishOutputSchema {
+  return {
+    type: "object",
+    properties: {
+      selfGeneratedQuestions: {
+        type: "array",
+        minItems: 6,
+        maxItems: 6,
+        items: {
+          type: "object",
+          properties: {
+            question: { type: "string" },
+            answeredInDocs: {
+              type: "string",
+              enum: ["true", "false", "partial"],
+            },
+            partialAnswer: { type: "string", nullable: true },
+            importance: {
+              type: "string",
+              enum: ["high", "medium"],
+            },
+          },
+          required: [
+            "question",
+            "answeredInDocs",
+            "partialAnswer",
+            "importance",
+          ],
+          propertyOrdering: [
+            "question",
+            "answeredInDocs",
+            "partialAnswer",
+            "importance",
+          ],
+        },
+      },
+    },
+    required: ["selfGeneratedQuestions"],
+    propertyOrdering: ["selfGeneratedQuestions"],
+  };
+}
+
+function buildRunParams(
+  url: string,
+  goal: string,
+  options: RunOptions = {},
+  includeOutputSchema = true
+): AgentRunParams {
+  const params: AgentRunParams = { url, goal };
+
+  if (options.browserProfile) {
+    params.browser_profile = options.browserProfile;
+  }
+
+  if (options.proxyConfig) {
+    params.proxy_config = {
+      enabled: options.proxyConfig.enabled,
+      country_code: options.proxyConfig.countryCode as ProxyCountryCode | undefined,
+    };
+  }
+
+  if (options.useVault) {
+    params.use_vault = true;
+  }
+
+  if (options.credentialItemIds?.length) {
+    params.credential_item_ids = options.credentialItemIds;
+  }
+
+  if (includeOutputSchema && options.outputSchema) {
+    params.output_schema = options.outputSchema;
+  }
+
+  return params;
 }
 
 function normalizeAnswered(value: unknown): AnsweredInDocs {
@@ -94,80 +188,64 @@ export function normalizeAnalysis(payload: unknown): TinyFishAnalysis {
   return { selfGeneratedQuestions: normalized };
 }
 
+async function runAgent(
+  params: AgentRunParams,
+  options: RunOptions = {}
+): Promise<unknown> {
+  const client = getClient(options);
+
+  try {
+    const response = await client.agent.run(params);
+
+    if (response.status !== RunStatus.COMPLETED) {
+      const detail =
+        response.error?.message ?? `TinyFish run ended with status ${response.status}`;
+      throw new TinyFishError(`TinyFish request failed: ${detail}`);
+    }
+
+    return response.result;
+  } catch (error) {
+    if (error instanceof AuthenticationError) {
+      throw new TinyFishError(
+        `TinyFish API key is invalid or not configured. Add a valid TINYFISH_API_KEY to your .env file. (${error.message})`,
+        error.statusCode
+      );
+    }
+    if (error instanceof APITimeoutError) {
+      throw new TinyFishError("TinyFish request timed out", 504);
+    }
+    throw error;
+  }
+}
+
+async function runTinyFishRequest(
+  url: string,
+  goal: string,
+  options: RunOptions = {}
+): Promise<unknown> {
+  const params = buildRunParams(url, goal, options, true);
+
+  try {
+    return await runAgent(params, options);
+  } catch (error) {
+    const schemaRejected =
+      error instanceof BadRequestError || error instanceof PermissionDeniedError;
+    if (params.output_schema && schemaRejected) {
+      return runAgent(buildRunParams(url, goal, options, false), options);
+    }
+    throw error;
+  }
+}
+
 export async function runTinyFishAnalysis(
   url: string,
   options: RunOptions = {}
 ): Promise<TinyFishAnalysis> {
-  const apiKey = process.env.TINYFISH_API_KEY;
-  if (!apiKey) {
-    throw new Error("Missing TINYFISH_API_KEY");
-  }
-
-  const baseUrl = process.env.TINYFISH_BASE_URL || DEFAULT_BASE_URL;
-  const timeoutMs = options.timeoutMs ?? DEFAULT_TIMEOUT_MS;
-  const maxRetries = options.maxRetries ?? DEFAULT_MAX_RETRIES;
-
-  const sleep = (ms: number) =>
-    new Promise((resolve) => setTimeout(resolve, ms));
-
-  for (let attempt = 0; attempt <= maxRetries; attempt += 1) {
-    const controller = new AbortController();
-    const timeout = setTimeout(() => controller.abort(), timeoutMs);
-
-    try {
-      const response = await fetch(`${baseUrl}/v1/automation/run`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          "X-API-Key": apiKey,
-        },
-        body: JSON.stringify({
-          url,
-          goal: buildAnalysisGoal(),
-        }),
-        signal: controller.signal,
-      });
-
-      if (!response.ok) {
-        const raw = await response.text();
-        const status = response.status;
-        if (status === 401) {
-          let detail = "Invalid or expired API key";
-          try {
-            const body = JSON.parse(raw) as { error?: { code?: string; message?: string } };
-            if (body?.error?.message) detail = body.error.message;
-          } catch {
-            // use default
-          }
-          throw new TinyFishError(
-            `TinyFish API key is invalid or not configured. Add a valid TINYFISH_API_KEY to your .env file. (${detail})`,
-            status
-          );
-        }
-        throw new TinyFishError(
-          `TinyFish request failed: ${status} ${raw}`,
-          status
-        );
-      }
-
-      const json = (await response.json()) as TinyFishRunResponse;
-      const payload = json.result ?? json.resultJson ?? json;
-      return normalizeAnalysis(payload);
-    } catch (error) {
-      if (error instanceof Error && error.name === "AbortError") {
-        error = new TinyFishError("TinyFish request timed out", 504);
-      }
-      if (attempt >= maxRetries || !isRetryable(error)) throw error;
-      const backoff =
-        DEFAULT_BACKOFF_MS * Math.pow(2, attempt) +
-        Math.floor(Math.random() * DEFAULT_BACKOFF_MS);
-      await sleep(backoff);
-    } finally {
-      clearTimeout(timeout);
-    }
-  }
-
-  throw new Error("TinyFish request failed after retries");
+  const payload = await runTinyFishRequest(url, buildAnalysisGoal(), {
+    ...options,
+    outputSchema: options.outputSchema ?? buildAnalysisOutputSchema(),
+  });
+  return normalizeAnalysis(payload);
 }
 
 /**
@@ -179,75 +257,5 @@ export async function runTinyFishWithGoal(
   goal: string,
   options: RunOptions = {}
 ): Promise<unknown> {
-  const apiKey = process.env.TINYFISH_API_KEY;
-  if (!apiKey) {
-    throw new Error("Missing TINYFISH_API_KEY");
-  }
-
-  const baseUrl = process.env.TINYFISH_BASE_URL || DEFAULT_BASE_URL;
-  const timeoutMs = options.timeoutMs ?? DEFAULT_TIMEOUT_MS;
-  const maxRetries = options.maxRetries ?? DEFAULT_MAX_RETRIES;
-
-  const sleep = (ms: number) =>
-    new Promise((resolve) => setTimeout(resolve, ms));
-
-  for (let attempt = 0; attempt <= maxRetries; attempt += 1) {
-    const controller = new AbortController();
-    const timeout = setTimeout(() => controller.abort(), timeoutMs);
-
-    try {
-      const requestBody: Record<string, unknown> = { url, goal };
-      if (options.browserProfile) {
-        requestBody.browser_profile = options.browserProfile;
-      }
-
-      const response = await fetch(`${baseUrl}/v1/automation/run`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          "X-API-Key": apiKey,
-        },
-        body: JSON.stringify(requestBody),
-        signal: controller.signal,
-      });
-
-      if (!response.ok) {
-        const raw = await response.text();
-        const status = response.status;
-        if (status === 401) {
-          let detail = "Invalid or expired API key";
-          try {
-            const body = JSON.parse(raw) as { error?: { code?: string; message?: string } };
-            if (body?.error?.message) detail = body.error.message;
-          } catch {
-            // use default
-          }
-          throw new TinyFishError(
-            `TinyFish API key is invalid or not configured. Add a valid TINYFISH_API_KEY to your .env file. (${detail})`,
-            status
-          );
-        }
-        throw new TinyFishError(
-          `TinyFish request failed: ${status} ${raw}`,
-          status
-        );
-      }
-
-      const json = (await response.json()) as TinyFishRunResponse;
-      return json.result ?? json.resultJson ?? json;
-    } catch (error) {
-      if (error instanceof Error && error.name === "AbortError") {
-        error = new TinyFishError("TinyFish request timed out", 504);
-      }
-      if (attempt >= maxRetries || !isRetryable(error)) throw error;
-      const backoff =
-        DEFAULT_BACKOFF_MS * Math.pow(2, attempt) +
-        Math.floor(Math.random() * DEFAULT_BACKOFF_MS);
-      await sleep(backoff);
-    } finally {
-      clearTimeout(timeout);
-    }
-  }
-
-  throw new Error("TinyFish request failed after retries");
+  return runTinyFishRequest(url, goal, options);
 }

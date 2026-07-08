@@ -159,9 +159,11 @@ The **TinyFish Web Agent** provides this capability. (The product was previously
 
 ## 5. TinyFish Web Agent — Technical Reference
 
-GEO uses the **TinyFish Web Agent** for browser automation and LLM-backed analysis. The following is a condensed reference from the [official documentation](https://docs.mino.ai/).
+GEO uses the **TinyFish Web Agent** for browser automation and LLM-backed analysis. The following is a condensed reference from the [official documentation](https://docs.tinyfish.ai/).
 
 **Note:** The API has moved from `mino.ai` to `agent.tinyfish.ai`. Use the new base URL and `TINYFISH_API_KEY` for all implementations. Mino is being phased out.
+
+**SDK:** GEO integrates through the official TypeScript SDK, [`@tiny-fish/sdk`](https://www.npmjs.com/package/@tiny-fish/sdk). The SDK reads `TINYFISH_API_KEY` from the environment, handles authentication, retries (`408`/`429`/`5xx`), timeouts, and typed responses. GEO calls `client.agent.run({ url, goal, output_schema })` (blocking) via `src/lib/tinyfish.ts`. The raw REST endpoints below remain available for reference and no-SDK usage.
 
 ### 5.1 Endpoints
 
@@ -187,6 +189,7 @@ Base URL: `https://agent.tinyfish.ai`. Legacy: `https://mino.ai` (avoid for new 
 | goal | string | Yes | Natural-language description of the task |
 | browser_profile | "lite" \| "stealth" | No | Default `lite`; `stealth` for bot-protected sites |
 | proxy_config | object | No | Optional proxy; e.g. `{ "enabled": true, "country_code": "US" }` |
+| output_schema | object | No | Optional constrained JSON schema for the final result |
 
 ### 5.4 SSE Event Types (run-sse)
 
@@ -207,7 +210,7 @@ Base URL: `https://agent.tinyfish.ai`. Legacy: `https://mino.ai` (avoid for new 
 | get_run | Retrieve status and result by run id |
 | list_runs | List runs with optional filters and pagination |
 
-Example MCP configuration (e.g. Cursor): use the TinyFish/Mino MCP URL as documented by the provider (e.g. `https://mino.ai/mcp` or the TinyFish equivalent).
+Example MCP configuration (e.g. Cursor): use the TinyFish MCP URL as documented by the provider (e.g. `https://agent.tinyfish.ai/mcp`).
 
 ---
 
@@ -495,7 +498,7 @@ The following stack is used to implement the architecture above. All choices are
 
 | Service | Use | Integration |
 |---------|-----|-------------|
-| **TinyFish Web Agent** | Browser automation and **LLM-backed analysis**: what the agent sees well, what is confusing, what is hard to access. | REST API: `POST /v1/automation/run` or `run-sse`; base URL `https://agent.tinyfish.ai`; auth via `X-API-Key`; `TINYFISH_API_KEY` server-side. |
+| **TinyFish Web Agent** | Browser automation and **LLM-backed analysis**: what the agent sees well, what is confusing, what is hard to access. | Official `@tiny-fish/sdk` (`client.agent.run`) server-side; base URL `https://agent.tinyfish.ai`; auth via `TINYFISH_API_KEY`. |
 | **OpenAI** | Optional: cleanup, consistency checks, recommendation generation on top of TinyFish’s analysis. | REST API (e.g. Chat Completions); server-side only; `OPENAI_API_KEY`. |
 
 ### 11.3 Data and Persistence
@@ -626,9 +629,9 @@ geo/
 
 ## 16. Documentation References
 
-- [TinyFish Web Agent — Documentation](https://docs.mino.ai/) (legacy Mino branding; use agent.tinyfish.ai and TINYFISH_API_KEY)
-- [Quick Start](https://docs.mino.ai/quick-start)
-- [API Reference](https://docs.mino.ai/api-reference)
-- [Authentication](https://docs.mino.ai/authentication)
-- [MCP Integration](https://docs.mino.ai/mcp-integration)
-- [API Keys](https://mino.ai/api-keys)
+- [TinyFish Web Agent — Documentation](https://docs.tinyfish.ai/) (legacy Mino branding; use agent.tinyfish.ai and `TINYFISH_API_KEY`)
+- [Quick Start](https://docs.tinyfish.ai/quick-start)
+- [API Reference](https://docs.tinyfish.ai/api-reference)
+- [Authentication](https://docs.tinyfish.ai/authentication)
+- [MCP Integration](https://docs.tinyfish.ai/mcp-integration)
+- [API Keys](https://agent.tinyfish.ai/api-keys)

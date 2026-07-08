@@ -1,26 +1,14 @@
 import type { Metadata } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
-import { Playfair_Display } from "next/font/google";
+import type { CSSProperties, ReactNode } from "react";
 import "./globals.css";
 
-const geistSans = Geist({
-  variable: "--font-geist-sans",
-  subsets: ["latin"],
-  display: "swap",
-});
-
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
-  subsets: ["latin"],
-  display: "swap",
-});
-
-const playfair = Playfair_Display({
-  variable: "--font-playfair",
-  subsets: ["latin"],
-  display: "swap",
-  weight: ["400", "700", "900"],
-});
+const fontVariables = {
+  "--font-geist-sans":
+    'Inter, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif',
+  "--font-geist-mono":
+    '"SFMono-Regular", ui-monospace, "Cascadia Code", "Source Code Pro", Menlo, Consolas, monospace',
+  "--font-playfair": 'Georgia, "Times New Roman", Times, serif',
+} as CSSProperties;
 
 export const metadata: Metadata = {
   title: "GEO — Generative Engine Optimization Audit",
@@ -50,15 +38,11 @@ export const metadata: Metadata = {
 export default function RootLayout({
   children,
 }: Readonly<{
-  children: React.ReactNode;
+  children: ReactNode;
 }>) {
   return (
-    <html lang="en" className="scroll-smooth">
-      <body
-        className={`${geistSans.variable} ${geistMono.variable} ${playfair.variable} antialiased`}
-      >
-        {children}
-      </body>
+    <html lang="en" className="scroll-smooth" style={fontVariables}>
+      <body className="font-sans antialiased">{children}</body>
     </html>
   );
 }
