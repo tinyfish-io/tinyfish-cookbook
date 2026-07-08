@@ -9,7 +9,7 @@ An accelerator and grant application copilot for the Vietnam startup ecosystem. 
 The real scraping and application work does **not** run on Vercel — same reasoning as FareGuard: a full discovery sweep across 6 sites plus per-application form extraction/drafting/filling can take longer than Vercel's function time limit. The heavy lifting runs on a free **GitHub Actions** schedule instead:
 
 ```
-GitHub Actions (every 8 hours)
+GitHub Actions (daily at 4 AM UTC)
   → scripts/discover.ts
   → calls TinyFish for all 6 sources in parallel
   → writes discovered programs straight to Redis
@@ -49,7 +49,7 @@ The Company Profile page is a real editable form (name, pitch, sector, stage, tr
 ## Tech stack
 
 - Next.js 14 (App Router) + TypeScript, Tailwind CSS, Geist font
-- TinyFish Agent API (stealth browser profile) for discovery, form extraction, and form filling
+- TinyFish SDK (`@tiny-fish/sdk`, stealth browser profile) for discovery, form extraction, and form filling
 - Groq (Llama 3.3 70B) for drafting answers
 - Redis (Upstash) for persistence — falls back to a local file automatically without it configured
 - GitHub Actions for the actual scheduled discovery sweep
@@ -61,7 +61,7 @@ npm install
 npm run dev
 ```
 
-Works immediately with seed data and no env vars. Add `TINYFISH_API_KEY` to `.env.local` to get one real discovery sweep automatically on first load.
+Works immediately with no env vars — the dashboard starts empty. Add `TINYFISH_API_KEY` to `.env.local` to get one real discovery sweep automatically on first load.
 
 ## Deploy
 
@@ -71,7 +71,7 @@ Same shape as FareGuard:
 2. Add Redis via Vercel's Storage → Marketplace → Redis (or Upstash directly)
 3. Add env vars on Vercel: `TINYFISH_API_KEY`, `GROQ_API_KEY`, `KV_REST_API_URL`, `KV_REST_API_TOKEN`, `CRON_SECRET` (any random string), `GITHUB_TOKEN` (PAT with `workflow` scope), `GITHUB_REPO`
 4. Add the same 4 secrets (`TINYFISH_API_KEY`, `KV_REST_API_URL`, `KV_REST_API_TOKEN`, `GROQ_API_KEY`) as GitHub repo secrets under Settings → Secrets and variables → Actions
-5. Deploy — `.github/workflows/discover.yml` starts firing every 8 hours automatically once pushed
+5. Deploy — `.github/workflows/discover.yml` starts firing daily (4 AM UTC) automatically once pushed
 
 ## Reset local state
 
