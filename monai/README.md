@@ -228,7 +228,10 @@ MonAI/
 │   │   └── suppliers.py         # Discovery + RFQ outreach
 │   └── services/
 │       ├── tinyfish_client.py   # Search + fetch wrappers
-│       └── ai_client.py         # OpenAI chat completions
+│       ├── ai_client.py         # OpenAI chat completions
+│       ├── report_builder.py    # Report generation
+│       ├── response_parser.py   # Response parsing + metric stripping
+│       └── search_analysis.py   # Search result analysis
 │
 └── frontend/
     ├── vercel.json              # SPA rewrites
@@ -245,9 +248,7 @@ MonAI/
     │   ├── lib/
     │   │   ├── api.ts           # Backend client (env-driven)
     │   │   └── utils.ts
-    │   ├── hooks/
-    │   │   └── use-mobile.ts
-    │   └── assets/              # Food illustrations + leaf texture
+    │   └── assets/              # Food illustrations (.webp) + leaf texture
     └── package.json
 ```
 
