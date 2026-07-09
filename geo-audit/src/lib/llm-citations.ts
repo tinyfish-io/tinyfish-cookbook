@@ -52,16 +52,23 @@ export function deriveBrandFromUrl(url: string): { domain: string; brand: string
   return { domain, brand };
 }
 
-/** Check if response text mentions the domain or brand (case-insensitive). */
+/** Check if response text mentions the domain or brand using word-boundary matching. */
+function matchesToken(text: string, token: string): boolean {
+  if (!token) return false;
+  const escaped = token.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+  return new RegExp(`\\b${escaped}\\b`, "i").test(text);
+}
+
 export function checkCitationInText(
   text: string,
   domain: string,
   brand: string
 ): boolean {
   const lower = text.toLowerCase();
-  const domainNorm = domain.toLowerCase();
-  const brandNorm = brand.toLowerCase();
-  return lower.includes(domainNorm) || lower.includes(brandNorm);
+  return (
+    matchesToken(lower, domain.toLowerCase()) ||
+    matchesToken(lower, brand.toLowerCase())
+  );
 }
 
 /** Truncate for snippet display. */
@@ -119,10 +126,13 @@ async function queryGemini(userQuery: string): Promise<string> {
 
   try {
     const res = await fetch(
-      `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${apiKey}`,
+      `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent`,
       {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: {
+          "Content-Type": "application/json",
+          "x-goog-api-key": apiKey,
+        },
         body: JSON.stringify({
           contents: [{ role: "user", parts: [{ text: userQuery }] }],
           generationConfig: { temperature: 0.3 },

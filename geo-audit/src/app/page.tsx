@@ -33,13 +33,6 @@ const STATS = [
   },
 ];
 
-const CURRENT_DATE = new Date().toLocaleDateString("en-US", {
-  weekday: "long",
-  year: "numeric",
-  month: "long",
-  day: "numeric",
-});
-
 export default function Home() {
   const [url, setUrl] = useState("");
   const router = useRouter();
@@ -56,8 +49,16 @@ export default function Home() {
       <div className="mx-auto max-w-[960px] px-6 py-4 sm:px-8">
         {/* ━━━━━ Masthead ━━━━━ */}
         <header className="flex items-center justify-between py-3 text-xs tracking-[0.2em] uppercase">
-          <span className="text-muted-foreground font-medium">
-            {CURRENT_DATE}
+          <span
+            className="text-muted-foreground font-medium"
+            suppressHydrationWarning
+          >
+            {new Date().toLocaleDateString("en-US", {
+              weekday: "long",
+              year: "numeric",
+              month: "long",
+              day: "numeric",
+            })}
           </span>
           <span
             className="font-semibold tracking-[0.25em]"

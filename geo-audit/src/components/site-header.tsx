@@ -69,6 +69,7 @@ export function SiteHeader({
             onClick={() => setMobileOpen(!mobileOpen)}
             className="inline-flex h-9 w-9 items-center justify-center text-muted-foreground transition-colors hover:text-foreground md:hidden"
             aria-label="Toggle menu"
+            aria-expanded={mobileOpen}
           >
             {mobileOpen ? <X className="size-5" /> : <Menu className="size-5" />}
           </button>

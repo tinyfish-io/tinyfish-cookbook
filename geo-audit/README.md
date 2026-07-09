@@ -258,7 +258,7 @@ GEO evaluates sites **using the TinyFish Web Agent itself**. TinyFish has an LLM
 ```json
 {
   "url": "https://yoursite.com",
-  "goal": "You are evaluating this page for how well an answer engine (e.g. ChatGPT, Perplexity) could understand and cite it. Analyze the page and produce a self-generated benchmark. For each of 5–8 questions that a user might ask (e.g. What is this product? Who is it for? How much does it cost? Where do I sign up?), state: (1) whether the answer is clearly in the page (true), partially there (partial), or missing (false), (2) a short partialAnswer explaining what you found or what is missing, (3) importance (high or medium). Return a JSON array called selfGeneratedQuestions with objects: question, answeredInDocs (true/false/\"partial\"), partialAnswer, importance."
+  "goal": "You are evaluating this page for how well an answer engine (e.g. ChatGPT, Perplexity) could understand and cite it. Analyze the page and produce a self-generated benchmark. For each of exactly 6 questions that a user might ask (e.g. What is this product? Who is it for? How much does it cost? Where do I sign up?), state: (1) whether the answer is clearly in the page (true), partially there (partial), or missing (false), (2) a short partialAnswer explaining what you found or what is missing, (3) importance (high or medium). Return a JSON array called selfGeneratedQuestions with objects: question, answeredInDocs (true/false/\"partial\"), partialAnswer, importance."
 }
 ```
 
@@ -534,26 +534,36 @@ All audit results (GEO score, findings, self-generated benchmark style analysis)
 ## 12. Codebase Structure
 
 ```
-geo/
-├── audits/
-│   ├── entity.ts
-│   ├── aboveFold.ts
-│   ├── consistency.ts
-│   └── citation.ts
-├── tinyfish/   # TinyFish Web Agent client (e.g. crawler, analysis runner)
-│   ├── crawler.ts
-│   ├── extractor.ts
-│   └── renderer.ts
-├── llm/
-│   ├── prompts.ts
-│   ├── evaluator.ts
-│   └── comparer.ts
-├── scoring/
-│   └── geoScore.ts
-├── ui/
-│   ├── auditTable.tsx
-│   ├── findings.tsx
-│   └── fixes.tsx
+geo-audit/
+├── prisma/
+│   ├── schema.prisma
+│   └── migrations/
+├── src/
+│   ├── app/
+│   │   ├── api/audit/          # Audit, history, trends, recommendations, llm-citations
+│   │   ├── audit/page.tsx      # Main audit dashboard
+│   │   └── page.tsx            # Landing page
+│   ├── components/
+│   │   ├── charts/             # ScoreTrendChart, ScoreRadarChart, QuestionAnalytics
+│   │   ├── interactive/        # LiveProgress, QuestionNetwork, ScoreSimulator
+│   │   ├── history/            # AuditHistory
+│   │   ├── llm-citations/      # LlmCitationCheck
+│   │   ├── recommendations/    # Recommendations
+│   │   └── ui/                 # shadcn/ui primitives
+│   ├── db/prisma.ts
+│   └── lib/
+│       ├── tinyfish.ts         # TinyFish Web Agent client (@tiny-fish/sdk)
+│       ├── audit-runner.ts     # Audit orchestration
+│       ├── scoring.ts          # GEO score computation
+│       ├── consistency.ts      # Multi-page consistency
+│       ├── llm-citations.ts    # Second-layer LLM citation checks
+│       ├── reddit-discovery.ts # Reddit post discovery via TinyFish
+│       ├── openai.ts           # Optional OpenAI cleanup
+│       ├── llmo-scoring.ts     # LLMO readiness scoring
+│       ├── llmo-signals.ts     # Machine-readability signals
+│       └── sitemap.ts          # Sitemap URL discovery
+├── package.json
+└── README.md
 ```
 
 ---

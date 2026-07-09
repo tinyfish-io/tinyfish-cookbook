@@ -182,6 +182,8 @@ export async function runAuditJob(payload: AuditPayload, config: RunAuditConfig)
     );
 
     let sessionId: string = randomUUID();
+    let persisted = false;
+    let createdSessionId: string | null = null;
     try {
       const session = await prisma.auditSession.create({
         data: {
@@ -189,6 +191,7 @@ export async function runAuditJob(payload: AuditPayload, config: RunAuditConfig)
           status: "IN_PROGRESS",
         },
       });
+      createdSessionId = session.id;
       sessionId = session.id;
 
       await prisma.$transaction(async (tx) => {
@@ -227,7 +230,18 @@ export async function runAuditJob(payload: AuditPayload, config: RunAuditConfig)
           consistencyReport,
         },
       });
+      persisted = true;
     } catch (error) {
+      if (createdSessionId) {
+        try {
+          await prisma.auditSession.update({
+            where: { id: createdSessionId },
+            data: { status: "FAILED" },
+          });
+        } catch {
+          // Best-effort cleanup for stuck IN_PROGRESS sessions.
+        }
+      }
       const message =
         error instanceof Error ? error.message : "Failed to persist audit";
       console.warn(
@@ -241,6 +255,7 @@ export async function runAuditJob(payload: AuditPayload, config: RunAuditConfig)
     const responseBody = {
       mode: "multi",
       sessionId,
+      persisted,
       baseUrl: url,
       overallScore,
       overallLlmoScore,
@@ -298,6 +313,7 @@ export async function runAuditJob(payload: AuditPayload, config: RunAuditConfig)
   }));
   let runId: string = randomUUID();
   let createdAt = new Date();
+  let persisted = false;
 
   try {
     const run = await prisma.auditRun.create({
@@ -323,6 +339,7 @@ export async function runAuditJob(payload: AuditPayload, config: RunAuditConfig)
         })),
       });
     }
+    persisted = true;
   } catch (error) {
     const message =
       error instanceof Error ? error.message : "Failed to persist audit";
@@ -337,6 +354,7 @@ export async function runAuditJob(payload: AuditPayload, config: RunAuditConfig)
   const responseBody = {
     mode: "single",
     id: runId,
+    persisted,
     url,
     createdAt,
     score: breakdown.score,

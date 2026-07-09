@@ -16,6 +16,9 @@ globalForCache.auditCache = auditCache;
 const CACHE_TTL_SECONDS = parseEnvNumber("AUDIT_CACHE_TTL_SECONDS", 120, {
   min: 30,
 });
+const CACHE_MAX_ENTRIES = parseEnvNumber("AUDIT_CACHE_MAX_ENTRIES", 100, {
+  min: 10,
+});
 const MAX_SITEMAP_PAGES = parseEnvNumber("AUDIT_MAX_SITEMAP_PAGES", 10, {
   min: 1,
 });
@@ -30,6 +33,20 @@ const TINYFISH_MAX_RETRIES = parseEnvNumber("TINYFISH_MAX_RETRIES", 0, {
   min: 0,
 });
 const TINYFISH_SINGLE_MAX_RETRIES = 0;
+
+function pruneAuditCache() {
+  const now = Date.now();
+  for (const [key, entry] of auditCache) {
+    if (now - entry.ts >= CACHE_TTL_SECONDS * 1000) {
+      auditCache.delete(key);
+    }
+  }
+  while (auditCache.size > CACHE_MAX_ENTRIES) {
+    const oldestKey = auditCache.keys().next().value;
+    if (!oldestKey) break;
+    auditCache.delete(oldestKey);
+  }
+}
 
 export async function POST(request: Request) {
   let payload: {
@@ -105,21 +122,28 @@ export async function POST(request: Request) {
 
     if (result.status === 200 && includeLlmCitations) {
       const auditUrl = typeof responseBody.baseUrl === "string" ? responseBody.baseUrl : url;
+      let llmTimeout: ReturnType<typeof setTimeout> | undefined;
       try {
         const llmResult = await Promise.race([
           runLlmCitationCheck(auditUrl, undefined),
-          new Promise<never>((_, reject) =>
-            setTimeout(() => reject(new Error("LLM citation check timed out")), 90_000)
-          ),
+          new Promise<never>((_, reject) => {
+            llmTimeout = setTimeout(
+              () => reject(new Error("LLM citation check timed out")),
+              90_000
+            );
+          }),
         ]);
         responseBody = { ...responseBody, llmCitations: llmResult };
       } catch (llmErr) {
         const errMsg = llmErr instanceof Error ? llmErr.message : "LLM citation check failed";
         responseBody = { ...responseBody, llmCitations: { error: errMsg } };
+      } finally {
+        if (llmTimeout) clearTimeout(llmTimeout);
       }
     }
 
     if (result.status === 200) {
+      pruneAuditCache();
       auditCache.set(cacheKey, { response: responseBody, ts: Date.now() });
     }
 

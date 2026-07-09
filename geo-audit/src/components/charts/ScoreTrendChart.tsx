@@ -155,37 +155,37 @@ export function ScoreTrendChart({ url }: ScoreTrendChartProps) {
               <XAxis
                 dataKey="date"
                 className="text-xs text-muted-foreground"
-                tick={{ fill: "hsl(var(--muted-foreground))" }}
+                tick={{ fill: "var(--muted-foreground)" }}
               />
               <YAxis
                 domain={[0, 100]}
                 className="text-xs text-muted-foreground"
-                tick={{ fill: "hsl(var(--muted-foreground))" }}
+                tick={{ fill: "var(--muted-foreground)" }}
               />
               <Tooltip
                 contentStyle={{
-                  backgroundColor: "hsl(var(--card))",
-                  border: "1px solid hsl(var(--border))",
+                  backgroundColor: "var(--card)",
+                  border: "1px solid var(--border)",
                   borderRadius: "8px",
                 }}
-                labelStyle={{ color: "hsl(var(--foreground))" }}
+                labelStyle={{ color: "var(--foreground)" }}
               />
               <Legend />
               <Line
                 type="monotone"
                 dataKey="score"
-                stroke="hsl(var(--primary))"
+                stroke="var(--primary)"
                 strokeWidth={3}
-                dot={{ fill: "hsl(var(--primary))", r: 4 }}
+                dot={{ fill: "var(--primary)", r: 4 }}
                 activeDot={{ r: 6 }}
                 name="GEO Score"
               />
               <Line
                 type="monotone"
                 dataKey="clarityIndex"
-                stroke="hsl(var(--success))"
+                stroke="var(--success)"
                 strokeWidth={2}
-                dot={{ fill: "hsl(var(--success))", r: 3 }}
+                dot={{ fill: "var(--success)", r: 3 }}
                 name="Clarity Index"
               />
             </LineChart>

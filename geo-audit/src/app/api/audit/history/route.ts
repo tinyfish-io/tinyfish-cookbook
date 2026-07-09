@@ -21,7 +21,9 @@ export async function GET(request: Request) {
   }
 
   try {
-    // Fetch all single-page audits (no pagination on DB queries)
+    const MAX_HISTORY = 200;
+    const fetchLimit = Math.min(offset + limit, MAX_HISTORY);
+
     const singleAudits = await prisma.auditRun.findMany({
       where: {
         url: url,
@@ -36,9 +38,9 @@ export async function GET(request: Request) {
       orderBy: {
         createdAt: "desc",
       },
+      take: fetchLimit,
     });
 
-    // Fetch all multi-page audits (sessions) (no pagination on DB queries)
     const sessions = await prisma.auditSession.findMany({
       where: {
         baseUrl: url,
@@ -54,6 +56,7 @@ export async function GET(request: Request) {
       orderBy: {
         createdAt: "desc",
       },
+      take: fetchLimit,
     });
 
     // Combine and sort by date

@@ -25,8 +25,10 @@ export async function POST(request: Request) {
     );
   }
 
+  const normalizedUrl = url.toLowerCase().startsWith("http") ? url : `https://${url}`;
+
   try {
-    new URL(url.toLowerCase().startsWith("http") ? url : `https://${url}`);
+    new URL(normalizedUrl);
   } catch {
     return NextResponse.json(
       { error: "Invalid url" },
@@ -40,7 +42,7 @@ export async function POST(request: Request) {
       : undefined;
 
   try {
-    const result = await runLlmCitationCheck(url, topics);
+    const result = await runLlmCitationCheck(normalizedUrl, topics);
     return NextResponse.json(result);
   } catch (error) {
     const message =

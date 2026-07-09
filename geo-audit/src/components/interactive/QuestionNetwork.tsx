@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, useMemo } from "react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 
 type QuestionNode = {
@@ -11,12 +11,6 @@ type QuestionNode = {
   category: string;
 };
 
-type QuestionLink = {
-  source: string;
-  target: string;
-  strength: number;
-};
-
 interface QuestionNetworkProps {
   questions: QuestionNode[];
 }
@@ -25,7 +19,17 @@ export function QuestionNetwork({ questions }: QuestionNetworkProps) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const [hoveredNode, setHoveredNode] = useState<string | null>(null);
   const [selectedNode, setSelectedNode] = useState<string | null>(null);
+  const hoveredRef = useRef<string | null>(null);
+  const selectedRef = useRef<string | null>(null);
   const animationRef = useRef<number | undefined>(undefined);
+
+  useEffect(() => {
+    hoveredRef.current = hoveredNode;
+  }, [hoveredNode]);
+
+  useEffect(() => {
+    selectedRef.current = selectedNode;
+  }, [selectedNode]);
 
   const stableProbability = (source: string, target: string): number => {
     const key = `${source}|${target}`;
@@ -36,14 +40,19 @@ export function QuestionNetwork({ questions }: QuestionNetworkProps) {
     return (h % 1000) / 1000;
   };
 
-  // Generate links based on category similarity and importance
-  const links: QuestionLink[] = questions.flatMap((q1, i) =>
-    questions.slice(i + 1).map((q2) => ({
-      source: q1.id,
-      target: q2.id,
-      strength: q1.category === q2.category ? 0.8 : 0.3,
-    }))
-  ).filter((link) => stableProbability(link.source, link.target) < link.strength);
+  const links = useMemo(
+    () =>
+      questions
+        .flatMap((q1, i) =>
+          questions.slice(i + 1).map((q2) => ({
+            source: q1.id,
+            target: q2.id,
+            strength: q1.category === q2.category ? 0.8 : 0.3,
+          }))
+        )
+        .filter((link) => stableProbability(link.source, link.target) < link.strength),
+    [questions]
+  );
 
   useEffect(() => {
     const canvas = canvasRef.current;
@@ -153,8 +162,8 @@ export function QuestionNetwork({ questions }: QuestionNetworkProps) {
         const pos = nodePositions.get(q.id);
         if (!pos) return;
 
-        const isHovered = hoveredNode === q.id;
-        const isSelected = selectedNode === q.id;
+        const isHovered = hoveredRef.current === q.id;
+        const isSelected = selectedRef.current === q.id;
         const radius = isSelected ? 10 : isHovered ? 8 : 6;
 
         // Glow effect for selected/hovered
@@ -237,7 +246,7 @@ export function QuestionNetwork({ questions }: QuestionNetworkProps) {
         cancelAnimationFrame(animationRef.current);
       }
     };
-  }, [questions, links, hoveredNode, selectedNode]);
+  }, [questions, links]);
 
   const selectedQuestion = questions.find((q) => q.id === selectedNode);
 

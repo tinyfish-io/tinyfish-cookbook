@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { Card, CardContent } from "@/components/ui/card";
 import { CheckCircle2, Loader2, AlertCircle } from "lucide-react";
 
@@ -20,9 +20,22 @@ interface LiveProgressProps {
 export function LiveProgress({ questions, onComplete }: LiveProgressProps) {
   const [progress, setProgress] = useState<QuestionProgress[]>([]);
   const [currentScore, setCurrentScore] = useState(0);
+  const onCompleteRef = useRef(onComplete);
+  onCompleteRef.current = onComplete;
+  const questionsKey = questions.join("\0");
 
   useEffect(() => {
-    // Initialize questions as pending
+    let cancelled = false;
+    const timeoutIds: ReturnType<typeof setTimeout>[] = [];
+
+    const schedule = (fn: () => void, ms: number) => {
+      const id = setTimeout(() => {
+        if (!cancelled) fn();
+      }, ms);
+      timeoutIds.push(id);
+      return id;
+    };
+
     const initialProgress = questions.map((q, i) => ({
       id: `q-${i}`,
       question: q,
@@ -32,44 +45,54 @@ export function LiveProgress({ questions, onComplete }: LiveProgressProps) {
     }));
     setProgress(initialProgress);
 
-    // Simulate streaming results (in real implementation, this would be SSE or polling)
     const simulateStream = async () => {
       for (let i = 0; i < questions.length; i++) {
-        await new Promise((resolve) => setTimeout(resolve, 800));
-        
-        // Mark as analyzing
+        await new Promise<void>((resolve) => schedule(resolve, 800));
+        if (cancelled) return;
+
         setProgress((prev) =>
           prev.map((q, idx) =>
             idx === i ? { ...q, status: "analyzing" } : q
           )
         );
 
-        await new Promise((resolve) => setTimeout(resolve, 1500));
+        await new Promise<void>((resolve) => schedule(resolve, 1500));
+        if (cancelled) return;
 
-        // Mark as complete with answer
         const answers: Array<"YES" | "NO" | "PARTIAL"> = ["YES", "NO", "PARTIAL"];
         const randomAnswer = answers[Math.floor(Math.random() * answers.length)];
-        
+
         setProgress((prev) =>
           prev.map((q, idx) =>
             idx === i ? { ...q, status: "complete", answer: randomAnswer } : q
           )
         );
 
-        // Update score
-        setCurrentScore(Math.min(100, Math.round(((i + 1) / questions.length) * 80 + Math.random() * 20)));
+        setCurrentScore(
+          Math.min(
+            100,
+            Math.round(((i + 1) / questions.length) * 80 + Math.random() * 20)
+          )
+        );
       }
-      
-      if (onComplete) {
-        setTimeout(onComplete, 500);
+
+      if (!cancelled) {
+        schedule(() => onCompleteRef.current?.(), 500);
       }
     };
 
-    simulateStream();
-  }, [questions, onComplete]);
+    void simulateStream();
+
+    return () => {
+      cancelled = true;
+      timeoutIds.forEach(clearTimeout);
+    };
+  }, [questionsKey]);
 
   const completedCount = progress.filter((p) => p.status === "complete").length;
-  const percentage = Math.round((completedCount / questions.length) * 100);
+  const percentage = questions.length
+    ? Math.round((completedCount / questions.length) * 100)
+    : 0;
 
   return (
     <div className="space-y-4">

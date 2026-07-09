@@ -339,7 +339,13 @@ function AuditPageInner() {
     };
   }, []);
 
-  async function runAudit() {
+  async function runAudit(
+    auditUrl?: string,
+    options?: { sitemap?: boolean }
+  ) {
+    const targetUrl = (auditUrl ?? url).trim();
+    if (!targetUrl) return;
+
     if (resultsTimeoutRef.current !== null) {
       clearTimeout(resultsTimeoutRef.current);
       resultsTimeoutRef.current = null;
@@ -355,7 +361,12 @@ function AuditPageInner() {
       const response = await fetch("/api/audit", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ url, sitemap: useSitemap, includeReddit, includeLlmCitations }),
+        body: JSON.stringify({
+          url: targetUrl,
+          sitemap: options?.sitemap ?? useSitemap,
+          includeReddit,
+          includeLlmCitations,
+        }),
       });
 
       // Stale run: user started another audit; ignore this response
@@ -411,62 +422,7 @@ function AuditPageInner() {
     if (urlParam) {
       hasAutoRun.current = true;
       setUrl(urlParam);
-      // Trigger audit on next tick after state is set
-      setTimeout(() => {
-        auditRunIdRef.current += 1;
-        const thisRunId = auditRunIdRef.current;
-        setError("");
-        setLoading(true);
-        setShowLiveProgress(true);
-        setData(null);
-
-        fetch("/api/audit", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ url: urlParam, sitemap: false }),
-        })
-          .then(async (response) => {
-            if (thisRunId !== auditRunIdRef.current) return;
-            const responseText = await response.text();
-            if (thisRunId !== auditRunIdRef.current) return;
-            if (!response.ok) {
-              let errorMessage = "Audit request failed";
-              try {
-                const json = JSON.parse(responseText);
-                errorMessage = json?.error || errorMessage;
-              } catch {
-                errorMessage =
-                  responseText ||
-                  `Request failed with status ${response.status}`;
-              }
-              throw new Error(errorMessage);
-            }
-            const json = JSON.parse(responseText) as AuditResponse;
-            if (thisRunId !== auditRunIdRef.current) return;
-            resultsTimeoutRef.current = setTimeout(() => {
-              resultsTimeoutRef.current = null;
-              if (thisRunId !== auditRunIdRef.current) return;
-              try {
-                setData(json);
-                setActivePageIndex(0);
-              } finally {
-                if (thisRunId === auditRunIdRef.current) {
-                  setShowLiveProgress(false);
-                  setLoading(false);
-                }
-              }
-            }, 2000);
-          })
-          .catch((err) => {
-            if (thisRunId === auditRunIdRef.current) {
-              setError(
-                err instanceof Error ? err.message : "Unknown error"
-              );
-              setShowLiveProgress(false);
-              setLoading(false);
-            }
-          });
-      }, 0);
+      void runAudit(urlParam, { sitemap: false });
     }
   }, [searchParams]);
 
@@ -602,7 +558,7 @@ function AuditPageInner() {
                           {url.length} character{url.length !== 1 ? "s" : ""}
                         </span>
                         <Button
-                          onClick={runAudit}
+                          onClick={() => void runAudit()}
                           disabled={loading || !url.trim()}
                           size="lg"
                           className="rounded-xl shadow-sm"
@@ -758,7 +714,7 @@ function AuditPageInner() {
                       </div>
                     </div>
                     <Button
-                      onClick={runAudit}
+                      onClick={() => void runAudit()}
                       disabled={loading || !url.trim()}
                       className="w-full rounded-lg"
                     >
