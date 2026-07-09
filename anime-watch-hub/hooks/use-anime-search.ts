@@ -1,7 +1,7 @@
 'use client'
 
 import { useState, useCallback } from 'react'
-import { MinoAgentState } from '@/lib/types'
+import { TinyFishAgentState } from '@/lib/types'
 
 interface DiscoveredPlatform {
   id: string
@@ -12,10 +12,10 @@ interface DiscoveredPlatform {
 export function useAnimeSearch() {
   const [isSearching, setIsSearching] = useState(false)
   const [isDiscovering, setIsDiscovering] = useState(false)
-  const [agents, setAgents] = useState<MinoAgentState[]>([])
+  const [agents, setAgents] = useState<TinyFishAgentState[]>([])
   const [error, setError] = useState<string | null>(null)
 
-  const updateAgent = useCallback((platformId: string, updates: Partial<MinoAgentState>) => {
+  const updateAgent = useCallback((platformId: string, updates: Partial<TinyFishAgentState>) => {
     setAgents((prev) =>
       prev.map((agent) =>
         agent.platformId === platformId ? { ...agent, ...updates } : agent
@@ -25,7 +25,7 @@ export function useAnimeSearch() {
 
   const checkPlatform = useCallback(
     async (animeTitle: string, platform: DiscoveredPlatform) => {
-      updateAgent(platform.id, { status: 'connecting', statusMessage: 'Connecting to Mino agent...' })
+      updateAgent(platform.id, { status: 'connecting', statusMessage: 'Connecting to TinyFish agent...' })
 
       try {
         const response = await fetch('/api/check-platform', {
@@ -57,47 +57,53 @@ export function useAnimeSearch() {
               try {
                 const data = JSON.parse(line.slice(6))
 
-                if (data.streamingUrl) {
+                if (data.type === 'ERROR') {
+                  updateAgent(platform.id, {
+                    status: 'error',
+                    statusMessage: typeof data.message === 'string' ? data.message : 'Error',
+                    streamingUrl: undefined,
+                  })
+                  continue
+                }
+
+                if (data.type === 'STREAMING_URL' && data.streaming_url) {
                   updateAgent(platform.id, {
                     status: 'browsing',
-                    streamingUrl: data.streamingUrl,
+                    streamingUrl: data.streaming_url,
                     statusMessage: 'Browsing platform...',
                   })
                 }
 
-                if (data.type === 'STATUS' && data.message) {
-                  updateAgent(platform.id, { statusMessage: data.message })
+                if (data.type === 'PROGRESS' && data.purpose) {
+                  updateAgent(platform.id, { statusMessage: data.purpose })
                 }
 
                 if (data.type === 'COMPLETE') {
-                  let result = {
-                    available: false,
-                    message: 'Check completed',
+                  const statusUpper = typeof data.status === 'string' ? data.status.toUpperCase() : data.status
+                  const isFailure =
+                    statusUpper === 'FAILED' ||
+                    statusUpper === 'CANCELLED' ||
+                    data.status === 'failed'
+
+                  if (isFailure) {
+                    updateAgent(platform.id, {
+                      status: 'error',
+                      statusMessage:
+                        data.error?.message ??
+                        data.error ??
+                        data.help_message ??
+                        data.message ??
+                        'Automation failed',
+                      streamingUrl: undefined,
+                    })
+                  } else {
+                    updateAgent(platform.id, {
+                      status: 'complete',
+                      result: data.result,
+                      statusMessage: undefined,
+                      streamingUrl: undefined,
+                    })
                   }
-
-                  if (data.resultJson) {
-                    try {
-                      result = typeof data.resultJson === 'string' 
-                        ? JSON.parse(data.resultJson) 
-                        : data.resultJson
-                    } catch {
-                      // Use default result if parsing fails
-                    }
-                  }
-
-                  updateAgent(platform.id, {
-                    status: 'complete',
-                    result,
-                    statusMessage: undefined,
-                    streamingUrl: undefined,
-                  })
-                }
-
-                if (data.type === 'ERROR') {
-                  updateAgent(platform.id, {
-                    status: 'error',
-                    statusMessage: data.message || 'An error occurred',
-                  })
                 }
               } catch {
                 // Skip malformed JSON lines
@@ -129,7 +135,7 @@ export function useAnimeSearch() {
       setAgents([])
 
       try {
-        // Step 1: Discover platform URLs using Gemini
+        // Step 1: Discover platform URLs using OpenAI
         const discoverResponse = await fetch('/api/discover-platforms', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
@@ -151,7 +157,7 @@ export function useAnimeSearch() {
         }
 
         // Initialize agents for each platform
-        const initialAgents: MinoAgentState[] = platforms.map((p: DiscoveredPlatform) => ({
+        const initialAgents: TinyFishAgentState[] = platforms.map((p: DiscoveredPlatform) => ({
           platformId: p.id,
           platformName: p.name,
           url: p.searchUrl,
@@ -159,7 +165,7 @@ export function useAnimeSearch() {
         }))
         setAgents(initialAgents)
 
-        // Step 2: Check each platform in parallel using Mino
+        // Step 2: Check each platform in parallel using TinyFish
         await Promise.all(platforms.map((platform: DiscoveredPlatform) => checkPlatform(animeTitle, platform)))
       } catch (err) {
         console.error('Search error:', err)

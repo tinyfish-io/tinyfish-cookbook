@@ -1,139 +1,96 @@
-# Project Title - Scholarship Match Engine 
+# Scholarship Finder
 
-**Live Link:** https://tinyfishscholarshipfinder.lovable.app/
+A Next.js app that finds real scholarships in real time. Enter a scholarship type, university, and region — Gemini discovers relevant sources, then parallel TinyFish browser agents scrape each one and stream results back as they arrive.
 
-## What This Project Is -
-This project is an AI-powered scholarship discovery and comparison system that automatically finds, scans, and extracts scholarship information directly from official scholarship websites worldwide.
+## Demo
 
-Instead of relying on outdated databases, PDFs, or manual searches, the system pulls live, up-to-date data from source websites and returns it in a clean, structured, and comparable format. Users can search scholarships based on financial need, country/region, academic level, or target university.
+Each agent card shows a live browser preview as it scrapes. Results appear as each agent completes rather than waiting for all to finish.
 
-## How it works 
-The system first uses an AI layer to identify and curate relevant scholarship websites based on user input such as:
+## How It Works
 
-Country or region
+```
+User submits search
+       ↓
+/api/search — Gemini (gemini-2.0-flash) discovers 5-8 relevant scholarship URLs
+       ↓
+Parallel TinyFish browser agents scrape each URL simultaneously
+       ↓
+Results stream back to the UI as each agent completes
+```
 
-University or institution
+## Architecture
 
-Financial need / merit-based criteria
+```
+src/
+├── app/
+│   ├── api/
+│   │   └── search/route.ts     ← single route: Gemini discovery + parallel agent scraping
+│   └── page.tsx
+├── components/
+│   ├── SearchForm.tsx           ← search inputs
+│   ├── SearchResults.tsx        ← results grid
+│   ├── ScholarshipCard.tsx      ← individual scholarship card
+│   ├── SelectableScholarshipCard.tsx
+│   ├── CompareDashboard.tsx     ← side-by-side comparison
+│   ├── CompareButton.tsx
+│   ├── LoadingAnimation.tsx     ← live agent status feed
+│   └── Header.tsx
+├── hooks/
+│   └── useScholarshipSearch.ts  ← SSE stream consumer
+└── types/
+    └── scholarship.ts
+```
 
-Academic level (undergraduate, postgraduate, PhD)
+## Code Snippet
 
-Field of study
+```typescript
+// /api/search — Gemini discovers URLs, then TinyFish agents scrape in parallel
+import { GoogleGenerativeAI } from "@google/generative-ai";
+import { TinyFish, EventType, RunStatus } from "@tiny-fish/sdk";
 
-This ensures that only official and relevant sources are used.
+const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY!);
+const model = genAI.getGenerativeModel({ model: "gemini-2.0-flash" });
+const result = await model.generateContent(prompt);
+const urls = JSON.parse(result.response.text());
 
+const client = new TinyFish({ apiKey: process.env.TINYFISH_API_KEY });
 
-## What to Expect
-Live, up-to-date data pulled directly from official websites
-
-Parallel web scanning for fast results
-
-Real-time status updates during execution
-
-Structured, comparable output (JSON)
-
-**Demo Video** - https://drive.google.com/file/d/1GXZhJOjiVUP5XcGvTAvRGcYhTWoKXlsE/view?usp=sharing
-
-## Code snippet -
-```bash
-const response = await fetch("https://mino.ai/v1/automation/run-sse", {
-  method: "POST",
-  headers: {
-    "Content-Type": "application/json",
-    "X-API-Key": "sk-mino-YOUR_API_KEY",
-  },
-  body: JSON.stringify({
-    url: "https://www.gebiz.gov.sg",
-    goal: "Extract the latest open government tenders. Return JSON with tenderTitle, agency, tenderID, procurementCategory, submissionDeadline, eligibilityCriteria, estimatedValue, tenderStatus, and tenderLink.",
-    browser_profile: "lite",
-  }),
-});
-
-const reader = response.body!.getReader();
-const decoder = new TextDecoder();
-
-while (true) {
-  const { done, value } = await reader.read();
-  if (done) break;
-
-  const chunk = decoder.decode(value);
-  for (const line of chunk.split("\n")) {
-    if (line.startsWith("data: ")) {
-      const data = JSON.parse(line.slice(6));
-
-      // Live browser view
-      if (data.streamingUrl) {
-        console.log("Live view:", data.streamingUrl);
-      }
-
-      // Final structured output
-      if (data.type === "COMPLETE" && data.resultJson) {
-        console.log("Extracted tenders:", data.resultJson);
+await Promise.all(
+  scholarshipUrls.map(async (site, index) => {
+    const agentStream = await client.agent.stream({ url: site.url, goal });
+    for await (const event of agentStream) {
+      if (event.type === EventType.COMPLETE) {
+        send({ type: "AGENT_COMPLETE", scholarships: event.result?.scholarships });
+        return;
       }
     }
-  }
-}
+  })
+);
 ```
-## Tech Stack
 
-Next.js (TypeScript)
+## Running Locally
 
-Mino API
+1. **Install dependencies**
+   ```bash
+   npm install
+   ```
 
-AI
+2. **Set up environment**
+   ```bash
+   cp .env.example .env.local
+   # Add your API keys to .env.local
+   ```
 
-## Architecture Diagram - 
-```mermaid
-flowchart TB
+3. **Run the dev server**
+   ```bash
+   npm run dev
+   ```
 
-%% =======================
-%% UI LAYER
-%% =======================
-UI["USER INTERFACE<br/>(React + Tailwind + Dashboard)"]
+4. Open [http://localhost:3000](http://localhost:3000)
 
-%% =======================
-%% INPUT & ORCHESTRATION
-%% =======================
-ORCH["Search Orchestration Layer<br/>(Next.js API / Server Actions)"]
+## Environment Variables
 
-%% =======================
-%% INTELLIGENCE LAYER
-%% =======================
-LLM["LLM Intelligence Layer<br/>(ChatGPT API / Gemini API)"]
-
-%% =======================
-%% AUTOMATION LAYER
-%% =======================
-MINO["MINO Web Automation<br/>(Scholarship Discovery & Extraction)"]
-
-%% =======================
-%% DATA LAYER
-%% =======================
-DB["DATA STORE<br/>(Supabase / Postgres)"]
-
-%% =======================
-%% DETAIL NODES
-%% =======================
-LLMD["• Interpret user intent<br/>• Region / University filtering<br/>• Generate authoritative scholarship links"]
-MINOD["• Visit scholarship websites<br/>• Extract visible scholarship details<br/>• SSE streaming of results"]
-DBD["• Cached scholarships<br/>• Deduplicated entries<br/>• Saved comparisons"]
-
-%% =======================
-%% CONNECTIONS
-%% =======================
-UI --> ORCH
-
-ORCH --> LLM
-LLM --> LLMD
-
-ORCH --> MINO
-MINO --> MINOD
-
-ORCH --> DB
-DB --> DBD
-
-MINO --> ORCH
-DB --> ORCH
-
-ORCH --> UI
-```
+| Variable | Description |
+|----------|-------------|
+| `TINYFISH_API_KEY` | Browser agents that scrape scholarship pages. Get yours at [agent.tinyfish.ai/api-keys](https://agent.tinyfish.ai/api-keys) |
+| `GEMINI_API_KEY` | LLM-powered URL discovery via gemini-2.0-flash. Get yours at [aistudio.google.com/apikey](https://aistudio.google.com/apikey) |

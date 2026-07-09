@@ -1,0 +1,11 @@
+<svg width="32" height="32" viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="mp-icon-gold" x1="3" y1="29" x2="29" y2="3" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#8F6A14"/>
+      <stop offset="1" stop-color="#F0D98A"/>
+    </linearGradient>
+  </defs>
+  <rect width="32" height="32" rx="7" fill="#0F0A08"/>
+  <path d="M16 5 L26 13 L22.5 26 L9.5 26 L6 13 Z" fill="url(#mp-icon-gold)" fill-opacity="0.18" stroke="url(#mp-icon-gold)" stroke-width="1.4" stroke-linejoin="round"/>
+  <path d="M9 18 L13 18 L15 13.5 L17.3 22 L19.2 17 L20.6 18 L23 18" stroke="url(#mp-icon-gold)" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+</svg>

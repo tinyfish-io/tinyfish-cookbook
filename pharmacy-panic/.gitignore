@@ -1,0 +1,17 @@
+# Dependencies
+node_modules/
+
+# Next.js
+.next/
+out/
+
+# Environment variables — never commit real keys
+.env
+.env.local
+.env.*.local
+
+# Vercel
+.vercel
+
+# Build artifacts
+*.tsbuildinfo

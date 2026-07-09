@@ -1,0 +1,14 @@
+<svg width="32" height="32" viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="fg-jet-icon" x1="3" y1="27" x2="29" y2="3" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#1E3A8A"/>
+      <stop offset="1" stop-color="#7DD3FC"/>
+    </linearGradient>
+  </defs>
+  <rect width="32" height="32" rx="7" fill="#0F172A"/>
+  <path d="M5.5 19.5c1 5 8.5 7.4 14 4.9 3.7-1.7 5.6-4.3 4.9-6.2" stroke="url(#fg-jet-icon)" stroke-width="1.5" stroke-linecap="round" fill="none"/>
+  <path d="M7.3 23.4c4 2.4 11.6 2 15.4-2.9 1.5-1.9 1.9-3.7 1.1-5" stroke="url(#fg-jet-icon)" stroke-width="1.5" stroke-linecap="round" fill="none" opacity="0.85"/>
+  <path d="M11.5 19.8c3.3-3.2 7.3-5.9 10.8-7.4l4-4.9c1-1 2.2-.5 1.9.9l-2 7.1c-.5 2.3-2.9 5.3-5.7 7.3-2.5 1.8-8 4.3-10.2 3.9-.5-.1-.4-1 .2-1.6Z" fill="url(#fg-jet-icon)"/>
+  <path d="M17.8 15.7 13.9 14.6l1.9-1.8 3 .6-1 2.3Z" fill="url(#fg-jet-icon)"/>
+  <path d="M21.3 20.4 22.5 24.2l-1.9-1.7-.8-3 1.5.9Z" fill="url(#fg-jet-icon)"/>
+</svg>

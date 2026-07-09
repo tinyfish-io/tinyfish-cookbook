@@ -1,6 +1,5 @@
 {
   "repo-owner": "ENG",
-  "vanta-dependabot-owner": "ENG",
-  "vanta-ebs-inspector-owner": "ENG",
-  "vanta-ecr-container-owner": "ENG"
+  "spoc": "paveldudka",
+  "spoc_deputy": []
 }
