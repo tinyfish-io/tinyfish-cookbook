@@ -1,0 +1,7 @@
+fastapi==0.116.1
+starlette==0.46.2
+uvicorn[standard]==0.32.1
+tinyfish>=0.2.5
+pydantic==2.11.7
+python-dotenv==1.0.1
+openai==1.58.1

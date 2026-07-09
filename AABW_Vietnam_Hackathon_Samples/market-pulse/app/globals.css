@@ -1,0 +1,110 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --bg: #FAF6F0;
+  --surface: #FFFFFF;
+  --surface-alt: #F2E9DC;
+  --border: #E5D8C5;
+  --text-primary: #1F1712;
+  --text-secondary: #6B5D4F;
+  --text-muted: #9C8D7D;
+  --accent: #B8891A;
+  --accent-dark: #8F6A14;
+  --accent-soft: rgba(184, 137, 26, 0.10);
+  --burgundy: #6B2430;
+  --success: #3E8A5E;
+  --warning: #B8721B;
+  --danger: #A8362F;
+  --shadow-sm: 0 1px 2px rgba(30, 20, 10, 0.06);
+  --shadow-md: 0 8px 24px rgba(30, 20, 10, 0.10), 0 1px 2px rgba(30, 20, 10, 0.06);
+}
+
+[data-theme="dark"] {
+  --bg: #0F0A08;
+  --surface: #1A120F;
+  --surface-alt: #241814;
+  --border: #3A2620;
+  --text-primary: #F5EDE4;
+  --text-secondary: #B8A79A;
+  --text-muted: #7A6A5D;
+  --accent: #D4A72C;
+  --accent-dark: #B8891A;
+  --accent-soft: rgba(212, 167, 44, 0.12);
+  --burgundy: #4A1620;
+  --success: #4A9B6E;
+  --warning: #D4881F;
+  --danger: #C1453D;
+  --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.4);
+  --shadow-md: 0 12px 32px rgba(0, 0, 0, 0.5), 0 1px 2px rgba(0, 0, 0, 0.4);
+}
+
+* {
+  border-color: var(--border);
+}
+html { color-scheme: dark; }
+html:not([data-theme="dark"]) { color-scheme: light; }
+
+body {
+  background: var(--bg);
+  color: var(--text-primary);
+}
+
+::selection { background: var(--accent); color: #1a1108; }
+table { border-collapse: collapse; }
+.tabular { font-variant-numeric: tabular-nums; }
+
+.card-surface {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  box-shadow: var(--shadow-sm);
+  position: relative;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease, transform 0.2s ease;
+}
+.card-surface:hover {
+  border-color: var(--accent);
+  box-shadow: var(--shadow-md);
+  z-index: 10;
+}
+
+@keyframes skeleton-pulse {
+  0%, 100% { opacity: 0.5; }
+  50% { opacity: 1; }
+}
+.skeleton {
+  background: var(--surface-alt);
+  border-radius: 8px;
+  animation: skeleton-pulse 1.4s ease-in-out infinite;
+}
+
+/* Animated gradient mesh — stands in for photography we can't legally embed.
+   Slow, breathing movement of warm gold/burgundy blobs behind the hero. */
+@keyframes mesh-drift-1 {
+  0%, 100% { transform: translate(0%, 0%) scale(1); }
+  50% { transform: translate(8%, -6%) scale(1.15); }
+}
+@keyframes mesh-drift-2 {
+  0%, 100% { transform: translate(0%, 0%) scale(1); }
+  50% { transform: translate(-10%, 8%) scale(1.1); }
+}
+@keyframes mesh-drift-3 {
+  0%, 100% { transform: translate(0%, 0%) scale(1); }
+  50% { transform: translate(6%, 10%) scale(0.9); }
+}
+.mesh-blob-1 { animation: mesh-drift-1 18s ease-in-out infinite; }
+.mesh-blob-2 { animation: mesh-drift-2 22s ease-in-out infinite; }
+.mesh-blob-3 { animation: mesh-drift-3 26s ease-in-out infinite; }
+
+@keyframes shimmer {
+  0% { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
+}
+.text-shimmer {
+  background: linear-gradient(90deg, var(--accent) 0%, #F0D98A 50%, var(--accent) 100%);
+  background-size: 200% auto;
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  animation: shimmer 6s linear infinite;
+}

@@ -1,0 +1,96 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --bg: #F6F5F3;
+  --surface: #FFFFFF;
+  --surface-alt: #F0EFEC;
+  --border: #E2E0DB;
+  --text-primary: #16151A;
+  --text-secondary: #63616B;
+  --text-muted: #95939C;
+  --accent: #5B4FE8;
+  --accent-dark: #4438C7;
+  --accent-soft: rgba(91, 79, 232, 0.08);
+  --success: #1B9C6E;
+  --warning: #C77E1B;
+  --danger: #C1443C;
+  --shadow-sm: 0 1px 2px rgba(15, 15, 20, 0.05);
+  --shadow-md: 0 4px 16px rgba(15, 15, 20, 0.08), 0 1px 2px rgba(15, 15, 20, 0.06);
+}
+
+[data-theme="dark"] {
+  --bg: #0A0A0C;
+  --surface: #131317;
+  --surface-alt: #1B1B21;
+  --border: #28282F;
+  --text-primary: #F3F2F5;
+  --text-secondary: #9C9AA5;
+  --text-muted: #656370;
+  --accent: #7C6FF0;
+  --accent-dark: #5B4FE8;
+  --accent-soft: rgba(124, 111, 240, 0.12);
+  --success: #34C98C;
+  --warning: #E0A83D;
+  --danger: #E0645B;
+  --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.4);
+  --shadow-md: 0 8px 24px rgba(0, 0, 0, 0.5), 0 1px 2px rgba(0, 0, 0, 0.4);
+}
+
+* {
+  border-color: var(--border);
+}
+
+html {
+  color-scheme: dark;
+}
+html:not([data-theme="dark"]) {
+  color-scheme: light;
+}
+
+body {
+  background: var(--bg);
+  color: var(--text-primary);
+}
+
+::selection {
+  background: var(--accent);
+  color: #fff;
+}
+
+table {
+  border-collapse: collapse;
+}
+
+.tabular {
+  font-variant-numeric: tabular-nums;
+}
+
+.card-surface {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  box-shadow: var(--shadow-sm);
+  position: relative;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease, transform 0.2s ease;
+}
+.card-surface:hover {
+  border-color: var(--accent);
+  box-shadow: var(--shadow-md);
+  z-index: 10;
+}
+
+@keyframes skeleton-pulse {
+  0%, 100% { opacity: 0.5; }
+  50% { opacity: 1; }
+}
+.skeleton {
+  background: var(--surface-alt);
+  border-radius: 8px;
+  animation: skeleton-pulse 1.4s ease-in-out infinite;
+}
+
+.drop-target-active {
+  border-color: var(--accent) !important;
+  background: var(--accent-soft) !important;
+}

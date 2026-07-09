@@ -1,4 +1,5 @@
 import { NextRequest } from 'next/server'
+import { TinyFish } from '@tiny-fish/sdk'
 
 export async function POST(request: NextRequest) {
   const encoder = new TextEncoder()
@@ -22,7 +23,7 @@ export async function POST(request: NextRequest) {
     const apiKey = process.env.TINYFISH_API_KEY
     if (!apiKey) {
       return new Response(
-        encoder.encode(`data: ${JSON.stringify({ type: 'ERROR', message: 'Mino API key not configured' })}\n\n`),
+        encoder.encode(`data: ${JSON.stringify({ type: 'ERROR', message: 'TinyFish API key not configured' })}\n\n`),
         {
           headers: {
             'Content-Type': 'text/event-stream',
@@ -60,55 +61,32 @@ Return a JSON object with these fields:
 If the anime is NOT found or not available, set available to false and explain why in the message.
 If you encounter a geo-restriction or region block, mention that in the message.`
 
-    const minoResponse = await fetch('https://agent.tinyfish.ai/v1/automation/run-sse', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'X-API-Key': apiKey,
-      },
-      body: JSON.stringify({
-        url: searchUrl,
-        goal: goal,
-      }),
-    })
+    const client = new TinyFish({ apiKey })
 
-    if (!minoResponse.ok || !minoResponse.body) {
-      return new Response(
-        encoder.encode(`data: ${JSON.stringify({ type: 'ERROR', message: 'Failed to start Mino agent' })}\n\n`),
-        {
-          headers: {
-            'Content-Type': 'text/event-stream',
-            'Cache-Control': 'no-cache',
-            Connection: 'keep-alive',
-          },
-        }
-      )
-    }
-
-    // Stream the Mino response directly to the client
+    // Stream TinyFish SDK events directly to the client (SSE)
     const readable = new ReadableStream({
-  async start(controller) {
-    const decoder = new TextDecoder()
+      async start(controller) {
+        try {
+          const stream = await client.agent.stream({
+            url: searchUrl,
+            goal,
+          })
 
-    try {
-      for await (const chunk of minoResponse.body as any) {
-        controller.enqueue(
-          encoder.encode(decoder.decode(chunk, { stream: true }))
-        )
-      }
-    } catch (error) {
-      console.error('Error streaming Mino response:', error)
-      controller.enqueue(
-        encoder.encode(
-          `data: ${JSON.stringify({ type: 'ERROR', message: 'Stream interrupted' })}\n\n`
-        )
-      )
-    } finally {
-      controller.close()
-    }
-  },
-})
-
+          for await (const event of stream) {
+            controller.enqueue(encoder.encode(`data: ${JSON.stringify(event)}\n\n`))
+          }
+        } catch (error) {
+          console.error('Error streaming TinyFish response:', error)
+          controller.enqueue(
+            encoder.encode(
+              `data: ${JSON.stringify({ type: 'ERROR', message: 'Stream interrupted' })}\n\n`
+            )
+          )
+        } finally {
+          controller.close()
+        }
+      },
+    })
 
     return new Response(readable, {
       headers: {

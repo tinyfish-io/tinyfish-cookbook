@@ -1,0 +1,22 @@
+# Render Blueprint — FinSight API (FastAPI)
+# Docs: https://render.com/docs/blueprint-spec
+services:
+  - type: web
+    name: finsight-api
+    runtime: python
+    region: singapore
+    plan: free
+    buildCommand: pip install -r requirements.txt
+    startCommand: uvicorn api.index:app --host 0.0.0.0 --port $PORT
+    healthCheckPath: /api/v1/health
+    envVars:
+      - key: PYTHON_VERSION
+        value: "3.12.0"
+      - key: TINYFISH_API_KEY
+        sync: false
+      - key: OPENAI_API_KEY
+        sync: false
+      - key: FRONTEND_URL
+        sync: false
+      - key: FINSIGHT_LLM_MODEL
+        value: gpt-4o
