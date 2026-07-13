@@ -49,6 +49,12 @@ export async function GET(req: NextRequest) {
     return NextResponse.json({ success: false, spots: [], message: 'Invalid zip code.' });
   }
 
+  const tinyFishKey = process.env.TINYFISH_API_KEY;
+  if (!tinyFishKey) return NextResponse.json({ error: 'Missing TINYFISH_API_KEY' }, { status: 500 });
+
+  const geminiKey = process.env.GEMINI_API_KEY;
+  if (!geminiKey) return NextResponse.json({ error: 'Missing GEMINI_API_KEY' }, { status: 500 });
+
   const encoder = new TextEncoder();
   const { readable, writable } = new TransformStream();
   const writer = writable.getWriter();
@@ -72,7 +78,7 @@ export async function GET(req: NextRequest) {
       send({ type: 'LOCATION', location: { city: geo.city, state: geo.state } });
 
       // Step 2 — Gemini discovers URLs (init inside handler)
-      const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY!);
+      const genAI = new GoogleGenerativeAI(geminiKey);
       const model = genAI.getGenerativeModel({ model: 'gemini-2.0-flash' });
 
       const prompt = `Find 5-7 real URLs of pages listing chicken wing restaurants for ${locationHint}.${flavor ? ` User prefers "${flavor}" wings.` : ''}
@@ -104,7 +110,7 @@ Rules:
       send({ type: 'SOURCES', count: urls.length });
 
       // Step 3 — TinyFish agents in parallel
-      const client = new TinyFish({ apiKey: process.env.TINYFISH_API_KEY });
+      const client = new TinyFish({ apiKey: tinyFishKey });
 
       const goal = `Scout chicken wing restaurants in ${locationHint}.${flavor ? ` Flavor: "${flavor}".` : ''}
 
