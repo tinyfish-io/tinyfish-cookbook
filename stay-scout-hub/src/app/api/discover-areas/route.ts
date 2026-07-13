@@ -35,6 +35,9 @@ export async function POST(request: Request) {
   const apiKey = process.env.TINYFISH_API_KEY;
   if (!apiKey) return Response.json({ error: "Missing TINYFISH_API_KEY" }, { status: 500 });
 
+  const geminiKey = process.env.GEMINI_API_KEY;
+  if (!geminiKey) return Response.json({ error: "Missing GEMINI_API_KEY" }, { status: 500 });
+
   const purposeDescription = getPurposeDescription(purpose, customPurpose);
 
   try {
@@ -65,7 +68,7 @@ export async function POST(request: Request) {
     }
 
     // Step 3 — Gemini extracts structured neighborhood recommendations
-    const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY!);
+    const genAI = new GoogleGenerativeAI(geminiKey);
     const model = genAI.getGenerativeModel({ model: "gemini-2.0-flash" });
 
     const prompt = `You are an expert travel advisor. Based ONLY on the travel guide content below, extract 5-8 specific neighborhood or area recommendations for someone staying in ${city}.
