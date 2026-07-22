@@ -4,7 +4,7 @@ The complete web toolkit for your agent — search, fetch, browser automation, a
 
 ## Skills
 
-- **`/tinyfish:web-toolkit`** — built on TinyFish's hosted MCP server (bundled via `.mcp.json`). No install, no CLI, no auth preflight. Works in any environment, including sandboxed surfaces without terminal access.
+- **`/tinyfish:tinyfish-mcp`** — built on TinyFish's hosted MCP server (bundled via `.mcp.json`). No install, no CLI, no auth preflight. Works in any environment, including sandboxed surfaces without terminal access.
 - **`/tinyfish:use-tinyfish`** — built on the `tinyfish` CLI. For terminal environments where the CLI can be installed (`npm install -g @tiny-fish/cli`).
 
 Both skills expose the same four-tool escalation ladder: search → fetch → browser automation → headless browser session.

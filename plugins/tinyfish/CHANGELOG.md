@@ -4,7 +4,7 @@
 
 ### Added
 - Bundled remote MCP server (`https://agent.tinyfish.ai/mcp`) via `.mcp.json`, loaded automatically by the plugin system — works in sandboxed surfaces (Claude.ai, Desktop, Cowork) where the CLI can't be installed
-- Skill: `/tinyfish:web-toolkit` — same 4-tool escalation ladder as `use-tinyfish`, built entirely on the MCP tools (no CLI, no install, no auth preflight)
+- Skill: `/tinyfish:tinyfish-mcp` — same 4-tool escalation ladder as `use-tinyfish`, built entirely on the MCP tools (no CLI, no install, no auth preflight)
 - Plugin-level `README.md` with a privacy-policy link and a note on local file access by skills
 
 ### Removed
