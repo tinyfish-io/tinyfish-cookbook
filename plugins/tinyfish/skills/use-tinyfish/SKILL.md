@@ -1,220 +1,80 @@
 ---
 name: use-tinyfish
-description: The complete web toolkit for your agent. Search the web and get answers in milliseconds. Fetch any URL and get clean markdown back. Send a browser agent to navigate sites, fill forms, and extract structured data. Spin up a headless browser for full programmatic control. Use when you need to search the web, extract/scrape data from websites, handle bot-protected sites, or automate browser tasks using natural language.
+description: The complete web toolkit for your agent, powered by the hosted TinyFish MCP server. Search the web and get answers in milliseconds. Fetch any URL and get clean markdown back. Send a browser agent to navigate sites, fill forms, and extract structured data. Spin up a headless browser for full programmatic control. Use when you need to search the web, extract/scrape data from websites, handle bot-protected sites, or automate browser tasks using natural language.
 ---
 
-# TinyFish CLI
+# TinyFish Web Toolkit
 
-The complete web toolkit — four tools, one CLI. Start with the lightest tool that can do the job and escalate only when needed.
+The complete web toolkit — provided by the hosted TinyFish MCP server. Start with the lightest tool that can do the job and escalate only when needed.
 
 ## Pre-flight Check (REQUIRED)
 
-Before making any TinyFish call, always run BOTH checks:
+Before making any TinyFish call:
 
-**1. CLI installed?**
-```bash
-which tinyfish && tinyfish --version || echo "TINYFISH_CLI_NOT_INSTALLED"
-```
+1. Confirm the TinyFish MCP tools are available in this session (look for tools such as `search`, `fetch_content`, and `run_web_automation` from the `tinyfish` server).
+2. If the tools are missing, or calls fail with an authorization error, stop and tell the user how to connect:
+   - **Claude Code:** run `/mcp`, select the `tinyfish` server, and complete the sign-in flow.
+   - **Claude Desktop / Claude.ai:** enable the TinyFish connector in Settings → Connectors and complete sign-in.
+   - **Claude Cowork:** connect the TinyFish connector *before* starting the session — sign-in cannot be completed from inside a running Cowork sandbox.
+3. Re-check tool availability after the user connects, then proceed.
 
-If not installed, stop and tell the user:
-> Install the TinyFish CLI: `npm install -g @tiny-fish/cli`
+A TinyFish account is required: https://agent.tinyfish.ai
 
-**2. Authenticated?**
-```bash
-tinyfish auth status
-```
-
-If not authenticated, stop and tell the user:
-> You need a TinyFish API key. Get one at: https://agent.tinyfish.ai/api-keys
->
-> Then authenticate:
-> ```
-> tinyfish auth login
-> ```
-
-Do NOT proceed until both checks pass.
+Do NOT proceed until the tools respond.
 
 ---
 
 ## Picking the Right Tool
 
 ```
-search  →  fetch  →  agent  →  browser
-lightest                        heaviest
+search  →  fetch_content  →  run_web_automation  →  create_browser_session
+lightest                                             heaviest
 ```
 
 | Tool | When to use | Speed | Cost |
 |------|-------------|-------|------|
 | **search** | You need to find URLs or get a quick answer about a topic | Fastest | Lowest |
-| **fetch** | You have URLs and need their clean content (articles, docs, product pages) | Fast | Low |
-| **agent** | You need to interact with a page — click, fill forms, navigate, extract structured data from dynamic sites | Slower | Higher |
-| **browser** | Agent isn't enough — you need raw programmatic browser control via CDP | Slowest | Highest |
+| **fetch_content** | You have URLs and need their clean content (articles, docs, product pages) | Fast | Low |
+| **run_web_automation** | You need to interact with a page — click, fill forms, navigate, extract structured data from dynamic sites | Slower | Higher |
+| **create_browser_session** | The web agent isn't enough — you need raw programmatic browser control via CDP | Slowest | Highest |
+
+### Full tool inventory
+
+- **search** — web search; returns ranked results with titles, URLs, and snippets.
+- **run_big_search** / **get_search_result** — larger indexed search over a topic; submit, then retrieve results.
+- **fetch_content** — fetch clean, extracted content from one or more URLs (ads, nav, and boilerplate stripped). Prefer markdown output for reading.
+- **run_web_automation** — run a browser automation from a natural-language goal (opens a real browser, navigates, clicks, fills forms, extracts data). **run_web_automation_async** submits and returns immediately; manage runs with **list_runs**, **get_run**, and **cancel_run**.
+- **batch_create** / **batch_status** / **batch_cancel** — submit and manage many automation runs at once.
+- **create_browser_session** / **list_browser_sessions** — spin up a remote headless browser; returns a CDP WebSocket URL for use with Playwright, Puppeteer, or any CDP client.
+- **get_search_usage** / **list_fetch_usage** — check usage.
 
 ### Common Patterns
 
-**Research: search → fetch**
+**Research: search → fetch_content**
 Search for a topic, then fetch the best results to read their full content.
 
-```bash
-# 1. Find URLs
-tinyfish search query "best React state management libraries 2026"
+**Deep extraction: search → run_web_automation**
+Search to find the right site, then use the web agent to interact with it and extract structured data.
 
-# 2. Read the top results
-tinyfish fetch content get --format markdown "https://result1.com" "https://result2.com"
-```
+**Escalation: fetch_content → run_web_automation**
+Try fetch_content first. If the page is dynamic/JS-heavy and the fetch returns empty or incomplete content, escalate to the web agent.
 
-**Deep extraction: search → agent**
-Search to find the right site, then use agent to interact with it and extract structured data.
+**Full control: run_web_automation → create_browser_session**
+If the web agent can't handle a complex multi-step workflow, spin up a raw browser session and automate it yourself via CDP.
 
-```bash
-# 1. Find the site
-tinyfish search query "Nike running shoes official store"
+### Writing automation goals
 
-# 2. Automate extraction on it
-tinyfish agent run --url "https://nike.com/running" \
-  "Extract all running shoes as JSON: [{\"name\": str, \"price\": str, \"colors\": [str]}]"
-```
+**Always specify the JSON structure you want in the goal**, e.g.:
 
-**Escalation: fetch → agent**
-Try fetch first. If the page is dynamic/JS-heavy and fetch returns empty or incomplete content, escalate to agent.
+> Extract all products as a JSON array: `[{"name": str, "price": str, "url": str}]`
 
-**Full control: agent → browser**
-If agent can't handle a complex multi-step workflow, spin up a raw browser session and automate it yourself via CDP.
-
----
-
-## Commands
-
-### `tinyfish search query`
-
-Web search. Returns ranked results with titles, URLs, and snippets.
-
-```bash
-tinyfish search query "<query>" [--location <hint>] [--language <hint>] [--pretty]
-```
-
-- Returns 10 results by default
-- Use `--location` and `--language` for geo-targeted results
-- Default output is JSON; `--pretty` for human-readable
-
-```bash
-tinyfish search query "best pho in Ho Chi Minh City" --location "Vietnam" --language "en"
-```
-
----
-
-### `tinyfish fetch content get`
-
-Fetch clean, extracted content from one or more URLs. Strips ads, nav, boilerplate — returns just the content.
-
-```bash
-tinyfish fetch content get <urls...> [--format markdown|html|json] [--links] [--image-links] [--pretty]
-```
-
-- Accepts **multiple URLs** in a single call — they are fetched in parallel server-side
-- `--format markdown` (default) — clean readable text
-- `--format json` — structured document tree
-- `--links` — include all extracted links from the page
-- `--image-links` — include extracted image URLs
-- Response includes: `url`, `final_url`, `title`, `language`, `author`, `published_date`, `text`, `latency_ms`
-
-```bash
-# Fetch one page as markdown
-tinyfish fetch content get --format markdown "https://example.com/article"
-
-# Fetch multiple pages with links
-tinyfish fetch content get --links "https://site-a.com" "https://site-b.com" "https://site-c.com"
-```
-
----
-
-### `tinyfish agent run`
-
-Run a browser automation using a natural language goal. The agent opens a real browser, navigates, clicks, fills forms, and extracts data.
-
-```bash
-tinyfish agent run --url <url> "<goal>" [--sync] [--async] [--pretty]
-```
-
-| Flag | Purpose |
-|------|---------|
-| `--url <url>` | Target URL (bare hostnames get `https://` auto-prepended) |
-| `--sync` | Wait for full result without streaming steps |
-| `--async` | Submit and return immediately |
-| `--pretty` | Human-readable output |
-
-**Output:** Default streams `data: {...}` SSE lines. The final result is the event where `type == "COMPLETE"` and `status == "COMPLETED"` — the extracted data is in the `resultJson` field. Read the raw output directly; no script-side parsing is needed.
-
-**Always specify the JSON structure you want in the goal:**
-
-```bash
-tinyfish agent run --url "https://example.com/products" \
-  "Extract all products as JSON array: [{\"name\": str, \"price\": str, \"url\": str}]"
-
-tinyfish agent run --url "https://example.com/search" \
-  "Search for 'wireless headphones', filter under $50, extract top 5 as JSON: [{\"name\": str, \"price\": str, \"rating\": str}]"
-```
-
-**Parallel extraction — when hitting multiple independent sites, make separate calls. Do NOT combine into one goal.**
-
-Good — parallel calls (run simultaneously):
-```bash
-tinyfish agent run --url "https://pizzahut.com" \
-  "Extract pizza prices as JSON: [{\"name\": str, \"price\": str}]"
-
-tinyfish agent run --url "https://dominos.com" \
-  "Extract pizza prices as JSON: [{\"name\": str, \"price\": str}]"
-```
-
-Bad — single combined call:
-```bash
-# Don't do this — less reliable and slower
-tinyfish agent run --url "https://pizzahut.com" \
-  "Extract prices from Pizza Hut and also go to Dominos..."
-```
-
-**Managing runs:**
-
-```bash
-tinyfish agent run list [--status PENDING|RUNNING|COMPLETED|FAILED|CANCELLED] [--limit N]
-tinyfish agent run get <run_id>
-tinyfish agent run cancel <run_id>
-```
-
-**Batch operations** — submit many runs from a CSV file (`url,goal` columns):
-
-```bash
-tinyfish agent batch run --input runs.csv
-tinyfish agent batch list
-tinyfish agent batch get <batch_id>
-tinyfish agent batch cancel <batch_id>
-```
-
----
-
-### `tinyfish browser session create`
-
-Spin up a remote browser instance. Returns a CDP WebSocket URL for programmatic control.
-
-```bash
-tinyfish browser session create [--url <url>] [--pretty]
-```
-
-- `--url` optionally navigates to a page after creation
-- Returns `session_id`, `cdp_url` (WebSocket), and `base_url`
-- Use the `cdp_url` with Playwright, Puppeteer, or any CDP client
-
-```bash
-tinyfish browser session create --url "https://example.com"
-# Returns: { session_id, cdp_url: "wss://...", base_url: "https://..." }
-```
+**Parallel extraction — when hitting multiple independent sites, make separate `run_web_automation` calls (they can run concurrently). Do NOT combine multiple sites into one goal** — a single combined goal is slower and less reliable.
 
 ---
 
 ## General Notes
 
-- **Match the user's language**: Respond in whatever language the user writes in.
-- All commands support `--pretty` for human-readable output. Default is JSON.
-- Use `--debug` on the root command or set `TINYFISH_DEBUG=1` to log HTTP requests to stderr.
+- **Match the user's language**: respond in whatever language the user writes in.
+- Prefer the lightest tool that can do the job; escalate only when a lighter tool falls short.
 
 $ARGUMENTS

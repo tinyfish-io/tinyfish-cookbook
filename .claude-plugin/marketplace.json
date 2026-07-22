@@ -12,9 +12,9 @@
   "plugins": [
     {
       "name": "tinyfish",
-      "source": "./tinyfish",
-      "description": "The complete web toolkit for your agent. Search the web, fetch clean content from URLs, automate browsers with natural language, spin up headless browsers for full programmatic control, and expose local ports to the internet.",
-      "version": "1.0.0",
+      "source": "./plugins/tinyfish",
+      "description": "The complete web toolkit for your agent. Search the web, fetch clean content from URLs, automate browsers with natural language, and spin up headless browsers for full programmatic control — all via the hosted TinyFish MCP server.",
+      "version": "1.1.0",
       "author": {
         "name": "TinyFish",
         "url": "https://tinyfish.ai"
@@ -27,8 +27,7 @@
         "web-scraping",
         "data-extraction",
         "search",
-        "fetch",
-        "tunneling"
+        "fetch"
       ]
     }
   ]

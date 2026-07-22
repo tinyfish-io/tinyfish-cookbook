@@ -1,5 +1,18 @@
 # Changelog
 
+## 1.1.0 (2026-07-22)
+
+### Changed
+- The plugin now connects to the **hosted TinyFish MCP server** (`https://agent.tinyfish.ai/mcp`) via a native `.mcp.json` declaration instead of requiring the TinyFish CLI. It works without any local installation in Claude Code, Claude Desktop, and Claude.ai; in Claude Cowork, connect the TinyFish connector before starting a session.
+- Skill `use-tinyfish` rewritten to guide selection over the MCP tools (`search` → `fetch_content` → `run_web_automation` → `create_browser_session`) instead of CLI commands.
+
+### Removed
+- Skill `tunneling` (tinyfi.sh SSH tunnels).
+- CLI installation and `tinyfish auth login` pre-flight — authentication is now an OAuth sign-in to the hosted server.
+
+### Added
+- README with connection instructions, privacy-policy link, and data-handling notes.
+
 ## 1.0.0 (2026-04-15)
 
 ### Added
