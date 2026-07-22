@@ -3,13 +3,15 @@
 ## 1.1.0 (2026-07-21)
 
 ### Added
-- Bundled remote MCP server (`https://agent.tinyfish.ai/mcp`) via `.mcp.json`, loaded automatically by the plugin system — works in sandboxed surfaces (Claude.ai, Desktop, Cowork) where the CLI can't be installed
-- Skill: `/tinyfish:tinyfish-mcp` — 4-tool escalation ladder (search, fetch, browser automation, headless browser session) built entirely on the MCP tools, no CLI, no install, no auth preflight
+- Bundled remote MCP server (`https://agent.tinyfish.ai/mcp`) via `.mcp.json`, loaded automatically by the plugin system — works in sandboxed surfaces (Claude.ai, Desktop, Cowork) where the CLI can't be installed. In Claude Desktop this still requires one manual "Install" click on the plugin's Connectors tab.
+- Skill: `/tinyfish:search` — free, token-efficient web search with recency/date filtering and news/research-paper scoping
+- Skill: `/tinyfish:fetch` — free, clean content extraction from up to 10 URLs in parallel
+- Skill: `/tinyfish:agent` — free browser automation, batch runs, and raw CDP browser sessions
 - Plugin-level `README.md` with a privacy-policy link and a note on local file access by skills
 
 ### Removed
 - Skill: `/tinyfish:tunneling` — expose local ports via tinyfi.sh SSH tunnels
-- Skill: `/tinyfish:use-tinyfish` — the CLI-based toolkit, replaced entirely by `tinyfish-mcp` so this plugin is MCP-only and works without a local CLI install
+- Skill: `/tinyfish:use-tinyfish` — the CLI-based toolkit, replaced entirely by `search`/`fetch`/`agent` so this plugin is MCP-only and works without a local CLI install
 
 ## 1.0.0 (2026-04-15)
 

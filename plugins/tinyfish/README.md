@@ -4,9 +4,15 @@ The complete web toolkit for your agent — search, fetch, browser automation, a
 
 ## Skills
 
-- **`/tinyfish:tinyfish-mcp`** — built on TinyFish's hosted MCP server (bundled via `.mcp.json`). No install, no CLI, no auth preflight. Works in any environment, including sandboxed surfaces without terminal access.
+All built on TinyFish's hosted MCP server (bundled via `.mcp.json`). No install, no CLI, no auth preflight. Works in any environment, including sandboxed surfaces without terminal access.
 
-Exposes a four-tool escalation ladder: search → fetch → browser automation → headless browser session.
+- **`/tinyfish:search`** — free, token-efficient web search with flexible recency/date filtering and news/research-paper scoping
+- **`/tinyfish:fetch`** — free, clean content extraction from up to 10 URLs in parallel, including JS-heavy pages
+- **`/tinyfish:agent`** — free browser automation: natural-language goals, batch runs across multiple sites, and raw CDP browser sessions
+
+## Desktop setup note
+
+In Claude Desktop, installing this plugin enables its skills but the bundled `tinyfish` MCP connector still needs one manual step: open the plugin's **Connectors** tab and click **Install** on `tinyfish` before the skills can actually call it.
 
 ## Privacy
 
@@ -14,4 +20,4 @@ TinyFish's privacy policy: https://www.tinyfish.ai/privacy-policy
 
 ## Local file access
 
-This skill does not read local files. All operations go through the TinyFish MCP server.
+None of these skills read local files. All operations go through the TinyFish MCP server.
