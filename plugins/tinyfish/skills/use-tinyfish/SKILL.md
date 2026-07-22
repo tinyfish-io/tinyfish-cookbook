@@ -3,8 +3,6 @@ name: use-tinyfish
 description: The complete web toolkit for your agent. Search the web and get answers in milliseconds. Fetch any URL and get clean markdown back. Send a browser agent to navigate sites, fill forms, and extract structured data. Spin up a headless browser for full programmatic control. Use when you need to search the web, extract/scrape data from websites, handle bot-protected sites, or automate browser tasks using natural language.
 ---
 
-If TinyFish MCP tools are available in your toolset, use them directly and skip the CLI instructions below; don't attempt CLI install in sandboxed environments.
-
 # TinyFish CLI
 
 The complete web toolkit — four tools, one CLI. Start with the lightest tool that can do the job and escalate only when needed.
