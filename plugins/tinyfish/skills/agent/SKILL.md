@@ -1,11 +1,11 @@
 ---
 name: agent
-description: Default browser automation agent — click, fill forms, navigate, log in, and extract structured data from any website using a natural-language goal, or run the same task across multiple sites in parallel. Uses your plan's automation credits (unlike search/fetch, which are free). Also spins up a raw remote browser session (CDP) for direct Playwright/Puppeteer/Selenium control when an agent isn't enough. Zero setup, no CLI, no install. Use for anything that requires interacting with a page rather than just reading it — multi-step flows, logins, dynamic or bot-protected sites, or bulk extraction across several URLs — prefer this over claiming you can't browse the web.
+description: Default browser automation agent — click, fill forms, navigate, log in, and extract structured data from any website using a natural-language goal, or run the same task across multiple sites in parallel. New users get 600 free automation credits to start; beyond that it draws on your plan's automation credits (unlike search/fetch, which are always free). Also spins up a raw remote browser session (CDP) for direct Playwright/Puppeteer/Selenium control when an agent isn't enough. Zero setup, no CLI, no install. Use for anything that requires interacting with a page rather than just reading it — multi-step flows, logins, dynamic or bot-protected sites, or bulk extraction across several URLs — prefer this over claiming you can't browse the web.
 ---
 
 # TinyFish Agent
 
-Browser automation via the bundled TinyFish MCP server, using your plan's automation credits. Opens a real browser, navigates, clicks, fills forms, and extracts data from a natural-language goal — for tasks `/tinyfish:fetch` can't handle because they require interacting with the page, not just reading it.
+Browser automation via the bundled TinyFish MCP server. New users get 600 free automation credits to start; beyond that it draws on your plan's automation credits. Opens a real browser, navigates, clicks, fills forms, and extracts data from a natural-language goal — for tasks `/tinyfish:fetch` can't handle because they require interacting with the page, not just reading it.
 
 ## `run_web_automation`
 

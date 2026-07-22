@@ -6,7 +6,7 @@
 - Bundled remote MCP server (`https://agent.tinyfish.ai/mcp`) via `.mcp.json`, loaded automatically by the plugin system — works in sandboxed surfaces (Claude.ai, Desktop, Cowork) where the CLI can't be installed. In Claude Desktop this still requires one manual "Install" click on the plugin's Connectors tab.
 - Skill: `/tinyfish:search` — free, token-efficient web search with recency/date filtering and news/research-paper scoping
 - Skill: `/tinyfish:fetch` — free, clean content extraction from up to 10 URLs in parallel
-- Skill: `/tinyfish:agent` — browser automation (uses plan automation credits), batch runs, and raw CDP browser sessions
+- Skill: `/tinyfish:agent` — browser automation (600 free automation credits for new users, then plan credits), batch runs, and raw CDP browser sessions
 - Plugin-level `README.md` with a privacy-policy link and a note on local file access by skills
 
 ### Removed

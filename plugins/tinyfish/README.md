@@ -8,7 +8,7 @@ All built on TinyFish's hosted MCP server (bundled via `.mcp.json`). No install,
 
 - **`/tinyfish:search`** — free, token-efficient web search with flexible recency/date filtering and news/research-paper scoping
 - **`/tinyfish:fetch`** — free, clean content extraction from up to 10 URLs in parallel, including JS-heavy pages
-- **`/tinyfish:agent`** — browser automation (uses your plan's automation credits): natural-language goals, batch runs across multiple sites, and raw CDP browser sessions
+- **`/tinyfish:agent`** — browser automation (600 free automation credits for new users, then your plan's credits): natural-language goals, batch runs across multiple sites, and raw CDP browser sessions
 
 ## Desktop setup note
 
