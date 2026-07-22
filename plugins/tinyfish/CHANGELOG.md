@@ -1,5 +1,14 @@
 # Changelog
 
+## 1.1.0 (2026-07-21)
+
+### Added
+- Bundled remote MCP server (`https://agent.tinyfish.ai/mcp`) via `.mcp.json`, loaded automatically by the plugin system — works in sandboxed surfaces (Claude.ai, Desktop, Cowork) where the CLI can't be installed
+- `use-tinyfish` skill now prefers MCP tools when available and skips CLI preflight checks in that case
+
+### Removed
+- Skill: `/tinyfish:tunneling` — expose local ports via tinyfi.sh SSH tunnels
+
 ## 1.0.0 (2026-04-15)
 
 ### Added
