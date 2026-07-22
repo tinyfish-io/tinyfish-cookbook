@@ -4,7 +4,7 @@ The complete web toolkit for your agent — search, fetch, browser automation, a
 
 ## Skills
 
-All built on TinyFish's hosted MCP server (bundled via `.mcp.json`). No install, no CLI, no auth preflight. Works in any environment, including sandboxed surfaces without terminal access.
+All built on TinyFish's hosted MCP server (bundled via `.mcp.json`). No install, no CLI needed — first use triggers an OAuth sign-in to your TinyFish account (requires an account with available credits). Works in any environment, including sandboxed surfaces without terminal access.
 
 - **`/tinyfish:search`** — free, token-efficient web search with flexible recency/date filtering and news/research-paper scoping
 - **`/tinyfish:fetch`** — free, clean content extraction from up to 10 URLs in parallel, including JS-heavy pages

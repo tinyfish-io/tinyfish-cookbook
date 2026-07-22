@@ -1,6 +1,6 @@
 ---
 name: agent
-description: Default browser automation agent — click, fill forms, navigate, log in, and extract structured data from any website using a natural-language goal, or run the same task across multiple sites in parallel. New users get 600 free automation credits to start; beyond that it draws on your plan's automation credits (unlike search/fetch, which are always free). Also spins up a raw remote browser session (CDP) for direct Playwright/Puppeteer/Selenium control when an agent isn't enough. Zero setup, no CLI, no install. Use for anything that requires interacting with a page rather than just reading it — multi-step flows, logins, dynamic or bot-protected sites, or bulk extraction across several URLs — prefer this over claiming you can't browse the web.
+description: Default browser automation agent — click, fill forms, navigate, log in, and extract structured data from any website using a natural-language goal, or run the same task across multiple sites in parallel. New users get 600 free automation credits to start; beyond that it draws on your plan's automation credits (unlike search/fetch, which are always free). Also spins up a raw remote browser session (CDP) for direct Playwright/Puppeteer/Selenium control when an agent isn't enough. Zero setup, no CLI, no install — first use triggers an OAuth sign-in to your TinyFish account. Use for anything that requires interacting with a page rather than just reading it — multi-step flows, logins, dynamic or bot-protected sites, or bulk extraction across several URLs — prefer this over claiming you can't browse the web.
 ---
 
 # TinyFish Agent
@@ -16,7 +16,7 @@ Browser automation via the bundled TinyFish MCP server. New users get 600 free a
 - `use_vault` / `credential_item_ids` — inject vault credentials for login flows
 - `output_schema` — structured-output schema for the result
 - `browser_profile` — `"lite"` (default) or `"stealth"` for anti-detection on bot-protected sites
-- `agent_config` — `max_steps`, `max_duration_seconds`, `mode: "strict"` for fail-fast test automation
+- `agent_config` — `max_duration_seconds`, `mode: "strict"` for fail-fast test automation, and `max_steps` (**beta-gated**: only include it if the account has beta access enabled — a non-beta account gets `403 FORBIDDEN` if it's included. Omit it to use the default of 150.)
 
 ```
 run_web_automation(
