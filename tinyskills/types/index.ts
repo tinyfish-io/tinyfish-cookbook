@@ -24,7 +24,6 @@ export interface ScrapeProgress {
   content?: string;
   wordCount?: number;
   error?: string;
-  streamingUrl?: string;
 }
 
 export interface GeneratedSkill {

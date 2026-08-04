@@ -10,7 +10,6 @@ import {
   Check,
   Copy,
   Download,
-  ExternalLink,
   History,
   Settings as SettingsIcon,
   ChevronRight,
@@ -362,16 +361,6 @@ export default function HomePage() {
                     <p className="text-[10px] text-muted-foreground mt-0.5 ml-5">
                       {item.wordCount.toLocaleString()} words
                     </p>
-                  )}
-                  {item.streamingUrl && item.status === "scraping" && (
-                    <a
-                      href={item.streamingUrl}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="absolute right-2 top-2.5 opacity-0 group-hover:opacity-100 text-muted-foreground hover:text-foreground transition-all"
-                    >
-                      <ExternalLink className="w-3 h-3" />
-                    </a>
                   )}
                 </div>
               ))}
