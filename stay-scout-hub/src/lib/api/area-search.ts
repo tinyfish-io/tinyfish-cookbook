@@ -83,7 +83,7 @@ export function researchArea(
               });
             }
 
-            if (event.type === 'STATUS') {
+            if (event.type === 'CONNECTED' || event.type === 'STATUS') {
               onStatus({
                 areaId: area.id,
                 areaName: area.name,
