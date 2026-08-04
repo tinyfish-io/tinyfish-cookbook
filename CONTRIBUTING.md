@@ -50,6 +50,18 @@ Each project folder **must** include a `README.md` with the following:
 6. **How to Run the codebase** (declare any env vars that may be needed here)
 7. **Architecture Diagram**
 
+## Check Your Recipe Before You Push
+
+There's a small script that checks the things reviewers would otherwise check by hand — the README sections listed above, and whether your TinyFish event handling actually lines up end to end:
+
+```bash
+python .github/scripts/check_recipes.py YOUR-NEW-PROJECT
+```
+
+No dependencies, just Python 3. It runs automatically on your pull request too.
+
+The event check is worth knowing about. Each recipe relays TinyFish events through three hops — the TinyFish stream, your own `/api` route, then the hook that renders progress — and it's easy to emit `streamingUrl` on one hop and read `streaming_url` on the next. Nothing crashes when you get this wrong; the live browser preview just silently never appears. The script catches that, including the snake_case field names the TinyFish stream actually publishes (`streaming_url`, `run_id`, `result`).
+
 ## Submitting Your Project
 
 1. Remember to test your new app thoroughly, and make sure it's has a nice `README.md` as described in the above section
