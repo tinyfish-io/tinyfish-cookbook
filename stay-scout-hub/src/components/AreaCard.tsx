@@ -168,7 +168,7 @@ export function AreaCard({ result }: AreaCardProps) {
                         <span className="text-muted-foreground">Reviews mention:</span>
                         <ul className="mt-1 list-disc list-inside text-muted-foreground">
                           {result.analysis.reviewHighlights.map((h, i) => (
-                            <li key={i}>"{h}"</li>
+                            <li key={i}>&quot;{h}&quot;</li>
                           ))}
                         </ul>
                       </div>
