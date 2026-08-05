@@ -73,7 +73,7 @@ export function CompareDashboard({ scholarships, onClose }: CompareDashboardProp
                     )
                   },
                   { label: "Additional Info", icon: null, render: (s: Scholarship) => <span className="text-sm text-muted-foreground">{s.additionalInfo || "N/A"}</span> },
-                ].map(({ label, icon, render }, idx) => (
+                ].map(({ label, icon, render }) => (
                   <tr key={label} className="border-b border-muted">
                     <td className="p-4 font-semibold bg-orange-50 text-orange-900">
                       <div className="flex items-center gap-2">{icon}{label}</div>

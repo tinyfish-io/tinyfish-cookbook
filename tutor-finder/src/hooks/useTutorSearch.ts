@@ -21,7 +21,8 @@ export function useTutorSearch() {
   const toggleTutorSelection = (tutorId: string) => {
     setState((prev) => {
       const next = new Set(prev.selectedTutorIds);
-      next.has(tutorId) ? next.delete(tutorId) : next.add(tutorId);
+      if (next.has(tutorId)) next.delete(tutorId);
+      else next.add(tutorId);
       return { ...prev, selectedTutorIds: next };
     });
   };
@@ -152,7 +153,7 @@ export function useTutorSearch() {
                 } catch { /* ignore parse errors */ }
               }
             }
-          } catch (error) {
+          } catch {
             setState((prev) => ({
               ...prev,
               agents: prev.agents.map((a) =>
