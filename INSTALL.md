@@ -14,6 +14,10 @@ In the Claude Code chat, run:
 /plugin install tinyfish@tinyfish-marketplace
 ```
 
+Agents installing on a user's behalf: the same works non-interactively —
+`claude plugin marketplace add tinyfish-io/tinyfish-cookbook` then
+`claude plugin install tinyfish@tinyfish-marketplace --scope user`.
+
 Success looks like: the plugin confirms installation, and TinyFish tools
 (`search`, `fetch_content`, `run_web_automation`) appear. First tool use
 triggers an OAuth sign-in — that's expected, complete it in the browser.
