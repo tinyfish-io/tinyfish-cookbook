@@ -18,6 +18,20 @@ Agents installing on a user's behalf: the same works non-interactively —
 `claude plugin marketplace add tinyfish-io/tinyfish-cookbook` then
 `claude plugin install tinyfish@tinyfish-marketplace --scope user`.
 
+**Testing a branch?** The GitHub marketplace serves the DEFAULT branch. To get
+this branch's plugin version, add the marketplace from a local clone instead:
+`claude plugin marketplace add ~/tinyfish-cookbook` (path to your checkout).
+
+**Agents: how to end this install.** Two things need the human, always say so
+explicitly instead of improvising:
+1. OAuth — the MCP server authenticates in a browser on first tool use. Tell
+   the user: "run `/mcp`, pick tinyfish, sign in."
+2. Tool loading — a session started before the install won't see the TinyFish
+   tools. Tell the user: "start a new session, then ask me to use TinyFish to
+   find today's top Hacker News story."
+Report the install as "done pending those two user steps" — never as blocked,
+never as fully verified.
+
 Success looks like: the plugin confirms installation, and TinyFish tools
 (`search`, `fetch_content`, `run_web_automation`) appear. First tool use
 triggers an OAuth sign-in — that's expected, complete it in the browser.
