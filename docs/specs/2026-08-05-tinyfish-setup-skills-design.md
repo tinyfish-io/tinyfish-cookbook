@@ -16,6 +16,25 @@ vs 9–15% for agent-only users — deeper surface contact predicts retention.
 Correlation, not proven causation — so installer success and activation are
 measured separately (see Telemetry).
 
+**DX evidence (2026-08 funnel deep-dive):** users die at three walls, none
+of them "tried and got an error": (1) copy-but-never-run — 172 client
+selections → ~57 CLI starts (openclaw 15→1); (2) mid-flow terminal vanish —
+~75% of claude-code attempts emit `started` then nothing (untracked Ctrl+C
+during OAuth/npm-install waits, stale-version "update and retry" dead-ends,
+a telemetry kill-switch silently dropping events after one slow POST, a
+broken hermes skill-install dependency); (3) fake success — codex can
+finish connect unauthenticated, and 52.8% of MCP-connected users never
+invoke a single tool (Claude Desktop/web connector cohort ~60% idle vs
+17–32% for terminal installs). Ads-acquired users activate at 7% vs 40%
+organic. Every DX rule below traces to one of these walls.
+
+**Target developer:** spectrum from non-technical builder (no terminal
+fluency, may lack Node) through founders to seasoned engineers. The design
+must survive the first group and not insult the last: beginners get the
+in-app path (champion tier, <2 min, zero terminal); engineers get a
+terminal path that never dead-ends (competitive tier, every prompt
+defaulted, every error carries its fix).
+
 Two jobs, one system:
 
 1. **Rescue the droppers** — replace the fragile multi-step copy-paste with a
@@ -99,7 +118,19 @@ key only.
 
 ### `connect --all` flow
 
-1. **Detect** the five harness config dirs; absent ones skipped silently.
+DX rules binding every step (wall 2): each step emits started/completed
+checkpoint events (PR #4038 pattern) flushed immediately; visible progress
+("step 2 of 4 — waiting for browser sign-in, ~30s"); re-running resumes
+idempotently from wherever the user bailed; **every failure message
+contains the exact copy-paste command that fixes it** (or "use the in-app
+path instead"), plus a docs link where one exists — bare advice strings
+("update and retry") are banned and CI-enforced via an error-copy fixture
+test. `--dry-run` prints planned writes/changes per harness and touches
+nothing.
+
+1. **Detect** the five harness config dirs. Absent harnesses are not
+   installed but never silent: the summary lists all five with
+   detected/not-detected status and the config path searched.
 2. **Auth** — per capability matrix. Non-interactive: `TINYFISH_API_KEY` env.
 3. **Configure** — per capability matrix. Idempotent re-runs; `--uninstall`
    removes our entries and leaves user content intact.
@@ -107,6 +138,11 @@ key only.
    endpoint for all; authenticated check where the CLI holds the key
    (Cursor, OpenClaw). Summary prints per-harness ✓/✗ **with depth label**
    (`verified: health` vs `verified: health+auth`) + reason + fix hint.
+   The summary **never prints ✓ for an unauthenticated harness** (wall 3:
+   codex defers OAuth) — it prints "one step left: sign in when your agent
+   first runs" with the exact action. The finish message ends with a first
+   real task: "Now ask your agent: use TinyFish to find today's top Hacker
+   News story" — success is a real web call, not a config write.
    In-harness E2E is out of installer reach — summary points at
    `/tinyfish:doctor`. Verify failure = warning, not install failure.
 5. **Exit codes** — 0 harnesses detected: exit non-zero with "no supported
@@ -133,7 +169,11 @@ key only.
    `{harness, detected, installed, verify_depth, verify_ok}` for all five
    harnesses + CLI version. `TINYFISH_NO_TELEMETRY=1` suppresses **all
    CLI-emitted analytics** (both the new ping and existing connect-event
-   attempt telemetry); README documents exactly what is sent.
+   attempt telemetry); README documents exactly what is sent. Telemetry is
+   fire-and-forget with a hard per-event timeout, never serial-blocks a
+   step, and never disables itself silently — drop the event, keep the
+   stream (wall 2: a slow POST once tripped a kill-switch and blinded the
+   funnel).
 
 ## Skills (deepen play)
 
@@ -178,7 +218,9 @@ gates = `bun:test`. Coverage: syntax gates on scripts; unit tests against
 CLI-written files; idempotency; uninstall); env seams (`TINYFISH_HOME`,
 remote-URL overrides); mocked verify branches (success/auth-fail/
 network-fail) per verify depth; update-check throttle + unreachable-remote;
-credentials 0600 assertion; doctor-report schema test (allowlist enforced —
+credentials 0600 assertion; error-copy fixture test (every failure string
+carries a fix command — bare advice fails CI); --dry-run
+writes-nothing assertion; doctor-report schema test (allowlist enforced —
 a fixture with poisoned paths/tokens must produce a clean report). Three
 E2E sandbox-HOME runs: fresh install, re-run idempotent, uninstall-restores.
 E4's flag/cohort wiring tests live in ux-labs frontend. CI skill/
@@ -190,13 +232,28 @@ marketplace validation as above.
   (`cli_version`, MCP `client_name`, connect attempt IDs) + `setup_completed`
   (schema in flow step 7). Opt-out env var covers all CLI-emitted analytics.
   Installer-success metrics reported separately from activation metrics.
+  **North-star DX metric: TTFC** — time from setup start (first checkpoint
+  event) to first real tool invocation, cohorted by client and acquisition
+  (ads vs organic). Target: <3 min terminal path (one budgeted OAuth
+  browser hop, everything else instant), <2 min in-app path.
+  The coworker-phase report card is TTFC-based, not install-based —
+  installs lie (52.8% connected-but-idle).
 - **Phase 2 (separate spec):** opt-in client diagnostics.
 
 ## Onboarding experiment prewire (E4)
 
 A **new, independent feature flag** (not a PROD-4115 variant — adding arms
 to a running experiment mid-flight contaminates cohorts) rendering the
-`connect --all` one-liner as the onboarding command block. Dormant = flag at
+setup block. Arm copy (wall 1): the **in-app path leads**, as a concrete
+instruction block, not a hint — names the app, shows the exact command to
+paste in the agent chat, and states what success looks like ("your agent
+replies confirming the TinyFish plugin is installed"); no-agent users are
+routed to the web playground (the 98%-success surface), never to a
+terminal. Client detection renders the **single-client command** for the
+detected tool (`connect claude-code`, `connect cursor`, …) — `--all`
+appears only under "installing for several tools?". The terminal block
+carries Node recovery up front ("No npx? Use the in-app path above — or
+install Node from nodejs.org"), mirrored in INSTALL.md. Dormant = flag at
 0% rollout, code merged but unreferenced by any live experiment. Activation
 requires: PROD-4115 concluded + sign-off from its owner (Kate) + cohorting
 keyed on existing `$feature/` conventions. Prewired in v1 so GA is a flag
@@ -215,6 +272,10 @@ flip with clean measurement.
 
 ## Phases
 
+- **Internal-phase gate (D13):** besides coworker testing, at least 2
+  recorded beginner-path sessions — non-engineering coworkers or a fresh
+  macOS account with no Node — walking the in-app path unassisted.
+  Coworkers alone validate only the engineer path.
 - **v1 (this spec):** connect --all (5 harnesses per capability matrix) +
   cursor client + rigor (merge/backup on CLI-written files, isolation,
   honest per-depth verify) + doctor (+report) + feedback + generator + CI +
@@ -228,7 +289,10 @@ flip with clean measurement.
   checkout auto-update if re-run prompting proves too slow, E4 flag
   activation (post-PROD-4115 + owner sign-off), GA owner named,
   npm-published one-liner as the public command, doctor/feedback for Cursor
-  if an invocation model appears. Device-code auth: closed — MCP OAuth
+  if an invocation model appears, and **connector-cohort activation** —
+  Claude Desktop/web MCP connector users are ~60% idle (auto-reconnect
+  daily, never invoke); v1 has no touchpoint for them, needs its own
+  design on TTFC data. Device-code auth: closed — MCP OAuth
   already provides zero-paste on the harnesses that matter; Cursor keeps
   the auth-login paste path.
 
@@ -271,12 +335,14 @@ flip with clean measurement.
 | Codex Review | `/codex review` | Independent 2nd opinion | 1 | CLEAR (outside voice) | 12 challenges: 6 folded, 4 decided via D8–D13, 2 already-resolved |
 | Eng Review | `/plan-eng-review` | Architecture & tests (required) | 1 | CLEAR | 5 issues, 0 critical gaps |
 | Design Review | `/plan-design-review` | UI/UX gaps | 0 | — | — |
-| DX Review | `/plan-devex-review` | Developer experience gaps | 0 | — | — |
+| DX Review | `/plan-devex-review` | Developer experience gaps | 1 | CLEAR (POLISH) | score 4/10 → 8/10, TTFC <3min terminal / <2min in-app; 13 fixes folded |
 
 **CODEX:** eng-review outside voice drove verify honesty (9A), integrate deferral (10A), prompt-before-update (8C); mid-review discovery that `tinyfish connect` ships the installer core produced the 15A pivot.
 
 **CROSS-MODEL:** CEO-review adversarial spec loop (fresh-context subagents, grounded in connect.ts): iteration 1 scored the bolted-on union 6/10 with 13 findings; iteration 2 scored the folded spec 8/10 (Scope + Feasibility PASS) with 11 clarity residuals, all fixed (Claude Code --all fallback path, path-redaction scrub, OpenClaw auth-verify + delegated-write correction, non-interactive definition + multi-OAuth UX, detect-only/uninstall exit codes, INSTALL.md ownership, feedback filing mechanism, doctor repair = connect-paths-only, update comparator, runner split). Iteration-1 headline fixes: 5-harness capability matrix now authoritative (fixes scope contradiction, per-harness write/auth/verify/skill semantics), E1 rescoped to non-interactive configure+verify at M effort with detect-only fallback, E2 split prepare-now/submit-at-GA (aligned with E5 bar), E4 defined as independent dormant flag requiring PROD-4115 owner sign-off, doctor report changed to field allowlist + user preview, exit codes enumerated, telemetry opt-out scoped to all CLI-emitted events, INSTALL.md location/exemption stated, tests extended to 5 fixtures + report-schema test.
 
-**VERDICT:** CEO + ENG CLEARED — ready to implement. v1 = extend `tinyfish connect` (cursor client, --all, capability-matrix rigor) + doctor/report/feedback + generator + tests + E4 dormant flag + E2 preparation.
+**DX:** POLISH mode against real funnel data (three walls: 172→57 copy-to-run, ~75% mid-flow vanish, 52.8% connected-idle). Fixes folded: in-app path leads with concrete instruction block + playground no-agent fallback; single-client command rendered per detected tool (--all demoted); Node recovery points in-app first; checkpoints + progress + resume; every-error-carries-fix rule (CI fixture test); telemetry never self-disables; honest per-harness auth state; finish message hands the agent a first real task; --dry-run; no silent skips; TTFC north-star <3min/<2min; beginner dogfooding gate; connector-idle cohort captured for GA. DX outside voice (codex): 15 challenges — 5 accepted as decisions D10–D14, 1 folded, 6 already-decided tradeoffs, 3 rebutted by prior decisions.
+
+**VERDICT:** CEO + ENG + DX CLEARED — ready to implement. v1 = extend `tinyfish connect` (cursor client, --all, capability-matrix rigor, DX rules) + doctor/report/feedback + generator + tests + E4 dormant flag + E2 preparation.
 
 NO UNRESOLVED DECISIONS
