@@ -30,7 +30,7 @@
 #   Floating tags (:latest, :22, :3.12) are PROHIBITED in production Dockerfiles.
 #
 #   CORRECT:
-#     FROM node:24-bookworm-slim@sha256:e8e2e91b1378f83c5b2dd15f0247f34110e2fe895f6ca7719dbb780f929368eb
+#     FROM node:24-bookworm-slim@sha256:3638d9a6fe4030bd716be989438248074489337ba3275657f93595428be4fc03
 #
 #   WRONG:
 #     FROM node:24-bookworm-slim
@@ -47,10 +47,10 @@ golden_images:
     - tier: recommended
       alias: node-24-lts
       image: node:24-bookworm-slim
-      uri: node:24-bookworm-slim@sha256:e8e2e91b1378f83c5b2dd15f0247f34110e2fe895f6ca7719dbb780f929368eb
-      runtime_version: "24.14.0"
+      uri: node:24-bookworm-slim@sha256:3638d9a6fe4030bd716be989438248074489337ba3275657f93595428be4fc03
+      runtime_version: "24.19.0"
       base_os: Debian 12 (Bookworm) slim
-      digest_updated: "2026-02-27"
+      digest_updated: "2026-08-08"
       eol: "2028-04-30"
       description: >
         Node.js 24 LTS on Debian 12 Bookworm slim. DevOps-managed. Slim variant reduces attack surface vs the full image
@@ -61,10 +61,10 @@ golden_images:
     - tier: acceptable
       alias: node-22-lts
       image: node:22-bookworm-slim
-      uri: node:22-bookworm-slim@sha256:dd9d21971ec4395903fa6143c2b9267d048ae01ca6d3ea96f16cb30df6187d94
-      runtime_version: "22.22.0"
+      uri: node:22-bookworm-slim@sha256:d649c27dae7ba0137b3cef5dd75baa422c08dc3d9e3fc0c23dfb172dc3cc6436
+      runtime_version: "22.23.2"
       base_os: Debian 12 (Bookworm) slim
-      digest_updated: "2026-02-27"
+      digest_updated: "2026-08-08"
       eol: "2027-04-30"
       description: >
         Node.js 22 LTS on Debian 12 Bookworm slim. DEVELOPER-managed. Teams using this image are responsible for
@@ -77,10 +77,10 @@ golden_images:
     - tier: recommended
       alias: node-24-distroless
       image: gcr.io/distroless/nodejs24-debian13:nonroot
-      uri: gcr.io/distroless/nodejs24-debian13:nonroot@sha256:af85d11ce7ef10172855a6e3649e3e8125b1b9e3ca41849ec2918036f05cb212
+      uri: gcr.io/distroless/nodejs24-debian13:nonroot@sha256:fbbdda866ea71aef98c4abece17e3d61fbf820cc2ef3961522caa2478716171a
       runtime_version: "24.18.0"
       base_os: Debian 13 (Trixie), distroless — no package manager
-      digest_updated: "2026-07-26"
+      digest_updated: "2026-08-08"
       eol: "2028-04-30"
       description: >
         Node.js 24 LTS on Google's distroless Debian 13 base. DevOps-managed. Ships the Node runtime plus glibc,
@@ -100,9 +100,9 @@ golden_images:
         blast radius — with no /bin/sh, no curl and no package manager, an attacker holding code execution has
         no tooling to pivot. Debian 13 is specified rather than the debian12 variant because debian12 ships
         Node 24.14.0 while the services migrating to this image already run 24.18.0; pinning debian12 would
-        silently downgrade the runtime by four minor releases. Note that node-24-lts above is still pinned at
-        24.14.0, so a build pairing that builder with this runtime spans two patch levels — harmless for a
-        Next.js standalone bundle, but it is a symptom of the overdue digest review, not an intended pairing.
+        silently downgrade the runtime by four minor releases. As of the 2026-08-08 refresh, node-24-lts is
+        at 24.19.0 and this runtime at 24.18.0, so the builder is one minor ahead of the runtime rather than
+        the two patch levels behind it that the overdue digest review had produced.
       use_case: "Final runtime stage of a multi-stage Node build. Pair with node-24-lts as the builder stage."
       caveats:
         - "Runtime only — has no npm and no shell, so it cannot be used as a builder stage."
@@ -132,10 +132,10 @@ golden_images:
     - tier: recommended
       alias: python-313
       image: python:3.13-slim-bookworm
-      uri: python:3.13-slim-bookworm@sha256:1245b6c39d0b8e49e911c7d07b60cd9ed26016b0e439b6903d5e08730e417553
-      runtime_version: "3.13.x"
+      uri: python:3.13-slim-bookworm@sha256:67a1e1f215ccda113cfc024e8639049257e88f273898f595b61476d128d387e8
+      runtime_version: "3.13.14"
       base_os: Debian 12 (Bookworm) slim
-      digest_updated: "2026-02-27"
+      digest_updated: "2026-08-08"
       eol: "2029-10-31"
       description: >
         Python 3.13 on Debian 12 Bookworm slim. DevOps-managed. Slim variant minimizes pre-installed packages, reducing
@@ -145,10 +145,10 @@ golden_images:
     - tier: acceptable
       alias: python-312
       image: python:3.12-slim-bookworm
-      uri: python:3.12-slim-bookworm@sha256:593bd06efe90efa80dc4eee3948be7c0fde4134606dd40d8dd8dbcade98e669c
-      runtime_version: "3.12.12"
+      uri: python:3.12-slim-bookworm@sha256:4766d8b510c428e595d74b9cc5bbb2fae8e26316fffb4adc89908d79aacd58a2
+      runtime_version: "3.12.13"
       base_os: Debian 12 (Bookworm) slim
-      digest_updated: "2026-02-27"
+      digest_updated: "2026-08-08"
       eol: "2028-10-31"
       description: >
         Python 3.12 on Debian 12 Bookworm slim. DEVELOPER-managed. Teams using this image are responsible for OS-level
@@ -165,10 +165,10 @@ golden_images:
     - tier: recommended
       alias: playwright-latest
       image: mcr.microsoft.com/playwright:v1.58.2-noble
-      uri: mcr.microsoft.com/playwright:v1.58.2-noble@sha256:65cefd09a5e943921ecd3a6e5414c603db2eb161e9eb48f2e2ccc63486dc7dc0
+      uri: mcr.microsoft.com/playwright:v1.58.2-noble@sha256:6446946a1d9fd62d9ae501312a2d76a43ee688542b21622056a372959b65d63d
       runtime_version: "1.58.2"
       base_os: Ubuntu 24.04 LTS (Noble Numbat)
-      digest_updated: "2026-02-27"
+      digest_updated: "2026-08-08"
       description: >
         Microsoft Playwright v1.58.2 on Ubuntu 24.04 LTS (Noble). DevOps-managed. Pre-baked with all browser binaries
         (Chromium, Firefox, WebKit) and their system-level dependencies. Playwright is the backbone of our AI web
@@ -178,10 +178,10 @@ golden_images:
     - tier: acceptable
       alias: playwright-v154
       image: mcr.microsoft.com/playwright:v1.54.0-noble
-      uri: mcr.microsoft.com/playwright:v1.54.0-noble@sha256:96b27b29220f99ef3205c4aa3a8b8e1b5beb6c3ebb2e9acbdef80cb944a03012
+      uri: mcr.microsoft.com/playwright:v1.54.0-noble@sha256:18d6adb6aaccf1b0f30eba890069972e089138e4a59ddb5303d7e7290e4e38b6
       runtime_version: "1.54.0"
       base_os: Ubuntu 24.04 LTS (Noble Numbat)
-      digest_updated: "2026-02-27"
+      digest_updated: "2026-08-08"
       description: >
         Microsoft Playwright v1.54.0 on Ubuntu 24.04 LTS (Noble). DEVELOPER-managed. Teams using this version are
         responsible for monitoring CVEs and upgrading to the recommended tier.
@@ -195,8 +195,8 @@ golden_images:
 # Metadata
 # =============================================================================
 metadata:
-  last_reviewed: "2026-02-27"
-  next_review_due: "2026-05-27"
+  last_reviewed: "2026-08-08"
+  next_review_due: "2026-11-08"
   review_cadence: quarterly
   maintained_by: "Infrastructure / DevOps Team"
   linear_ticket: https://linear.app/tinyfish/issue/INF-1097
