@@ -233,6 +233,7 @@ Pre-built n8n workflows using TinyFish — import the JSON and go.
 | [Competitor Scout](./N8N_WorkFlows/Competitor%20Scout%20CLI) | Research competitor feature decisions with OpenAI planning + TinyFish evidence collection |
 | [Web Research Agent](./N8N_WorkFlows/Web%20Research%20Agent) | Chatbot that scrapes any website with TinyFish and saves summaries to Notion |
 | [Daily Product Hunt Tracker](./N8N_WorkFlows/Daily%20Product%20Hunt%20Tracker) | Scheduled workflow delivering daily top 5 trending Product Hunt products to Telegram |
+| [AI Product Idea Generator](./N8N_WorkFlows/ai-competitor-analysis) | Scrapes Reddit pain points and Product Hunt solutions, then uses Gemini to surface unsolved market gaps |
 
 ## Getting Started
 
