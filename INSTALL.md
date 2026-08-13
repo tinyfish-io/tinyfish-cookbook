@@ -81,5 +81,4 @@ CLI means the config exists, not that a call would succeed.
 
 Use the playground: https://agent.tinyfish.ai — no install required.
 
-<!-- Hand-maintained (spec owner). Not generator-emitted. Keep in sync with
-docs/specs/2026-08-05-tinyfish-setup-skills-design.md. -->
+<!-- Hand-maintained (spec owner). Not generator-emitted. -->
