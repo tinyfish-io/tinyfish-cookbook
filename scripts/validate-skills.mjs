@@ -38,6 +38,13 @@ for (const p of marketplace.plugins ?? []) {
   if (!existsSync(dir)) fail(`marketplace.json: plugin source does not resolve: ${p.source}`);
   if (!existsSync(join(dir, "README.md")) && !existsSync(join(dir, ".claude-plugin", "plugin.json")) && !existsSync(join(dir, "skills")))
     fail(`marketplace.json: plugin dir looks empty: ${p.source}`);
+  // plugin.json wins at install time, so a one-sided bump silently ships the wrong version.
+  const manifest = join(dir, ".claude-plugin", "plugin.json");
+  if (existsSync(manifest)) {
+    const declared = JSON.parse(readFileSync(manifest, "utf8")).version;
+    if (p.version !== declared)
+      fail(`marketplace.json: ${p.name} entry says ${p.version} but plugin.json says ${declared} (plugin.json wins at install)`);
+  }
 }
 
 // Catches version skew between the entry and plugin.json, where plugin.json silently wins.

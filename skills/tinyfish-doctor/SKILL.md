@@ -38,7 +38,7 @@ it is the one channel carrying raw stacks and absolute paths.
 harness authenticates. For OAuth harnesses it is always false, because the CLI cannot borrow
 the harness's token. You are the only one who can close that gap.
 
-Run without `--harness`, so `harnesses[]` carries one entry per detected harness. Read the entry whose `harness` matches the agent you are running in — never the first one.
+Run without `--harness`, so `harnesses[]` carries one entry per detected harness. Read the entry whose `harness` matches the agent you are running in — never the first one. doctor only knows `claude-code`, `codex`, `cursor`, `hermes`, `openclaw`, `opencode`; if you are none of those, no entry describes you and step 2 is your only evidence.
 
 **Count the TinyFish servers first.** A plugin, a CLI-written entry, and an account-level
 connector can all be registered at once, all pointing at the same endpoint. doctor inspects
