@@ -36,8 +36,29 @@ const marketplace = JSON.parse(readFileSync(join(ROOT, ".claude-plugin", "market
 for (const p of marketplace.plugins ?? []) {
   const dir = join(ROOT, p.source);
   if (!existsSync(dir)) fail(`marketplace.json: plugin source does not resolve: ${p.source}`);
-  if (!existsSync(join(dir, "README.md")) && !existsSync(join(dir, "plugin.json")) && !existsSync(join(dir, "skills")))
+  if (!existsSync(join(dir, "README.md")) && !existsSync(join(dir, ".claude-plugin", "plugin.json")) && !existsSync(join(dir, "skills")))
     fail(`marketplace.json: plugin dir looks empty: ${p.source}`);
+}
+
+// Catches version skew between the entry and plugin.json, where plugin.json silently wins.
+// Kept alongside the checks above: --strict never verifies that `source` resolves (#241).
+const hasClaude = (() => {
+  try {
+    execSync("command -v claude", { cwd: ROOT, stdio: "pipe" });
+    return true;
+  } catch {
+    return false;
+  }
+})();
+if (hasClaude) {
+  try {
+    execSync("claude plugin validate . --strict", { cwd: ROOT, stdio: "pipe" });
+  } catch (e) {
+    const out = [e.stdout?.toString(), e.stderr?.toString()].filter(Boolean).join("\n").trim();
+    fail(`claude plugin validate --strict:\n${out}`);
+  }
+} else {
+  console.log("skipped: claude plugin validate --strict (claude CLI not on PATH)");
 }
 
 console.log(process.exitCode ? "validation failed" : "skills + marketplace valid");

@@ -24,6 +24,7 @@ const TARGETS = {
     dir: (name) => join(ROOT, "plugins", "tinyfish", "skills", name),
     vars: {
       HARNESS_FLAG: " --harness claude-code",
+      HARNESS_ENTRY: "`--harness claude-code` narrows `harnesses[]` to exactly one entry, so there is no ambiguity about which harness it describes.",
       REAUTH: "tell the user to run `/mcp`, pick tinyfish, and sign in.",
       FEEDBACK: "offer `/tinyfish:feedback` to file it",
     },
@@ -32,6 +33,8 @@ const TARGETS = {
     dir: (name) => join(ROOT, "skills", name),
     vars: {
       HARNESS_FLAG: "",
+      HARNESS_ENTRY:
+        "Run without `--harness`, so `harnesses[]` carries one entry per detected harness. Read the entry whose `harness` matches the agent you are running in — never the first one.",
       REAUTH: GENERIC_REAUTH,
       FEEDBACK: "file it at https://github.com/tinyfish-io/tinyfish-cookbook/issues",
     },

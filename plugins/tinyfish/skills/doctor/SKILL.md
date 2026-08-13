@@ -34,9 +34,11 @@ it is the one channel carrying raw stacks and absolute paths.
 
 ## 2. Prove the harness reach — the part doctor cannot do
 
-doctor sets `proves_harness_reach: false` whenever it could not prove that *this* harness
-authenticates. For OAuth harnesses it is always false, because the CLI cannot borrow the
-harness's token. You are the only one who can close that gap.
+`harnesses[].proves_harness_reach` is `false` whenever doctor could not prove that *this*
+harness authenticates. For OAuth harnesses it is always false, because the CLI cannot borrow
+the harness's token. You are the only one who can close that gap.
+
+`--harness claude-code` narrows `harnesses[]` to exactly one entry, so there is no ambiguity about which harness it describes.
 
 **Count the TinyFish servers first.** A plugin, a CLI-written entry, and an account-level
 connector can all be registered at once, all pointing at the same endpoint. doctor inspects

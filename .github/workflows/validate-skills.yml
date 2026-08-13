@@ -9,7 +9,7 @@ on:
       - "scripts/generate-harness-skills.mjs"
       - "scripts/validate-skills.mjs"
   push:
-    branches: [main, tinyfish-setup-skills]
+    branches: [main]
     paths:
       - "skills-src/**"
       - "plugins/**"
