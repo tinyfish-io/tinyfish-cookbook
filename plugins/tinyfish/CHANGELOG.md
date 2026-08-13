@@ -1,5 +1,10 @@
 # Changelog
 
+## 1.2.1 (2026-08-13)
+
+### Fixed
+- Skill: `/tinyfish:doctor` step 2 now counts TinyFish MCP servers before proving harness reach. Several can be registered at once against the same endpoint — a plugin, a CLI-written entry, an account-level connector — and a healthy sibling answering the test call was being read as proof that the registration doctor flagged is working. Found by the e2e regression test on a machine with three.
+
 ## 1.2.0 (2026-08-13)
 
 ### Changed

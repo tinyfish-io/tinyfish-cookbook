@@ -14,7 +14,7 @@
       "name": "tinyfish",
       "source": "./plugins/tinyfish",
       "description": "The complete web toolkit for your agent. Search the web, fetch clean content from URLs, automate browsers with natural language, and spin up headless browsers for full programmatic control.",
-      "version": "1.2.0",
+      "version": "1.2.1",
       "author": {
         "name": "TinyFish",
         "url": "https://tinyfish.ai"
