@@ -1,6 +1,6 @@
 {
   "name": "tinyfish",
-  "version": "1.1.0",
+  "version": "1.2.0",
   "description": "The complete web toolkit for your agent. Search the web and get answers in milliseconds. Fetch any URL and get clean markdown content back. Send a browser agent to navigate sites, fill forms, and extract structured data. Spin up a headless browser for full programmatic control when you need it.",
   "author": {
     "name": "TinyFish",

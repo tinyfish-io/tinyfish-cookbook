@@ -11,9 +11,12 @@ leaves the machine without the user seeing the exact text first.
 ## Collect
 
 Ask (briefly) for: what they were trying to do, what happened instead, and
-what they expected. If `/tinyfish:doctor` produced a diagnostic report this
-session, offer to attach it — the report is already redaction-safe (field
-allowlist, paths redacted, no credentials); do not add anything to it.
+what they expected. For anything setup-, auth-, or connectivity-shaped, run
+`npx -y @tiny-fish/cli@latest doctor` and offer to attach its stdout JSON
+verbatim — it is schema-versioned and already redaction-safe (undeclared
+fields stripped on parse, messages authored rather than raw). Do not add
+fields, summarise it, or paste config contents alongside it. On exit `2`
+doctor produced no JSON — say so instead of attaching an empty report.
 
 ## Structure
 
@@ -27,7 +30,7 @@ allowlist, paths redacted, no credentials); do not add anything to it.
 ### Environment
 harness + version, CLI version (if known)
 ### Doctor report (optional)
-…
+`tinyfish doctor` stdout, verbatim
 ```
 
 ## Preview gate

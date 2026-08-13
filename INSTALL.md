@@ -59,9 +59,23 @@ from nodejs.org first. Non-interactive environments: set `TINYFISH_API_KEY`.
 ## Verify / repair
 
 After install, run one real task: "use TinyFish to find today's top Hacker
-News story." If anything fails, run the `/tinyfish:doctor` skill in your
-agent — it diagnoses MCP config, auth, and connectivity, and knows how to
-repair by re-running connect.
+News story." If anything fails:
+
+```
+npx @tiny-fish/cli doctor --pretty     # what is wrong
+npx @tiny-fish/cli doctor --fix        # repair what is repairable
+```
+
+**Agents: `--fix` is the human's command, not yours.** Without a terminal
+every repair is skipped unless you pass `--yes`, and even then only
+`unattended_safe` repairs run — today that is Cursor alone. Read the JSON
+(`doctor` with no `--pretty`), report `checks[]` and `repairs[]`, and hand
+the command to the user. Never report a skipped repair as a fix.
+
+In-agent, `/tinyfish:doctor` runs the same checks and additionally proves
+this harness can reach TinyFish — the one thing the CLI cannot verify, since
+it cannot borrow the harness's OAuth token. A `registration: pass` from the
+CLI means the config exists, not that a call would succeed.
 
 ## No agent at all?
 

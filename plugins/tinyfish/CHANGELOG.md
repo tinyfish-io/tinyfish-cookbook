@@ -1,5 +1,11 @@
 # Changelog
 
+## 1.2.0 (2026-08-13)
+
+### Changed
+- Skill: `/tinyfish:doctor` rebuilt on `tinyfish doctor` (CLI 0.18+). The skill no longer re-implements the config checks by hand — it runs the CLI for those, then does the one check the CLI structurally cannot: calling a TinyFish tool through the harness's own MCP client to prove auth end to end. `proves_harness_reach` is always false for OAuth harnesses because the CLI cannot borrow the harness's token.
+- Skill: `/tinyfish:feedback` now attaches `tinyfish doctor` JSON verbatim instead of building its own report — the CLI's zod schema is the redaction boundary.
+
 ## 1.1.0 (2026-07-21)
 
 ### Added
