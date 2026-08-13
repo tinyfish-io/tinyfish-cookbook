@@ -1,52 +1,71 @@
 ---
 name: doctor
-description: Diagnose and repair your TinyFish setup — MCP config, API key validity, CLI install, and connectivity. Run when TinyFish tools fail, return auth errors, or after an install that didn't verify cleanly. Ends with a working setup or a shareable diagnostic report explaining exactly what's broken.
+description: Diagnose and repair your TinyFish setup — MCP registration, auth, and connectivity. Runs the TinyFish CLI's own doctor for the config checks, then does the one thing the CLI cannot — proving this harness can actually reach TinyFish. Run when TinyFish tools fail, return auth errors, or after an install that did not verify cleanly.
 ---
 
 # TinyFish Doctor
 
-Diagnose the TinyFish setup in this harness, repair what you can, and prove
-the fix with a real call. Never hand-edit config files — every repair action
-re-invokes `tinyfish connect` paths, which carry backup/merge/restore rigor.
+`tinyfish doctor` (CLI 0.18+) owns the diagnosis. Your job is to run it, do the one
+check it structurally cannot do, and act on what comes back. Never hand-edit config
+files — every repair goes through the CLI, which carries backup and merge rigor.
 
-## Checks (run in order, report each as pass/fail)
+## 0. No shell?
 
-1. **MCP config present** — is the TinyFish MCP server configured in this
-   harness? (Claude Code: TinyFish plugin installed; Codex/Cursor/Hermes:
-   MCP entry for `https://agent.tinyfish.ai/mcp`.)
-2. **Connectivity** — can this environment reach `https://agent.tinyfish.ai/mcp`
-   (any HTTP response counts; DNS/TLS/proxy failures fail this check)?
-3. **Auth** — call a free TinyFish tool (`search`, one cheap query). Success
-   = authenticated. An auth error = key/OAuth problem, not connectivity.
-4. **CLI** — `npx @tiny-fish/cli --version` (only if a terminal is
-   available). Note the version; failure here is non-fatal (MCP can work
-   without the CLI).
+Sandboxed surfaces (Claude.ai, Desktop, Cowork) have no `npx`. If you cannot run
+commands, skip to step 2 — it is the more valuable check anyway — then give the user
+the command from step 1 to run themselves.
 
-## Repairs
+## 1. Run doctor
 
-- Missing/broken MCP config → run `npx @tiny-fish/cli connect <this-harness>`
-  (ask the user before running; show the command first).
-- Auth failure on OAuth harness → tell the user the exact re-auth action for
-  this harness (e.g. Claude Code: `/mcp` → TinyFish → sign in).
-- Auth failure on key-based harness → `npx @tiny-fish/cli auth login`.
-- Connectivity failure → report it plainly (VPN/proxy/firewall); nothing to
-  repair locally.
+```
+npx -y @tiny-fish/cli@latest doctor{{HARNESS_FLAG}}
+```
 
-After any repair, re-run check 3. Success = show the real result of the test
-call — the user should see their agent touch the live web.
+JSON on stdout: `checks[]`, `harnesses[]`, `repairs[]`.
 
-## Diagnostic report
+| Exit | Meaning |
+|---|---|
+| `0` | every check passed |
+| `1` | a check failed — read `checks[]` |
+| `2` | doctor could not run; **stdout is empty**, the reason is on stderr |
 
-When checks fail and repair doesn't fix them, emit a report built from this
-field allowlist ONLY:
+`--pretty` only when showing a human the list. Never put `--debug` output in a report —
+it is the one channel carrying raw stacks and absolute paths.
 
-- harness name + version, CLI version
-- each check name + pass/fail
-- error strings from TinyFish tooling, with absolute paths redacted to `~/…`
-  or `<redacted>` before inclusion
+## 2. Prove the harness reach — the part doctor cannot do
 
-Never include: raw home paths, environment dumps, config file contents, URLs
-with tokens, or anything credential-derived (if a key must be referenced,
-use its SHA-256 hash, never the key).
+doctor sets `proves_harness_reach: false` whenever it could not prove that *this* harness
+authenticates. For OAuth harnesses it is always false, because the CLI cannot borrow the
+harness's token. You are the only one who can close that gap: call `search` once through
+your own MCP client with a cheap query.
 
-Show the report to the user and offer `/tinyfish:feedback` to file it.
+| What happens | What it means |
+|---|---|
+| Results come back | Setup works end to end, whatever `auth_mode` says |
+| Auth error, but doctor says `registered: yes` | Registration exists; the credential behind it is broken |
+| TinyFish tools absent entirely | Server not loaded in this session — the user must restart the agent |
+
+A `registration: pass` is presence, not proof — doctor reads config, not the wire. A stale
+API key sitting in a config header passes that check and still fails every call.
+
+## 3. Repair
+
+Run only commands that appear in `repairs[]`, and show `command` before running it.
+
+- Terminal with the user present → `doctor --fix{{HARNESS_FLAG}}`
+- Non-interactive → `doctor --fix --yes`; only `unattended_safe: true` repairs run and the
+  rest return as skipped. Never report a skipped repair as a fix.
+- `unattended_safe: false` (`auth login`) → hand it to the user, do not run it.
+- OAuth credential failures have no CLI repair: {{REAUTH}}
+
+Re-run step 2 after any repair. Success means showing the real search result — the user
+should see their agent touch the live web.
+
+## 4. Still broken
+
+Attach doctor's stdout JSON verbatim. It is schema-versioned and already redaction-safe:
+undeclared fields are stripped on parse and every message is authored rather than raw. Do
+not build your own report, add fields, or paste config contents. On exit `2` there is no
+JSON — say so rather than filing an empty report.
+
+Then {{FEEDBACK}}.

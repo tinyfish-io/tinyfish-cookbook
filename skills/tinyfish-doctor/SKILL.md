@@ -1,5 +1,5 @@
 ---
-name: doctor
+name: tinyfish-doctor
 description: Diagnose and repair your TinyFish setup — MCP registration, auth, and connectivity. Runs the TinyFish CLI's own doctor for the config checks, then does the one thing the CLI cannot — proving this harness can actually reach TinyFish. Run when TinyFish tools fail, return auth errors, or after an install that did not verify cleanly.
 ---
 
@@ -18,7 +18,7 @@ the command from step 1 to run themselves.
 ## 1. Run doctor
 
 ```
-npx -y @tiny-fish/cli@latest doctor --harness claude-code
+npx -y @tiny-fish/cli@latest doctor
 ```
 
 JSON on stdout: `checks[]`, `harnesses[]`, `repairs[]`.
@@ -52,11 +52,18 @@ API key sitting in a config header passes that check and still fails every call.
 
 Run only commands that appear in `repairs[]`, and show `command` before running it.
 
-- Terminal with the user present → `doctor --fix --harness claude-code`
+- Terminal with the user present → `doctor --fix`
 - Non-interactive → `doctor --fix --yes`; only `unattended_safe: true` repairs run and the
   rest return as skipped. Never report a skipped repair as a fix.
 - `unattended_safe: false` (`auth login`) → hand it to the user, do not run it.
-- OAuth credential failures have no CLI repair: tell the user to run `/mcp`, pick tinyfish, and sign in.
+- OAuth credential failures have no CLI repair: re-authenticate in the harness itself.
+
+  | Harness | Re-auth |
+  |---|---|
+  | Codex, Hermes | no login command — auth runs on first tool use; trigger a TinyFish tool and finish the browser sign-in |
+  | OpenCode | `opencode mcp auth tinyfish` |
+  | Claude Code | `/mcp` in-app, or `claude mcp login tinyfish` |
+  | OpenClaw, Cursor | key-based — `tinyfish auth login`, then `tinyfish connect <harness>` to rewrite the header |
 
 Re-run step 2 after any repair. Success means showing the real search result — the user
 should see their agent touch the live web.
@@ -68,4 +75,4 @@ undeclared fields are stripped on parse and every message is authored rather tha
 not build your own report, add fields, or paste config contents. On exit `2` there is no
 JSON — say so rather than filing an empty report.
 
-Then offer `/tinyfish:feedback` to file it.
+Then file it at https://github.com/tinyfish-io/tinyfish-cookbook/issues.

@@ -14,14 +14,14 @@ const fail = (msg) => {
 };
 
 execSync(`node ${join(ROOT, "scripts", "generate-harness-skills.mjs")}`, { stdio: "pipe" });
-const drift = execSync("git status --porcelain -- plugins dist", { cwd: ROOT }).toString().trim();
+const drift = execSync("git status --porcelain -- plugins skills", { cwd: ROOT }).toString().trim();
 if (drift) fail(`generated skills out of sync with skills-src — run scripts/generate-harness-skills.mjs and commit:\n${drift}`);
 
 const walk = (dir) =>
   readdirSync(dir, { withFileTypes: true }).flatMap((e) =>
     e.isDirectory() ? walk(join(dir, e.name)) : e.name === "SKILL.md" ? [join(dir, e.name)] : []
   );
-for (const f of walk(join(ROOT, "plugins"))) {
+for (const f of [...walk(join(ROOT, "plugins")), ...walk(join(ROOT, "skills", "tinyfish-doctor"))]) {
   const src = readFileSync(f, "utf8");
   const m = src.match(/^---\n([\s\S]*?)\n---/);
   if (!m) { fail(`${f}: missing frontmatter`); continue; }
