@@ -36,17 +36,25 @@ it is the one channel carrying raw stacks and absolute paths.
 
 doctor sets `proves_harness_reach: false` whenever it could not prove that *this* harness
 authenticates. For OAuth harnesses it is always false, because the CLI cannot borrow the
-harness's token. You are the only one who can close that gap: call `search` once through
-your own MCP client with a cheap query.
+harness's token. You are the only one who can close that gap.
+
+**Count the TinyFish servers first.** A plugin, a CLI-written entry, and an account-level
+connector can all be registered at once, all pointing at the same endpoint. doctor inspects
+only the one named `tinyfish` and cannot see its siblings. Note which server it reported on.
+
+Then call `search` once with a cheap query, and note which server answered — the tool
+namespace names it.
 
 | What happens | What it means |
 |---|---|
-| Results come back | Setup works end to end, whatever `auth_mode` says |
+| Results, from the server doctor reported on | Setup works end to end, whatever `auth_mode` says |
+| Results, but from a **different** TinyFish server | Proves nothing about the flagged registration. Report the working server *and* the flagged one as still unverified |
 | Auth error, but doctor says `registered: yes` | Registration exists; the credential behind it is broken |
 | TinyFish tools absent entirely | Server not loaded in this session — the user must restart the agent |
 
 A `registration: pass` is presence, not proof — doctor reads config, not the wire. A stale
-API key sitting in a config header passes that check and still fails every call.
+API key in a config header passes that check and still fails every call, and a healthy
+sibling server will answer cheerfully while the broken one stays broken.
 
 ## 3. Repair
 
