@@ -34,7 +34,7 @@ const TARGETS = {
     vars: {
       HARNESS_FLAG: "",
       HARNESS_ENTRY:
-        "Run without `--harness`, so `harnesses[]` carries one entry per detected harness. Read the entry whose `harness` matches the agent you are running in — never the first one. doctor only knows `claude-code`, `codex`, `cursor`, `hermes`, `openclaw`, `opencode`; if you are none of those, no entry describes you and step 2 is your only evidence.",
+        "Run without `--harness`, so `harnesses[]` carries one entry per harness doctor knows — installed or not. Read the entry whose `harness` matches the agent you are running in, never the first one, and check its `detected` first: an absent harness reports `detected: false`, `registered: \"no\"`, `auth_mode: \"unknown\"`, which is not a fault to repair. doctor only knows `claude-code`, `codex`, `cursor`, `hermes`, `openclaw`, `opencode`; if you are none of those, no entry describes you and step 2 is your only evidence.",
       REAUTH: GENERIC_REAUTH,
       FEEDBACK: "file it at https://github.com/tinyfish-io/tinyfish-cookbook/issues",
     },

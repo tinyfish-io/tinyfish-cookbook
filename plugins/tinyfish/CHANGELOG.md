@@ -1,5 +1,12 @@
 # Changelog
 
+## 1.2.2 (2026-08-17)
+
+### Fixed
+- Skill: `/tinyfish:doctor` reads `schema_version` before the fields it describes — the command pins `@latest`, so a newer CLI can hand it a shape it does not know.
+- Skill: `/tinyfish:doctor` no longer implies `auth login` is the only repair that needs a human. `connect <harness>` is `unattended_safe: false` for every harness except Cursor, and Cursor only while the CLI's own credential resolves.
+- Skill: `/tinyfish:feedback` files via `--body-file`, not `--body`. The body carries the user's free-form text and doctor's JSON; backticks or `$(…)` in either were evaluated by the filing shell. The URL fallback now says to percent-encode, so a `#` no longer truncates the body.
+
 ## 1.2.1 (2026-08-13)
 
 ### Fixed

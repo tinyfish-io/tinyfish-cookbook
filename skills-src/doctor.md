@@ -21,7 +21,12 @@ the command from step 1 to run themselves.
 npx -y @tiny-fish/cli@latest doctor{{HARNESS_FLAG}}
 ```
 
-JSON on stdout: `checks[]`, `harnesses[]`, `repairs[]`.
+JSON on stdout: `schema_version`, `checks[]`, `harnesses[]`, `repairs[]`.
+
+Read `schema_version` before the fields. This skill describes `1`. The command pins
+`@latest`, so a newer CLI can hand you a shape you do not know: on anything other than `1`,
+stop reading fields, show the user `--pretty` output instead, and rely on step 2 for the
+verdict.
 
 | Exit | Meaning |
 |---|---|
@@ -65,7 +70,10 @@ Run only commands that appear in `repairs[]`, and show `command` before running 
 - Terminal with the user present → `doctor --fix{{HARNESS_FLAG}}`
 - Non-interactive → `doctor --fix --yes`; only `unattended_safe: true` repairs run and the
   rest return as skipped. Never report a skipped repair as a fix.
-- `unattended_safe: false` (`auth login`) → hand it to the user, do not run it.
+- `unattended_safe: false` → hand it to the user, do not run it. Expect most repairs to be
+  false: `auth login` always is, and `connect <harness>` is unsafe for every harness except
+  Cursor — and Cursor only while the CLI's own credential resolves. Read the field, do not
+  infer it from the command.
 - OAuth credential failures have no CLI repair: {{REAUTH}}
 
 Re-run step 2 after any repair. Success means showing the real search result — the user

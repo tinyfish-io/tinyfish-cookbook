@@ -40,13 +40,18 @@ filing. Any edit they request happens before filing.
 
 ## File
 
-- Preferred: `gh issue create --repo tinyfish-io/tinyfish-cookbook --title
-  "<short summary>" --body "<body>"` (only if `gh` is installed and
-  authenticated).
+- Preferred: write the body to a file, then
+  `gh issue create --repo tinyfish-io/tinyfish-cookbook --title "<short
+  summary>" --body-file <path>` (only if `gh` is installed and
+  authenticated). Never interpolate the body into the command — it carries
+  the user's free-form text and doctor's JSON, and backticks or `$(…)` in
+  either would be evaluated by your shell.
 - Fallback: open a prefilled issue URL
   (`https://github.com/tinyfish-io/tinyfish-cookbook/issues/new?title=…&body=…`).
-  URL length limits truncate long bodies — if the body was truncated, tell
-  the user and show the full text so they can paste the remainder.
+  Percent-encode both values — an unencoded `#` truncates the body and `&`
+  splits it into junk parameters. URL length limits truncate long bodies
+  anyway — if the body was truncated, tell the user and show the full text
+  so they can paste the remainder.
 
 This repo is public — remind the user of that in the preview if the report
 contains anything they typed free-form.

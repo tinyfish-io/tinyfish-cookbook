@@ -13,15 +13,25 @@ const fail = (msg) => {
   process.exitCode = 1;
 };
 
+// The generator writes into the tree, so a dirty tree must stop it: overwriting an
+// uncommitted edit is not something a validator may do.
+const status = () => execSync("git status --porcelain -- plugins skills", { cwd: ROOT }).toString().trim();
+const dirty = status();
+if (dirty) {
+  fail(`uncommitted changes under plugins/ or skills/ — commit or stash before validating, the generator overwrites them:\n${dirty}`);
+  console.log("validation failed");
+  process.exit(1);
+}
 execSync(`node ${join(ROOT, "scripts", "generate-harness-skills.mjs")}`, { stdio: "pipe" });
-const drift = execSync("git status --porcelain -- plugins skills", { cwd: ROOT }).toString().trim();
+const drift = status();
 if (drift) fail(`generated skills out of sync with skills-src — run scripts/generate-harness-skills.mjs and commit:\n${drift}`);
 
 const walk = (dir) =>
   readdirSync(dir, { withFileTypes: true }).flatMap((e) =>
     e.isDirectory() ? walk(join(dir, e.name)) : e.name === "SKILL.md" ? [join(dir, e.name)] : []
   );
-for (const f of [...walk(join(ROOT, "plugins")), ...walk(join(ROOT, "skills", "tinyfish-doctor"))]) {
+// Every skill under skills/ is served by the `skills` CLI, so all of them face the Codex limit.
+for (const f of [...walk(join(ROOT, "plugins")), ...walk(join(ROOT, "skills"))]) {
   const src = readFileSync(f, "utf8");
   const m = src.match(/^---\n([\s\S]*?)\n---/);
   if (!m) { fail(`${f}: missing frontmatter`); continue; }

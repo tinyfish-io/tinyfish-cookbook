@@ -21,7 +21,12 @@ the command from step 1 to run themselves.
 npx -y @tiny-fish/cli@latest doctor
 ```
 
-JSON on stdout: `checks[]`, `harnesses[]`, `repairs[]`.
+JSON on stdout: `schema_version`, `checks[]`, `harnesses[]`, `repairs[]`.
+
+Read `schema_version` before the fields. This skill describes `1`. The command pins
+`@latest`, so a newer CLI can hand you a shape you do not know: on anything other than `1`,
+stop reading fields, show the user `--pretty` output instead, and rely on step 2 for the
+verdict.
 
 | Exit | Meaning |
 |---|---|
@@ -38,7 +43,7 @@ it is the one channel carrying raw stacks and absolute paths.
 harness authenticates. For OAuth harnesses it is always false, because the CLI cannot borrow
 the harness's token. You are the only one who can close that gap.
 
-Run without `--harness`, so `harnesses[]` carries one entry per detected harness. Read the entry whose `harness` matches the agent you are running in — never the first one. doctor only knows `claude-code`, `codex`, `cursor`, `hermes`, `openclaw`, `opencode`; if you are none of those, no entry describes you and step 2 is your only evidence.
+Run without `--harness`, so `harnesses[]` carries one entry per harness doctor knows — installed or not. Read the entry whose `harness` matches the agent you are running in, never the first one, and check its `detected` first: an absent harness reports `detected: false`, `registered: "no"`, `auth_mode: "unknown"`, which is not a fault to repair. doctor only knows `claude-code`, `codex`, `cursor`, `hermes`, `openclaw`, `opencode`; if you are none of those, no entry describes you and step 2 is your only evidence.
 
 **Count the TinyFish servers first.** A plugin, a CLI-written entry, and an account-level
 connector can all be registered at once, all pointing at the same endpoint. doctor inspects
@@ -65,7 +70,10 @@ Run only commands that appear in `repairs[]`, and show `command` before running 
 - Terminal with the user present → `doctor --fix`
 - Non-interactive → `doctor --fix --yes`; only `unattended_safe: true` repairs run and the
   rest return as skipped. Never report a skipped repair as a fix.
-- `unattended_safe: false` (`auth login`) → hand it to the user, do not run it.
+- `unattended_safe: false` → hand it to the user, do not run it. Expect most repairs to be
+  false: `auth login` always is, and `connect <harness>` is unsafe for every harness except
+  Cursor — and Cursor only while the CLI's own credential resolves. Read the field, do not
+  infer it from the command.
 - OAuth credential failures have no CLI repair: re-authenticate in the harness itself.
 
   | Harness | Re-auth |
