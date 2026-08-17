@@ -23,16 +23,25 @@ npx -y @tiny-fish/cli@latest doctor{{HARNESS_FLAG}}
 
 JSON on stdout: `schema_version`, `checks[]`, `harnesses[]`, `repairs[]`.
 
-Read `schema_version` before the fields. This skill describes `1`. The command pins
-`@latest`, so a newer CLI can hand you a shape you do not know: on anything other than `1`,
-stop reading fields, show the user `--pretty` output instead, and rely on step 2 for the
-verdict.
+Read `schema_version` before the fields. This skill describes `1` and `2`. The command pins
+`@latest`, so a newer CLI can hand you a shape you do not know: above `2`, stop reading
+fields, show the user `--pretty` output instead, and rely on step 2 for the verdict.
+
+The difference between the two is what a keyed registration proves. `2` tests an API-key
+registration on the wire, so a stale key header fails outright and earns a `connect` repair.
+`1` passes it on config presence alone, and step 2 is the only thing that catches it.
 
 | Exit | Meaning |
 |---|---|
 | `0` | every check passed |
 | `1` | a check failed — read `checks[]` |
 | `2` | doctor could not run; **stdout is empty**, the reason is on stderr |
+
+A `warn` is not a failure and does not move the exit code: doctor is saying it could not
+check something, not that it is broken. On `2`, `registered, API key present but unverified`
+means the key exists but doctor cannot read its value to test it, which is every Codex
+install and any harness whose config redacts the header. Never repair on a warn, prove it
+in step 2.
 
 `--pretty` only when showing a human the list. Never put `--debug` output in a report —
 it is the one channel carrying raw stacks and absolute paths.
@@ -59,21 +68,26 @@ namespace names it.
 | Auth error, but doctor says `registered: yes` | Registration exists; the credential behind it is broken |
 | TinyFish tools absent entirely | Server not loaded in this session — the user must restart the agent |
 
-A `registration: pass` is presence, not proof — doctor reads config, not the wire. A stale
-API key in a config header passes that check and still fails every call, and a healthy
-sibling server will answer cheerfully while the broken one stays broken.
+What a `registration: pass` proves depends on `schema_version`. On `2` an API-key
+registration was tested on the wire, so a stale key header is already a `fail` with a
+`connect` repair beside it. On `1`, and on every OAuth or `auth_mode: unknown` registration
+at either version, pass is presence only: doctor read config, not the wire, and a stale key
+still passes while every call 401s. Neither version says anything about siblings, and a
+healthy sibling will answer cheerfully while the broken one stays broken.
 
 ## 3. Repair
 
-Run only commands that appear in `repairs[]`, and show `command` before running it.
+Run only commands that appear in `repairs[]`, and show `command` before running it. Keep
+the order they arrive in: `auth login` comes before `connect` because `connect` writes
+whichever key is stored, so a dead one has to be replaced first.
 
 - Terminal with the user present → `doctor --fix{{HARNESS_FLAG}}`
 - Non-interactive → `doctor --fix --yes`; only `unattended_safe: true` repairs run and the
   rest return as skipped. Never report a skipped repair as a fix.
 - `unattended_safe: false` → hand it to the user, do not run it. Expect most repairs to be
   false: `auth login` always is, and `connect <harness>` is unsafe for every harness except
-  Cursor — and Cursor only while the CLI's own credential resolves. Read the field, do not
-  infer it from the command.
+  Cursor — and on `2` Cursor only while the CLI's own authenticated call passes, since a
+  revoked key still resolves as a credential. Read the field, do not infer it.
 - OAuth credential failures have no CLI repair: {{REAUTH}}
 
 Re-run step 2 after any repair. Success means showing the real search result — the user

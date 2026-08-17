@@ -74,8 +74,9 @@ the command to the user. Never report a skipped repair as a fix.
 
 In-agent, `/tinyfish:doctor` runs the same checks and additionally proves
 this harness can reach TinyFish — the one thing the CLI cannot verify, since
-it cannot borrow the harness's OAuth token. A `registration: pass` from the
-CLI means the config exists, not that a call would succeed.
+it cannot borrow the harness's OAuth token. For an OAuth registration a
+`registration: pass` from the CLI means the config exists, not that a call
+would succeed.
 
 ## No agent at all?
 

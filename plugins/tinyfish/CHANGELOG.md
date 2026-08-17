@@ -1,5 +1,15 @@
 # Changelog
 
+## 1.2.3 (2026-08-17)
+
+### Changed
+- Skill: `/tinyfish:doctor` describes `schema_version` `1` and `2`, and bails only above `2`. The CLI now tests an API-key registration on the wire, so a stale key header comes back as a `fail` with a `connect` repair rather than a green check. Without this the 1.2.2 guard would have degraded every user to `--pretty` output the moment that CLI published.
+- Skill: `/tinyfish:doctor` states the real gate on Cursor's unattended repair. On `2` it is the CLI's authenticated call passing, not merely a credential resolving, since a revoked key still resolves.
+
+### Added
+- Skill: `/tinyfish:doctor` reads `warn`. A warn does not move the exit code and must not be repaired; `registered, API key present but unverified` means doctor cannot read the key's value to test it, which is every Codex install. Step 2 settles those.
+- Skill: `/tinyfish:doctor` preserves `repairs[]` order, since `auth login` now precedes `connect` and `connect` writes whichever key is stored.
+
 ## 1.2.2 (2026-08-17)
 
 ### Fixed
