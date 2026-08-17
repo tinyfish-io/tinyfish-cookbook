@@ -1,5 +1,23 @@
 # Changelog
 
+## 1.2.2 (2026-08-17)
+
+### Fixed
+- Skill: `/tinyfish:doctor` reads `schema_version` before the fields it describes — the command pins `@latest`, so a newer CLI can hand it a shape it does not know.
+- Skill: `/tinyfish:doctor` no longer implies `auth login` is the only repair that needs a human. `connect <harness>` is `unattended_safe: false` for every harness except Cursor, and Cursor only while the CLI's own credential resolves.
+- Skill: `/tinyfish:feedback` files via `--body-file`, not `--body`. The body carries the user's free-form text and doctor's JSON; backticks or `$(…)` in either were evaluated by the filing shell. The URL fallback now says to percent-encode, so a `#` no longer truncates the body.
+
+## 1.2.1 (2026-08-13)
+
+### Fixed
+- Skill: `/tinyfish:doctor` step 2 now counts TinyFish MCP servers before proving harness reach. Several can be registered at once against the same endpoint — a plugin, a CLI-written entry, an account-level connector — and a healthy sibling answering the test call was being read as proof that the registration doctor flagged is working. Found by the e2e regression test on a machine with three.
+
+## 1.2.0 (2026-08-13)
+
+### Changed
+- Skill: `/tinyfish:doctor` rebuilt on `tinyfish doctor` (CLI 0.18+). The skill no longer re-implements the config checks by hand — it runs the CLI for those, then does the one check the CLI structurally cannot: calling a TinyFish tool through the harness's own MCP client to prove auth end to end. `proves_harness_reach` is always false for OAuth harnesses because the CLI cannot borrow the harness's token.
+- Skill: `/tinyfish:feedback` now attaches `tinyfish doctor` JSON verbatim instead of building its own report — the CLI's zod schema is the redaction boundary.
+
 ## 1.1.0 (2026-07-21)
 
 ### Added

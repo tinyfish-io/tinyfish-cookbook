@@ -1,0 +1,29 @@
+name: validate-skills
+on:
+  pull_request:
+    paths:
+      - "skills-src/**"
+      - "plugins/**"
+      - "skills/**"
+      - ".claude-plugin/**"
+      - "scripts/generate-harness-skills.mjs"
+      - "scripts/validate-skills.mjs"
+  push:
+    branches: [main]
+    paths:
+      - "skills-src/**"
+      - "plugins/**"
+      - "skills/**"
+      - ".claude-plugin/**"
+      - "scripts/generate-harness-skills.mjs"
+      - "scripts/validate-skills.mjs"
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - run: node scripts/validate-skills.mjs
