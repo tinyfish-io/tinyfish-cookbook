@@ -1,5 +1,12 @@
 # Changelog
 
+## 1.2.4 (2026-08-18)
+
+### Fixed
+- Skill: `/tinyfish:doctor` describes `schema_version` `3` (CLI 0.22+). It still said `1` and `2` and bailed above `2`, so with `@latest` pinned it degraded every run to `--pretty`. Adds the two verdicts (`ok_harnesses`, `ok_cli`), `checks[].scope`, `repairs[].action`, and the exit code coming from the harness scope alone — `ok_cli: false` beside exit `0` is a real state. Drops the `registered, API key present but unverified` string the CLI no longer emits, and runs the `--fix` examples through `npx` like step 1.
+- Skill: `/tinyfish:feedback` quotes the title as well as the body: `--title "$title" --body-file "$body_file"`. The summary is derived from the user's free-form text too, so backticks or `$(…)` in it were evaluated by the filing shell. Also prohibits `eval` and constructed command strings.
+- Plugin README lists `~/.grok` among the config directories doctor reads; the CLI added a grok harness.
+
 ## 1.2.3 (2026-08-17)
 
 ### Changed

@@ -5,7 +5,7 @@ description: Diagnose and repair your TinyFish setup — MCP registration, auth,
 
 # TinyFish Doctor
 
-`tinyfish doctor` (CLI 0.18+) owns the diagnosis. Your job is to run it, do the one
+`tinyfish doctor` (CLI 0.22+) owns the diagnosis. Your job is to run it, do the one
 check it structurally cannot do, and act on what comes back. Never hand-edit config
 files — every repair goes through the CLI, which carries backup and merge rigor.
 
@@ -17,31 +17,36 @@ the command from step 1 to run themselves.
 
 ## 1. Run doctor
 
-```
+```sh
 npx -y @tiny-fish/cli@latest doctor --harness claude-code
 ```
 
-JSON on stdout: `schema_version`, `checks[]`, `harnesses[]`, `repairs[]`.
+JSON on stdout: `schema_version`, `cli_version`, `ok_harnesses`, `ok_cli`, `checks[]`,
+`harnesses[]`, `repairs[]`.
 
-Read `schema_version` before the fields. This skill describes `1` and `2`. The command pins
-`@latest`, so a newer CLI can hand you a shape you do not know: above `2`, stop reading
-fields, show the user `--pretty` output instead, and rely on step 2 for the verdict.
+Read `schema_version` before the fields. This skill describes `3` (CLI 0.22+). The command
+pins `@latest`, so a newer CLI can hand you a shape you do not know: above `3`, stop reading
+fields, show the user `--pretty` output instead, and rely on step 2 for the verdict. Below
+`3` a single `ok` replaces the two verdicts and `checks[]` carry no `scope`, so read only
+`checks[]` and the exit code there.
 
-The difference between the two is what a keyed registration proves. `2` tests an API-key
-registration on the wire, so a stale key header fails outright and earns a `connect` repair.
-`1` passes it on config presence alone, and step 2 is the only thing that catches it.
+**Two verdicts, not one.** `ok_harnesses` answers whether the user's agents can reach
+TinyFish; `ok_cli` answers whether the CLI's own credential works. `checks[].scope`
+(`harness`, `cli`, `info`) says which one a check counts toward, and only the harness scope
+moves the exit code — `ok_cli: false` beside exit `0` is a real state, not a contradiction.
+Report it as the CLI's own credential, not as a broken harness.
 
 | Exit | Meaning |
 |---|---|
-| `0` | every check passed |
-| `1` | a check failed — read `checks[]` |
+| `0` | no harness check failed — `ok_cli` can still be `false` |
+| `1` | a harness check failed — read `checks[]` |
 | `2` | doctor could not run; **stdout is empty**, the reason is on stderr |
 
 A `warn` is not a failure and does not move the exit code: doctor is saying it could not
-check something, not that it is broken. On `2`, `registered, API key present but unverified`
-means the key exists but doctor cannot read its value to test it, which is every Codex
-install and any harness whose config redacts the header. Never repair on a warn, prove it
-in step 2.
+check something, not that it is broken. A registration warn whose detail says the key was
+not readable, or was not verified, means the key exists but doctor could not test its value
+— every Codex install, and any harness whose config redacts the header. Never repair on a
+warn, prove it in step 2.
 
 `--pretty` only when showing a human the list. Never put `--debug` output in a report —
 it is the one channel carrying raw stacks and absolute paths.
@@ -68,21 +73,21 @@ namespace names it.
 | Auth error, but doctor says `registered: yes` | Registration exists; the credential behind it is broken |
 | TinyFish tools absent entirely | Server not loaded in this session — the user must restart the agent |
 
-What a `registration: pass` proves depends on `schema_version`. On `2` an API-key
+What a `registration: pass` proves depends on `schema_version`. On `2` and `3` an API-key
 registration was tested on the wire, so a stale key header is already a `fail` with a
 `connect` repair beside it. On `1`, and on every OAuth or `auth_mode: unknown` registration
-at either version, pass is presence only: doctor read config, not the wire, and a stale key
+at any version, pass is presence only: doctor read config, not the wire, and a stale key
 still passes while every call 401s. Neither version says anything about siblings, and a
 healthy sibling will answer cheerfully while the broken one stays broken.
 
 ## 3. Repair
 
 Run only commands that appear in `repairs[]`, and show `command` before running it. Keep
-the order they arrive in: `auth login` comes before `connect` because `connect` writes
-whichever key is stored, so a dead one has to be replaced first.
+the order they arrive in: `action: auth-login` comes before `action: connect` because
+`connect` writes whichever key is stored, so a dead one has to be replaced first.
 
-- Terminal with the user present → `doctor --fix --harness claude-code`
-- Non-interactive → `doctor --fix --yes`; only `unattended_safe: true` repairs run and the
+- Terminal with the user present → `npx -y @tiny-fish/cli@latest doctor --fix --harness claude-code`
+- Non-interactive → `npx -y @tiny-fish/cli@latest doctor --fix --yes`; only `unattended_safe: true` repairs run and the
   rest return as skipped. Never report a skipped repair as a fix.
 - `unattended_safe: false` → hand it to the user, do not run it. Expect most repairs to be
   false: `auth login` always is, and `connect <harness>` is unsafe for every harness except

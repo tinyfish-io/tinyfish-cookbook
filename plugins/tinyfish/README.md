@@ -29,5 +29,5 @@ TinyFish's privacy policy: https://www.tinyfish.ai/privacy-policy
 
 The two setup skills do touch your machine:
 
-- **`/tinyfish:doctor`** runs the TinyFish CLI, which reads your agent config directories (`~/.claude`, `~/.codex`, `~/.cursor`, `~/.hermes`, `~/.openclaw`, `~/.config/opencode`) and the CLI credential store (`~/.tinyfish/config.json`) to find where TinyFish is registered. Diagnosis only reads; the repair step rewrites those registrations, and only commands the CLI itself proposes. `doctor` sends no analytics, though a repair re-runs `tinyfish connect`, which does — set `TINYFISH_NO_TELEMETRY` to suppress it.
+- **`/tinyfish:doctor`** runs the TinyFish CLI, which reads your agent config directories (`~/.claude`, `~/.codex`, `~/.cursor`, `~/.grok`, `~/.hermes`, `~/.openclaw`, `~/.config/opencode`) and the CLI credential store (`~/.tinyfish/config.json`) to find where TinyFish is registered. Diagnosis only reads; the repair step rewrites those registrations, and only commands the CLI itself proposes. `doctor` sends no analytics, though a repair re-runs `tinyfish connect`, which does — set `TINYFISH_NO_TELEMETRY` to suppress it.
 - **`/tinyfish:feedback`** shells out to `gh issue create` against a public repo, after showing you the exact issue text and waiting for your approval.
