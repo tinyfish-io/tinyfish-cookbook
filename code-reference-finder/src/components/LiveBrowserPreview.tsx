@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { motion } from 'framer-motion';
 import { Monitor, X, Maximize2, Minimize2 } from 'lucide-react';
 
@@ -16,11 +16,11 @@ export function LiveBrowserPreview({
   onClose,
 }: LiveBrowserPreviewProps) {
   const [isExpanded, setIsExpanded] = useState(false);
-  const [isLoading, setIsLoading] = useState(true);
+  const [loadedUrl, setLoadedUrl] = useState<string | null>(null);
 
-  useEffect(() => {
-    setIsLoading(true);
-  }, [streamingUrl]);
+  // Derived rather than reset in an effect, so a new URL shows the spinner again
+  // without a synchronising render pass.
+  const isLoading = loadedUrl !== streamingUrl;
 
   return (
     <motion.div
@@ -81,7 +81,7 @@ export function LiveBrowserPreview({
         <iframe
           src={streamingUrl}
           className="w-full h-full border-0"
-          onLoad={() => setIsLoading(false)}
+          onLoad={() => setLoadedUrl(streamingUrl)}
           title={`Live browser preview for ${title}`}
           sandbox="allow-scripts allow-same-origin"
         />
