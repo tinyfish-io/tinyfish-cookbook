@@ -58,7 +58,7 @@ There's a small script that checks the things reviewers would otherwise check by
 python .github/scripts/check_recipes.py YOUR-NEW-PROJECT
 ```
 
-No dependencies, just Python 3. It runs automatically on your pull request too.
+No dependencies, just Python 3. It also runs on your pull request, where it reports findings without blocking the merge — so the local run is the one that saves you a round trip.
 
 The event check is worth knowing about. Each recipe relays TinyFish events through three hops — the TinyFish stream, your own `/api` route, then the hook that renders progress — and it's easy to emit `streamingUrl` on one hop and read `streaming_url` on the next. Nothing crashes when you get this wrong; the live browser preview just silently never appears. The script catches that, including the snake_case field names the TinyFish stream actually publishes (`streaming_url`, `run_id`, `result`).
 

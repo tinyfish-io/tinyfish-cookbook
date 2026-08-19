@@ -91,7 +91,9 @@ README_REQUIREMENTS = [
     ("demo video or gif", re.compile(r"\.gif\b|\.mp4\b|\bdemo\s*(video|gif)\b|youtube\.com|youtu\.be|loom\.com", re.I)),
     ("TinyFish API snippet", re.compile(r"```[\s\S]*?(tinyfish|TinyFish|agent\.(run|stream))[\s\S]*?```")),
     ("how to run", re.compile(r"\b(how to run|getting started|quick ?start|installation|setup)\b", re.I)),
-    ("environment variables", re.compile(r"[A-Z][A-Z0-9_]{3,}_(API_)?KEY|\.env", re.I)),
+    # Case-insensitivity is scoped to `.env`; the KEY alternative must stay
+    # case-sensitive, or lowercase prose like "turn_key" satisfies it.
+    ("environment variables", re.compile(r"[A-Z][A-Z0-9_]{3,}_(API_)?KEY|(?i:\.env)")),
     ("architecture diagram", re.compile(r"\b(architecture|diagram|flow)\b", re.I)),
 ]
 
@@ -137,11 +139,17 @@ class Problem:
         return f"  [{tag}] {self.location}: {self.message}"
 
 
-def run_git(*args: str) -> str:
+def run_git(*args: str) -> tuple[int, str]:
+    """Return (exit status, stdout).
+
+    Callers must tell empty-and-successful apart from failed. Treating a
+    failed diff as "nothing changed" would make the whole check pass while
+    inspecting nothing, which is the failure CI exists to prevent.
+    """
     result = subprocess.run(
         ["git", *args], cwd=REPO_ROOT, capture_output=True, text=True, check=False
     )
-    return result.stdout if result.returncode == 0 else ""
+    return result.returncode, result.stdout
 
 
 def all_recipes() -> list[Path]:
@@ -170,13 +178,16 @@ def recipe_for(path: Path) -> Path | None:
     return REPO_ROOT / parts[0]
 
 
-def changed_recipes(base: str) -> tuple[list[Path], set[Path]]:
-    """Recipes touched since `base`, and the exact files that changed."""
-    diff = run_git("diff", "--name-only", base)
-    if not diff:
-        merge_base = run_git("merge-base", "HEAD", base).strip()
-        if merge_base:
-            diff = run_git("diff", "--name-only", merge_base)
+def changed_recipes(base: str) -> tuple[list[Path], set[Path], bool]:
+    """Recipes touched since `base`, the files that changed, and whether git
+    could be consulted at all."""
+    status, diff = run_git("diff", "--name-only", base)
+    if status != 0 or not diff:
+        mb_status, merge_base = run_git("merge-base", "HEAD", base)
+        if mb_status == 0 and merge_base.strip():
+            status, diff = run_git("diff", "--name-only", merge_base.strip())
+    if status != 0:
+        return [], set(), False
 
     recipes: dict[Path, None] = {}
     files: set[Path] = set()
@@ -189,7 +200,7 @@ def changed_recipes(base: str) -> tuple[list[Path], set[Path]]:
         owner = recipe_for(rel)
         if owner is not None and owner.is_dir():
             recipes[owner] = None
-    return list(recipes), files
+    return list(recipes), files, True
 
 
 def source_files(recipe: Path) -> list[Path]:
@@ -220,12 +231,52 @@ def read(path: Path) -> str:
 def strip_noise(text: str) -> str:
     """Blank out comments so they cannot fake a match.
 
-    Block comments are replaced by their own newlines rather than removed, so
-    every reported line number still matches the file on disk.
+    Scans with string awareness. A `//` inside a URL literal such as
+    "https://agent.tinyfish.ai/run-sse", or a `/*` inside a string, must not be
+    read as a comment: a regex-only version blanked the rest of that line,
+    hiding real `type:` literals and inventing "no producer emits" findings.
+
+    Block comments become their own newlines rather than disappearing, so every
+    reported line number still matches the file on disk.
+
+    Regex literals are not tracked, so a pattern containing an unescaped `//`
+    can still truncate a line. That is rare in recipe code and strictly better
+    than the previous behaviour.
     """
-    text = re.sub(r"/\*[\s\S]*?\*/", lambda m: "\n" * m.group(0).count("\n"), text)
-    text = re.sub(r"(?m)//.*$", "", text)
-    return text
+    out: list[str] = []
+    i, n = 0, len(text)
+    quote: str | None = None
+    while i < n:
+        ch = text[i]
+        if quote is not None:
+            out.append(ch)
+            if ch == "\\" and i + 1 < n:  # escape inside a string
+                out.append(text[i + 1])
+                i += 2
+                continue
+            if ch == quote:
+                quote = None
+            i += 1
+            continue
+        if ch in "\"'`":
+            quote = ch
+            out.append(ch)
+            i += 1
+            continue
+        if ch == "/" and i + 1 < n and text[i - 1 : i] != "\\":
+            if text[i + 1] == "/":
+                while i < n and text[i] != "\n":
+                    i += 1
+                continue
+            if text[i + 1] == "*":
+                end = text.find("*/", i + 2)
+                end = n if end == -1 else end + 2
+                out.append("\n" * text.count("\n", i, end))
+                i = end
+                continue
+        out.append(ch)
+        i += 1
+    return "".join(out)
 
 
 def line_of(text: str, index: int) -> int:
@@ -401,7 +452,16 @@ def check_env_documented(recipe: Path, files: list[Path]) -> list[Problem]:
         if p.is_file() and not (SKIP_DIR_NAMES & set(p.parts))
     ]
     documented = " ".join(read(p) for p in examples)
-    readme_body = " ".join(read(p) for p in recipe.glob("[Rr]eadme.md"))
+    # Matched case-insensitively by hand: glob("[Rr]eadme.md") misses the
+    # canonical README.md on a case-sensitive filesystem, which is what CI
+    # runs on, so documented vars were never credited there.
+    readme_body = " ".join(
+        read(p) for p in recipe.iterdir()
+        if p.is_file() and p.name.lower() == "readme.md"
+    )
+    # Exact names, not substrings: "API_KEY" must not count as documented
+    # just because the example file mentions "OPENAI_API_KEY".
+    documented_names = set(re.findall(r"\b[A-Z][A-Z0-9_]*\b", documented + " " + readme_body))
 
     used: set[str] = set()
     for path in files:
@@ -412,8 +472,7 @@ def check_env_documented(recipe: Path, files: list[Path]) -> list[Problem]:
         name for name in used
         if name not in ENV_IGNORE_EXACT
         and not name.startswith(ENV_IGNORE_PREFIXES)
-        and name not in documented
-        and name not in readme_body
+        and name not in documented_names
     )
     if not undocumented:
         return []
@@ -521,6 +580,30 @@ SELFTEST_CASES: list[tuple[str, dict[str, str], int]] = [
         0,
     ),
     (
+        "a URL inside a string does not hide later code on that line",
+        {
+            "api/route.ts": 'send({ type: "GO" });',
+            "hooks/use.ts": 'const u = "https://agent.tinyfish.ai/run-sse"; if (event.type === "GO") { go(); }',
+        },
+        0,
+    ),
+    (
+        "a block-comment opener inside a string does not blank real code",
+        {
+            "api/route.ts": 'const s = "/* not a comment"; send({ type: "GO" });',
+            "hooks/use.ts": 'if (event.type === "GO") { go(); }',
+        },
+        0,
+    ),
+    (
+        "a real comment still cannot fake a producer",
+        {
+            "api/route.ts": '// send({ type: "GHOST" });',
+            "hooks/use.ts": 'if (event.type === "GHOST") { go(); }',
+        },
+        1,
+    ),
+    (
         "camelCase field on a non-event receiver is left alone",
         {
             "cli/scout.mjs": (
@@ -598,7 +681,14 @@ def main() -> int:
     elif args.all:
         targets = all_recipes()
     else:
-        targets, touched = changed_recipes(args.base)
+        targets, touched, git_ok = changed_recipes(args.base)
+        if not git_ok:
+            print(
+                f"Could not diff against {args.base!r}: git failed. "
+                "Refusing to report success without checking anything.",
+                file=sys.stderr,
+            )
+            return 2
         if not targets:
             print("No recipe changes to check.")
             return 0
