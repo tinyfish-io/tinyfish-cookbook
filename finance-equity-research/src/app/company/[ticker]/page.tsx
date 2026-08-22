@@ -62,7 +62,7 @@ export default async function CompanyReadPage({ params }: PageProps<"/company/[t
 
   return (
     <main className="min-h-screen">
-      <TopBar active="company" />
+      <TopBar active="company" ticker={company.ticker} />
 
       <div className="rule-hairline grid grid-cols-[1fr_600px] items-end gap-14 px-12 pb-8 pt-10 max-lg:grid-cols-1">
         <div>

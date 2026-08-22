@@ -1,6 +1,7 @@
 import { notFound } from "next/navigation";
 import { db } from "@/lib/db";
 import { TopBar } from "@/components/TopBar";
+import { MeasureLeadTime } from "@/components/MeasureLeadTime";
 
 export const dynamic = "force-dynamic";
 
@@ -20,9 +21,17 @@ export default async function LeadTimePage({ params }: PageProps<"/company/[tick
   if (!read) {
     return (
       <main className="min-h-screen">
-        <TopBar active="lead" />
-        <div className="px-12 py-16 text-[14px] text-muted">
-          No measured lead-time read for {company.name} yet. A read lands once a signal series and an official filing can be paired.
+        <TopBar active="lead" ticker={company.ticker} />
+        <div className="px-12 py-16">
+          <div className="eyebrow mb-3.5" style={{ color: "var(--color-rust)", letterSpacing: "0.16em" }}>
+            Lead-time analysis · {company.ticker} — {company.name}
+          </div>
+          <h1 className="mb-4 font-serif text-[40px] font-medium leading-[1.05] tracking-tight">No measured lead-time read yet.</h1>
+          <p className="mb-7 max-w-[640px] text-[15px] leading-relaxed text-muted">
+            A read requires a historical signal series and an official filing to pair it with. Both can be gathered from primary
+            sources right now.
+          </p>
+          <MeasureLeadTime ticker={company.ticker} />
         </div>
       </main>
     );
@@ -40,7 +49,7 @@ export default async function LeadTimePage({ params }: PageProps<"/company/[tick
 
   return (
     <main className="min-h-screen">
-      <TopBar active="lead" />
+      <TopBar active="lead" ticker={company.ticker} />
 
       <div className="max-w-[1100px] px-12 pb-5 pt-12">
         <div className="eyebrow mb-3.5" style={{ color: "var(--color-rust)", letterSpacing: "0.16em" }}>
@@ -123,7 +132,7 @@ export default async function LeadTimePage({ params }: PageProps<"/company/[tick
           <div className="eyebrow mb-2 text-muted" style={{ letterSpacing: "0.14em" }}>Official filing</div>
           <div className="font-serif text-2xl font-medium">{filedLabel}</div>
           <div className="mt-1.5 text-[12.5px] leading-normal text-muted">
-            Form 8-K, Item 5.02 — departure of the Chief Executive Officer.{" "}
+            Form 8-K, Item 5.02 — departure or appointment of officers.{" "}
             {events.find((e) => e.is_key)?.url && (
               <a href={events.find((e) => e.is_key)!.url!} target="_blank" rel="noreferrer" className="text-[12.5px]">
                 View on EDGAR →

@@ -1,12 +1,11 @@
 import Link from "next/link";
 
-const TABS = [
-  { href: "/", label: "Live scan", key: "scan" },
-  { href: "/company/CBRL", label: "Company read", key: "company" },
-  { href: "/company/CBRL/lead-time", label: "Lead time", key: "lead" },
-] as const;
-
-export function TopBar({ active, now }: { active: (typeof TABS)[number]["key"]; now?: string }) {
+export function TopBar({ active, ticker = "CBRL", now }: { active: "scan" | "company" | "lead"; ticker?: string; now?: string }) {
+  const TABS = [
+    { href: "/", label: "Live scan", key: "scan" },
+    { href: `/company/${ticker}`, label: "Company read", key: "company" },
+    { href: `/company/${ticker}/lead-time`, label: "Lead time", key: "lead" },
+  ] as const;
   const stamp =
     now ??
     new Date().toLocaleString("en-US", {
