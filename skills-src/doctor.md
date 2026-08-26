@@ -91,7 +91,7 @@ the order they arrive in: `action: auth-login` comes before `action: connect` be
   rest return as skipped. Never report a skipped repair as a fix.
 - `unattended_safe: false` → hand it to the user, do not run it. Expect most repairs to be
   false: `auth login` always is, and `connect <harness>` is unsafe for every harness except
-  Cursor — and on `2` Cursor only while the CLI's own authenticated call passes, since a
+  Cursor — and on `2` and `3` Cursor only while the CLI's own authenticated call passes, since a
   revoked key still resolves as a credential. Read the field, do not infer it.
 - OAuth credential failures have no CLI repair: {{REAUTH}}
 

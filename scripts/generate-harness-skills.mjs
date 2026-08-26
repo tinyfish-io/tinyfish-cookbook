@@ -17,6 +17,7 @@ const GENERIC_REAUTH = `re-authenticate in the harness itself.
   | Codex, Hermes | no login command — auth runs on first tool use; trigger a TinyFish tool and finish the browser sign-in |
   | OpenCode | \`opencode mcp auth tinyfish\` |
   | Claude Code | \`/mcp\` in-app, or \`claude mcp login tinyfish\` |
+  | Grok | no login command — in Grok Build, \`/mcps\`, select \`tinyfish\`, press \`i\`. A keyed registration instead reads \`TINYFISH_API_KEY\` from Grok's environment and has no OAuth fallback: re-run \`tinyfish connect grok --api-key <key>\` and start Grok from a new terminal |
   | OpenClaw, Cursor | key-based — \`tinyfish auth login\`, then \`tinyfish connect <harness>\` to rewrite the header |`;
 
 const TARGETS = {
@@ -34,7 +35,7 @@ const TARGETS = {
     vars: {
       HARNESS_FLAG: "",
       HARNESS_ENTRY:
-        "Run without `--harness`, so `harnesses[]` carries one entry per harness doctor knows — installed or not. Read the entry whose `harness` matches the agent you are running in, never the first one, and check its `detected` first: an absent harness reports `detected: false`, `registered: \"no\"`, `auth_mode: \"unknown\"`, which is not a fault to repair. doctor only knows `claude-code`, `codex`, `cursor`, `hermes`, `openclaw`, `opencode`; if you are none of those, no entry describes you and step 2 is your only evidence.",
+        "Run without `--harness`, so `harnesses[]` carries one entry per harness doctor knows — installed or not. Read the entry whose `harness` matches the agent you are running in, never the first one, and check its `detected` first: an absent harness reports `detected: false`, `registered: \"no\"`, `auth_mode: \"unknown\"`, which is not a fault to repair. doctor only knows `claude-code`, `codex`, `cursor`, `grok`, `hermes`, `openclaw`, `opencode`; if you are none of those, no entry describes you and step 2 is your only evidence.",
       REAUTH: GENERIC_REAUTH,
       FEEDBACK: "file it at https://github.com/tinyfish-io/tinyfish-cookbook/issues",
     },

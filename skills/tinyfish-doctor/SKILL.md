@@ -57,7 +57,7 @@ it is the one channel carrying raw stacks and absolute paths.
 harness authenticates. For OAuth harnesses it is always false, because the CLI cannot borrow
 the harness's token. You are the only one who can close that gap.
 
-Run without `--harness`, so `harnesses[]` carries one entry per harness doctor knows — installed or not. Read the entry whose `harness` matches the agent you are running in, never the first one, and check its `detected` first: an absent harness reports `detected: false`, `registered: "no"`, `auth_mode: "unknown"`, which is not a fault to repair. doctor only knows `claude-code`, `codex`, `cursor`, `hermes`, `openclaw`, `opencode`; if you are none of those, no entry describes you and step 2 is your only evidence.
+Run without `--harness`, so `harnesses[]` carries one entry per harness doctor knows — installed or not. Read the entry whose `harness` matches the agent you are running in, never the first one, and check its `detected` first: an absent harness reports `detected: false`, `registered: "no"`, `auth_mode: "unknown"`, which is not a fault to repair. doctor only knows `claude-code`, `codex`, `cursor`, `grok`, `hermes`, `openclaw`, `opencode`; if you are none of those, no entry describes you and step 2 is your only evidence.
 
 **Count the TinyFish servers first.** A plugin, a CLI-written entry, and an account-level
 connector can all be registered at once, all pointing at the same endpoint. doctor inspects
@@ -91,7 +91,7 @@ the order they arrive in: `action: auth-login` comes before `action: connect` be
   rest return as skipped. Never report a skipped repair as a fix.
 - `unattended_safe: false` → hand it to the user, do not run it. Expect most repairs to be
   false: `auth login` always is, and `connect <harness>` is unsafe for every harness except
-  Cursor — and on `2` Cursor only while the CLI's own authenticated call passes, since a
+  Cursor — and on `2` and `3` Cursor only while the CLI's own authenticated call passes, since a
   revoked key still resolves as a credential. Read the field, do not infer it.
 - OAuth credential failures have no CLI repair: re-authenticate in the harness itself.
 
@@ -100,6 +100,7 @@ the order they arrive in: `action: auth-login` comes before `action: connect` be
   | Codex, Hermes | no login command — auth runs on first tool use; trigger a TinyFish tool and finish the browser sign-in |
   | OpenCode | `opencode mcp auth tinyfish` |
   | Claude Code | `/mcp` in-app, or `claude mcp login tinyfish` |
+  | Grok | no login command — in Grok Build, `/mcps`, select `tinyfish`, press `i`. A keyed registration instead reads `TINYFISH_API_KEY` from Grok's environment and has no OAuth fallback: re-run `tinyfish connect grok --api-key <key>` and start Grok from a new terminal |
   | OpenClaw, Cursor | key-based — `tinyfish auth login`, then `tinyfish connect <harness>` to rewrite the header |
 
 Re-run step 2 after any repair. Success means showing the real search result — the user
