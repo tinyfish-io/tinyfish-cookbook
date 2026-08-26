@@ -85,8 +85,8 @@ healthy sibling will answer cheerfully while the broken one stays broken.
 ## 3. Repair
 
 Run only commands that appear in `repairs[]`, and show `command` before running it. They
-arrive as bare `tinyfish …`; with no global install, run them as
-`npx -y @tiny-fish/cli@latest <command without the leading `tinyfish`>`. Keep
+arrive as bare `tinyfish …`, which is not on PATH under `npx` — swap that leading word for
+`npx -y @tiny-fish/cli@latest` when there is no global install. Keep
 the order they arrive in: `action: auth-login` comes before `action: connect` because
 `connect` writes whichever key is stored, so a dead one has to be replaced first.
 
