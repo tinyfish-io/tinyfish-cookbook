@@ -54,8 +54,9 @@ it is the one channel carrying raw stacks and absolute paths.
 ## 2. Prove the harness reach — the part doctor cannot do
 
 `harnesses[].proves_harness_reach` is `false` whenever doctor could not prove that *this*
-harness authenticates. For OAuth harnesses it is always false, because the CLI cannot borrow
-the harness's token. You are the only one who can close that gap.
+harness authenticates. It is `true` only where the harness's own client reports a live
+connection, or where a key doctor could read verified on the wire — the CLI cannot borrow an
+OAuth token, so every harness that reports no connection state leaves the gap to you.
 
 {{HARNESS_ENTRY}}
 
@@ -75,14 +76,17 @@ namespace names it.
 
 What a `registration: pass` proves depends on `schema_version`. On `2` and `3` an API-key
 registration was tested on the wire, so a stale key header is already a `fail` with a
-`connect` repair beside it. On `1`, and on every OAuth or `auth_mode: unknown` registration
-at any version, pass is presence only: doctor read config, not the wire, and a stale key
-still passes while every call 401s. Neither version says anything about siblings, and a
+`connect` repair beside it. A pass carrying `proves_harness_reach: true` is the harness's own
+client reporting a live connection — wire evidence at any version, whatever `auth_mode` says.
+Every other pass is presence only: doctor read config, not the wire, and a stale key still
+passes while every call 401s. No version says anything about siblings, and a
 healthy sibling will answer cheerfully while the broken one stays broken.
 
 ## 3. Repair
 
-Run only commands that appear in `repairs[]`, and show `command` before running it. Keep
+Run only commands that appear in `repairs[]`, and show `command` before running it. They
+arrive as bare `tinyfish …`; with no global install, run them as
+`npx -y @tiny-fish/cli@latest <command without the leading `tinyfish`>`. Keep
 the order they arrive in: `action: auth-login` comes before `action: connect` because
 `connect` writes whichever key is stored, so a dead one has to be replaced first.
 

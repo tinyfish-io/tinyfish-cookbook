@@ -40,13 +40,14 @@ filing. Any edit they request happens before filing.
 
 ## File
 
-- Preferred: write the body to a file and the summary to a variable, then
-  `gh issue create --repo tinyfish-io/tinyfish-cookbook --title "$title"
+- Preferred: write the body and the title to files, then `gh issue create
+  --repo tinyfish-io/tinyfish-cookbook --title "$(cat "$title_file")"
   --body-file "$body_file"` (only if `gh` is installed and authenticated).
-  Interpolate neither value into the command: both are derived from the
-  user's free-form text (the body also carries doctor's JSON), and backticks
-  or `$(…)` in either would be evaluated by your shell. Never build the
-  command as a string or run it through `eval`.
+  Both values come from the user's free-form text (the body also carries
+  doctor's JSON), so neither may reach the shell as literal text — including
+  in a `title=…` assignment, where backticks or `$(…)` are evaluated just the
+  same. `cat`'s output is not re-parsed. Never build the command as a string
+  or run it through `eval`.
 - Fallback: open a prefilled issue URL
   (`https://github.com/tinyfish-io/tinyfish-cookbook/issues/new?title=…&body=…`).
   Percent-encode both values — an unencoded `#` truncates the body and `&`
