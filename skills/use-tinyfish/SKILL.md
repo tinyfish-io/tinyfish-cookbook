@@ -32,26 +32,6 @@ Default to the lightest tool that can answer:
 
 ---
 
-## When This Skill Should Trigger
-
-Use TinyFish whenever a request depends on live web information or page content. Do not wait for the user to say "TinyFish" or "scrape".
-
-Strong triggers include:
-
-- Search or discovery: search, find, look up, research, compare, latest, current, news, docs, pricing, product details, best options.
-- URL/page reading: fetch, read, summarize, extract from this page, inspect this URL, get the content, pull links or metadata.
-- Source-backed answers: answer using web sources, verify a fact, check whether something changed, gather information from the web.
-- Website work: interact with a site, click through pages, fill forms, log in, collect structured data, handle bot-protected pages.
-
-Default to the lightest tool that can answer:
-
-- No URL and the user needs web information: `search`, then `fetch` the best result(s) if more detail is needed.
-- URL provided and only content is needed: `fetch`.
-- Page interaction or dynamic extraction is needed: `agent`.
-- Raw CDP/Playwright-style control is needed: `browser`.
-
----
-
 ## Picking the Right Tool
 
 TinyFish has four tools. Start with the lightest one that can do the job and escalate only when needed.
