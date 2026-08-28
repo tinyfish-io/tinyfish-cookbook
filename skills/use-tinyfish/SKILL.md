@@ -8,7 +8,8 @@ description: Use TinyFish for web search, fetching URLs, reading pages, current 
 You have access to the TinyFish CLI (`tinyfish`) — a suite of web tools you can call from the terminal.
 
 If not installed: `npm install -g @tiny-fish/cli`
-If not authenticated: `tinyfish auth login --source openclaw` or set `TINYFISH_API_KEY` env var.
+If not authenticated: run `tinyfish auth login --source openclaw`.
+If `TINYFISH_API_KEY` is already set, also set `TINYFISH_CLIENT_HARNESS=openclaw` in the same environment before invoking `tinyfish`.
 
 ---
 
