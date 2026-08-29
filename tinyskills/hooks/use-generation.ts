@@ -199,18 +199,6 @@ export function useGeneration(settings: Settings = DEFAULT_SETTINGS) {
                 }
                 return { ...prev, scrapeProgress: newProgress };
               });
-            } else if (event.type === "source_streaming") {
-              setState((prev) => {
-                const newProgress = new Map(prev.scrapeProgress);
-                const existing = newProgress.get(event.sourceUrl);
-                if (existing) {
-                  newProgress.set(event.sourceUrl, {
-                    ...existing,
-                    streamingUrl: event.streamingUrl,
-                  });
-                }
-                return { ...prev, scrapeProgress: newProgress };
-              });
             } else if (event.type === "source_complete") {
               setState((prev) => {
                 const newProgress = new Map(prev.scrapeProgress);
