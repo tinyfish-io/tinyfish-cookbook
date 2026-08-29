@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useCallback } from "react";
-import type { Scholarship, SearchParams, SearchResponse, SearchState } from "@/types/scholarship";
+import type { SearchParams, SearchResponse, SearchState } from "@/types/scholarship";
 
 const emptyState = (): SearchState => ({
   step: 0,

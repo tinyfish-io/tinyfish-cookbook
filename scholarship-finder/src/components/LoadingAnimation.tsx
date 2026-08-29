@@ -67,7 +67,6 @@ export function LoadingAnimation({ searchState }: LoadingAnimationProps) {
             <AgentCard
               key={agent.agentId}
               agent={agent}
-              isExpanded={expandedAgent === agent.agentId}
               onExpand={() => setExpandedAgent(expandedAgent === agent.agentId ? null : agent.agentId)}
             />
           ))}
@@ -137,7 +136,7 @@ export function LoadingAnimation({ searchState }: LoadingAnimationProps) {
   );
 }
 
-function AgentCard({ agent, isExpanded, onExpand }: { agent: AgentStatus; isExpanded: boolean; onExpand: () => void }) {
+function AgentCard({ agent, onExpand }: { agent: AgentStatus; onExpand: () => void }) {
   const statusColors = {
     pending: "border-muted-foreground/30",
     running: "border-primary",

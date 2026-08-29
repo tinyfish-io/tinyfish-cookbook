@@ -12,7 +12,11 @@ interface AgentPreviewCardProps {
 
 export function AgentPreviewCard({ agent, onExpandPreview }: AgentPreviewCardProps) {
   const [shouldHide, setShouldHide] = useState(false);
-  const [iframeLoaded, setIframeLoaded] = useState(false);
+  const [loadedUrl, setLoadedUrl] = useState<string | null>(null);
+
+  // Derived rather than reset in an effect, so a new URL shows the placeholder
+  // again without a synchronising render pass.
+  const iframeLoaded = !!agent.streamingUrl && loadedUrl === agent.streamingUrl;
 
   useEffect(() => {
     if (agent.status === "complete" || agent.status === "error") {
@@ -20,10 +24,6 @@ export function AgentPreviewCard({ agent, onExpandPreview }: AgentPreviewCardPro
       return () => clearTimeout(timer);
     }
   }, [agent.status]);
-
-  useEffect(() => {
-    if (agent.streamingUrl) setIframeLoaded(false);
-  }, [agent.streamingUrl]);
 
   if (shouldHide) return null;
 
@@ -102,7 +102,7 @@ export function AgentPreviewCard({ agent, onExpandPreview }: AgentPreviewCardPro
               src={agent.streamingUrl}
               className="w-full h-full border-0"
               title={`Live preview for ${agent.name}`}
-              onLoad={() => setIframeLoaded(true)}
+              onLoad={() => setLoadedUrl(agent.streamingUrl ?? null)}
             />
             {onExpandPreview && iframeLoaded && (
               <button
