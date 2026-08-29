@@ -639,6 +639,7 @@ export default function DashboardPage() {
 
       {/* Project Dialog */}
       <ProjectDialog
+        key={editingProject?.id ?? 'new'}
         open={projectDialogOpen}
         onOpenChange={(open) => {
           setProjectDialogOpen(open);
