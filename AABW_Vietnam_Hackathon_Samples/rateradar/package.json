@@ -1,0 +1,32 @@
+{
+  "name": "rateradar",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "next lint",
+    "sweep": "tsx scripts/sweep.ts"
+  },
+  "dependencies": {
+    "@tiny-fish/sdk": "^0.0.9",
+    "@upstash/redis": "^1.34.3",
+    "framer-motion": "^11.15.0",
+    "lucide-react": "^0.468.0",
+    "next": "^15.4.8",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1"
+  },
+  "devDependencies": {
+    "@types/node": "^20",
+    "@types/react": "^18",
+    "@types/react-dom": "^18",
+    "autoprefixer": "^10.4.20",
+    "postcss": "^8.4.47",
+    "tailwindcss": "^3.4.13",
+    "tsx": "^4.19.2",
+    "typescript": "^5"
+  },
+  "type": "module"
+}

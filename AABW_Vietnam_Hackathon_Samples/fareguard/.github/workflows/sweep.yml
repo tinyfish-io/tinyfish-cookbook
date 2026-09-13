@@ -1,0 +1,30 @@
+name: FareGuard sweep
+
+on:
+  schedule:
+    # Every 8 hours. GitHub Actions runners have no execution time cap like
+    # Vercel does, so this is where the real 7-site TinyFish sweep runs.
+    - cron: "0 */8 * * *"
+  workflow_dispatch: {}
+    # Lets the deployed app's "Run sweep now" button trigger this on demand
+    # via the GitHub API (see lib/github.ts), and lets you trigger it by
+    # hand from the Actions tab.
+
+jobs:
+  sweep:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+      - name: Install dependencies
+        run: npm install --no-audit --no-fund
+      - name: Run sweep
+        run: npx tsx scripts/sweep.ts
+        env:
+          TINYFISH_API_KEY: ${{ secrets.TINYFISH_API_KEY }}
+          KV_REST_API_URL: ${{ secrets.KV_REST_API_URL }}
+          KV_REST_API_TOKEN: ${{ secrets.KV_REST_API_TOKEN }}
+          GROQ_API_KEY: ${{ secrets.GROQ_API_KEY }}

@@ -1,0 +1,411 @@
+/* Fonts — Geist (body) + JetBrains Mono (chrome/code) per VideoDB design system,
+   plus Caveat for the hand-drawn illustration captions only. */
+@import url('https://fonts.googleapis.com/css2?family=Geist:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600&family=Caveat:wght@500;600;700&display=swap');
+@import "tailwindcss";
+
+/* ───────────────────────── Design tokens (VideoDB DS) ───────────────────────── */
+:root {
+  /* Brand */
+  --orange-400: #FF7E32; --orange-500: #F24E1E; --orange-600: #D14016; --orange-700: #A23310;
+  --orange-rgb: 242, 78, 30;
+  --color-primary: var(--orange-500);
+  --color-accent: var(--orange-600);
+  --color-error: #E5484D;
+  --color-success: #059669;
+
+  /* Scrims */
+  --scrim-hover-on-dark: rgba(255, 255, 255, 0.04);
+  --scrim-hover-on-light: rgba(0, 0, 0, 0.04);
+  --scrim-glass: rgba(255, 255, 255, 0.10);
+  --scrim-glass-strong: rgba(255, 255, 255, 0.18);
+  --scrim-glass-border: rgba(255, 255, 255, 0.60);
+  --scrim-dark-pill: rgba(0, 0, 0, 0.65);
+  --surface-chrome-dark: rgba(10, 10, 10, 0.80);
+  --surface-chrome-light: rgba(255, 255, 255, 0.80);
+
+  /* Neutrals */
+  --white: #FFFFFF;
+  --neutral-dark: #0A0A0A;
+  --neutral-darker: #050505;
+  --neutral-light: #F5F5F7;
+  --surface-light: #E8E8EA;
+  --surface-light-hover: #DCDCDE;
+  --charcoal: #161616;
+  --charcoal-hover: #1F1F1F;
+  --charcoal-darker: #1A1A1A;
+  --grey-200: #E8E8EA;
+  --grey-400: #B4B4B6;
+  --grey-700: #2A2A2A;
+  --grey-900: #161616;
+  --grey-1000: #0A0A0A;
+
+  /* Text */
+  --text-on-dark: #FFFFFF;
+  --text-on-dark-display: rgba(255, 255, 255, 0.95);
+  --text-on-dark-muted: rgba(255, 255, 255, 0.75);
+  --text-on-dark-subtle: rgba(255, 255, 255, 0.65);
+  --text-on-dark-second: rgba(255, 255, 255, 0.60);
+  --text-on-light: #111111;
+  --text-on-light-display: rgba(0, 0, 0, 0.90);
+  --text-on-light-muted: rgba(0, 0, 0, 0.75);
+  --text-on-light-subtle: rgba(0, 0, 0, 0.60);
+  --text-on-light-second: rgba(0, 0, 0, 0.65);
+
+  /* Borders */
+  --border-on-dark: rgba(255, 255, 255, 0.08);
+  --border-on-dark-strong: rgba(255, 255, 255, 0.12);
+  --border-on-light: rgba(0, 0, 0, 0.08);
+  --border-on-light-strong: rgba(0, 0, 0, 0.12);
+
+  /* Radii */
+  --r-control: 9999px;
+  --r-card: 12px;
+  --r-surface-md: 16px;
+  --r-surface: 32px;
+  --r-subtle: 4px;
+
+  /* Motion */
+  --ease-ui: cubic-bezier(0.4, 0, 0.2, 1);
+  --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-spring: cubic-bezier(0.34, 1.56, 0.64, 1);
+  --dur-fast: 150ms;
+  --dur-ui: 200ms;
+  --dur-ext: 300ms;
+
+  /* Sizing */
+  --touch-target-min: 44px;
+  --ds-header-h: 60px;
+  /* ── Semantic app surface tokens (theme-switchable) ──
+     Default = dark. `.theme-light` on <html> flips these. Components and
+     utilities read these so a single class set works in both themes. */
+  --c-bg: #0A0A0A;
+  --c-bg-2: #0F0F0F;
+  --c-surface: #161616;
+  --c-surface-2: #1F1F1F;
+  --c-text: #FFFFFF;
+  --c-text-muted: rgba(255,255,255,0.72);
+  --c-text-subtle: rgba(255,255,255,0.55);
+  --c-text-faint: rgba(255,255,255,0.40);
+  --c-border: rgba(255,255,255,0.10);
+  --c-border-strong: rgba(255,255,255,0.18);
+  --c-hover: rgba(255,255,255,0.04);
+  --c-hover-2: rgba(255,255,255,0.07);
+  --c-input-bg: rgba(255,255,255,0.06);
+  --c-chrome: rgba(10,10,10,0.80);
+  --c-select-chevron: url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' fill='none' stroke='rgba(255,255,255,0.65)' stroke-width='1.5'%3E%3Cpolyline points='4 6 8 10 12 6'/%3E%3C/svg%3E");
+}
+
+.theme-light {
+  --c-bg: #F5F5F7;
+  --c-bg-2: #ECECEE;
+  --c-surface: #FFFFFF;
+  --c-surface-2: #F0F0F2;
+  --c-text: #111111;
+  --c-text-muted: rgba(0,0,0,0.72);
+  --c-text-subtle: rgba(0,0,0,0.55);
+  --c-text-faint: rgba(0,0,0,0.48);
+  --c-border: rgba(0,0,0,0.10);
+  --c-border-strong: rgba(0,0,0,0.14);
+  --c-hover: rgba(0,0,0,0.04);
+  --c-hover-2: rgba(0,0,0,0.06);
+  --c-input-bg: rgba(0,0,0,0.02);
+  --c-chrome: rgba(255,255,255,0.82);
+  --c-select-chevron: url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' fill='none' stroke='rgba(0,0,0,0.65)' stroke-width='1.5'%3E%3Cpolyline points='4 6 8 10 12 6'/%3E%3C/svg%3E");
+}
+
+/* Theme-aware logo swap helpers */
+.theme-light .show-on-dark { display: none !important; }
+.theme-dark  .show-on-light { display: none !important; }
+
+/* Tailwind theme bridge — lets existing utilities resolve to DS tokens. */
+@theme inline {
+  --color-background: var(--neutral-dark);
+  --color-foreground: var(--text-on-dark);
+  --color-orange-400: var(--orange-400);
+  --color-orange-500: var(--orange-500);
+  --color-orange-600: var(--orange-600);
+  --color-charcoal: var(--charcoal);
+  --color-neutral-dark: var(--neutral-dark);
+  --color-surface-light: var(--surface-light);
+  --color-error: var(--color-error);
+  --color-success: var(--color-success);
+  --font-sans: 'Geist', ui-sans-serif, system-ui, sans-serif;
+  --font-mono: 'JetBrains Mono', ui-monospace, monospace;
+}
+
+/* ───────────────────────── Reset + base ───────────────────────── */
+* { box-sizing: border-box; }
+*::before, *::after { box-sizing: border-box; }
+html {
+  scroll-behavior: smooth;
+  scroll-padding-top: calc(var(--ds-header-h) + 24px);
+  -webkit-text-size-adjust: 100%;
+}
+html, body { margin: 0; padding: 0; }
+body {
+  font-family: 'Geist', ui-sans-serif, system-ui, sans-serif;
+  font-size: 15px;
+  line-height: 1.55;
+  background: var(--c-bg);
+  color: var(--c-text);
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+  -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+  transition: background var(--dur-ext) var(--ease-ui), color var(--dur-ext) var(--ease-ui);
+}
+button, input, textarea, select { font: inherit; color: inherit; }
+a { color: inherit; text-decoration: none; }
+
+.font-display { font-family: 'Geist', ui-sans-serif, system-ui, sans-serif; }
+.font-mono { font-family: 'JetBrains Mono', ui-monospace, monospace; }
+.font-hand { font-family: 'Caveat', ui-sans-serif, cursive; }
+
+/* Global focus ring */
+*:focus-visible {
+  outline: 2px solid var(--orange-500);
+  outline-offset: 2px;
+  border-radius: 2px;
+}
+
+/* Selection palette — neutral body, orange headings (scoped to <main>). */
+::selection { background: rgba(255, 255, 255, 0.18); }
+main ::selection { background: rgba(155, 155, 157, 0.32); color: inherit; }
+main h1::selection, main h2::selection, main h3::selection, main h4::selection,
+main .ds-section-heading__title::selection, main .ds-content-card__title::selection {
+  background: var(--orange-500); color: #FFFFFF;
+}
+
+/* Scrollbars */
+::-webkit-scrollbar { width: 10px; height: 10px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: var(--border-on-dark-strong); border-radius: 8px; }
+::-webkit-scrollbar-thumb:hover { background: var(--text-on-dark-second); }
+pre::-webkit-scrollbar { width: 8px; height: 8px; }
+pre::-webkit-scrollbar-thumb { background: rgba(255, 255, 255, 0.18); border-radius: 8px; }
+pre::-webkit-scrollbar-track { background: transparent; }
+
+/* ───────────────────────── Surfaces / sections ─────────────────────────
+   Dark/light section rhythm (videodb.io style). Every section carries a
+   --dark or --light surface; children pick the matching component variant. */
+.ds-section--dark  { background: var(--c-bg); color: var(--c-text); }
+.ds-section--darker{ background: var(--c-bg-2); color: var(--c-text); }
+.ds-section--light { background: var(--neutral-light); color: var(--text-on-light); }
+/* In light mode the page background (--c-bg) is #F5F5F7 — already near-white — so
+   a pure-white fill alone is a ~4% difference and reads as "no division". Keep the
+   white fill but add an explicit edge (hairline borders + soft elevation) so the
+   band reads as a distinct raised panel. Dark mode is untouched: the light band
+   already contrasts hard against the black page. */
+.theme-light .ds-section--light {
+  background: var(--white);
+  border-top: 1px solid rgba(0, 0, 0, 0.08);
+  border-bottom: 1px solid rgba(0, 0, 0, 0.08);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.03), 0 16px 40px -20px rgba(0, 0, 0, 0.10);
+}
+
+/* Generic surface card */
+.ds-card { border-radius: var(--r-card); border: 1px solid; }
+.ds-card--dark  { background: var(--c-surface); border-color: var(--c-border); color: var(--c-text); }
+.ds-card--light { background: var(--white); border-color: var(--border-on-light); color: var(--text-on-light); }
+.ds-card--dark.is-interactive:hover  { border-color: var(--c-border-strong); }
+.ds-card--light.is-interactive:hover { border-color: var(--border-on-light-strong); }
+
+/* ───────────────────────── Eyebrow / mono labels ───────────────────────── */
+.ds-eyebrow {
+  display: inline-block;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px; font-weight: 500; letter-spacing: 0.18em; text-transform: uppercase;
+}
+.ds-eyebrow--orange { color: var(--orange-500); }
+.ds-eyebrow--on-dark { color: var(--c-text-subtle); }
+.ds-eyebrow--on-light { color: var(--text-on-light-subtle); }
+
+/* Section heading */
+.ds-section-heading { display: flex; flex-direction: column; gap: 16px; max-width: 720px; }
+.ds-section-heading--centered { text-align: center; margin-inline: auto; align-items: center; }
+.ds-section-heading__title {
+  font-family: 'Geist', sans-serif; font-size: clamp(26px, 4.5vw, 40px); font-weight: 400;
+  letter-spacing: -0.02em; line-height: 1.1; margin: 0;
+}
+.ds-section-heading--dark .ds-section-heading__title { color: var(--c-text); }
+.ds-section-heading--light .ds-section-heading__title { color: var(--text-on-light); }
+.ds-section-heading__lead { font-family: 'Geist', sans-serif; font-size: 16px; line-height: 1.6; margin: 0; }
+.ds-section-heading--dark .ds-section-heading__lead { color: var(--c-text-muted); }
+.ds-section-heading--light .ds-section-heading__lead { color: var(--text-on-light-muted); }
+
+/* ───────────────────────── Buttons ───────────────────────── */
+.ds-btn {
+  display: inline-flex; align-items: center; justify-content: center; gap: 8px;
+  font-family: 'Geist', sans-serif; font-size: 14px; font-weight: 400;
+  padding: 12px 24px; border: 0; border-radius: var(--r-control); cursor: pointer; text-decoration: none;
+  transition: background var(--dur-fast) var(--ease-ui), color var(--dur-fast) var(--ease-ui), border-color var(--dur-fast) var(--ease-ui), transform var(--dur-fast) var(--ease-ui);
+  min-height: var(--touch-target-min);
+}
+.ds-btn:active { transform: scale(0.985); transition-duration: 96ms; }
+.ds-btn--primary { background: var(--orange-500); color: #fff; }
+.ds-btn--primary:hover { background: var(--orange-600); }
+.ds-btn--secondary-dark { background: var(--c-surface); color: var(--c-text-muted); border: 1px solid var(--c-border-strong); }
+.ds-btn--secondary-dark:hover { background: var(--c-surface-2); color: var(--c-text); }
+.ds-btn--secondary-light { background: #FFFFFF; color: var(--text-on-light-muted); border: 1px solid var(--border-on-light-strong); }
+.ds-btn--secondary-light:hover { background: var(--surface-light); color: var(--text-on-light); }
+.ds-btn--ghost-dark { background: transparent; color: var(--c-text-muted); border: 1px solid var(--c-border-strong); }
+.ds-btn--ghost-dark:hover { background: var(--c-hover-2); color: var(--c-text); }
+.ds-btn--ghost-light { background: rgba(0,0,0,0.04); color: var(--text-on-light-muted); border: 1px solid var(--border-on-light-strong); }
+.ds-btn--ghost-light:hover { background: rgba(0,0,0,0.08); color: var(--text-on-light); }
+.ds-btn--ghost-charcoal { background: transparent; color: var(--text-on-dark-muted); border: 1px solid var(--border-on-dark); }
+.ds-btn--ghost-charcoal:hover { background: rgba(255,255,255,0.04); color: var(--text-on-dark); border-color: var(--border-on-dark-strong); }
+.ds-btn--danger { background: var(--color-error); color: #fff; }
+.ds-btn--danger:hover { background: #c93b40; }
+.ds-btn--sm { padding: 8px 16px; font-size: 13px; min-height: 0; }
+.ds-btn--icon { width: 40px; height: 40px; min-height: 0; padding: 0; justify-content: center; flex: 0 0 auto; }
+.ds-btn:disabled, .ds-btn[aria-disabled="true"] { opacity: 0.4; cursor: not-allowed; pointer-events: none; }
+.ds-btn[aria-busy="true"] { opacity: 0.7; cursor: progress; pointer-events: none; }
+.ds-btn__spinner {
+  width: 14px; height: 14px; border: 1.5px solid currentColor; border-right-color: transparent;
+  border-radius: 50%; animation: ds-btn-spin 720ms linear infinite; flex-shrink: 0;
+}
+@keyframes ds-btn-spin { to { transform: rotate(360deg); } }
+
+/* ───────────────────────── Inputs / form ───────────────────────── */
+.ds-input, .ds-textarea, .ds-select {
+  width: 100%; font-family: 'Geist', sans-serif; font-size: 16px; padding: 12px 18px;
+  border: 1px solid; border-radius: var(--r-card);
+  transition: border-color var(--dur-fast) var(--ease-ui); box-sizing: border-box;
+}
+.ds-textarea { resize: vertical; min-height: 96px; line-height: 1.5; }
+.ds-input--pill { border-radius: var(--r-control); }
+.ds-input--dark, .ds-textarea--dark { background: var(--c-input-bg); color: var(--c-text); border-color: var(--c-border); }
+.ds-input--dark::placeholder, .ds-textarea--dark::placeholder { color: var(--c-text-faint); }
+.ds-input--light, .ds-textarea--light { background: rgba(255,255,255,0.85); color: var(--text-on-light); border-color: var(--border-on-light); }
+.ds-input--light::placeholder, .ds-textarea--light::placeholder { color: var(--text-on-light-subtle); }
+.ds-input:focus-visible, .ds-textarea:focus-visible, .ds-select:focus-visible {
+  outline: 2px solid var(--orange-400); outline-offset: 2px; border-color: var(--orange-400);
+}
+.ds-select {
+  appearance: none; -webkit-appearance: none; padding: 12px 40px 12px 18px; cursor: pointer;
+  background-repeat: no-repeat; background-position: right 14px center; background-size: 14px;
+}
+.ds-select--dark {
+  background-color: var(--c-input-bg); color: var(--c-text); border-color: var(--c-border);
+  background-image: var(--c-select-chevron);
+}
+.ds-select--light {
+  background-color: rgba(255,255,255,0.95); color: var(--text-on-light); border-color: var(--border-on-light);
+  background-image: url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' fill='none' stroke='rgba(0,0,0,0.65)' stroke-width='1.5'%3E%3Cpolyline points='4 6 8 10 12 6'/%3E%3C/svg%3E");
+}
+.ds-select option { color: #111; background: #fff; }
+.ds-select--dark option { color: #111; background: #fff; }
+.ds-briefing-grid { grid-template-columns: repeat(auto-fill, minmax(248px, 1fr)); }
+.ds-field-label {
+  display: block; font-family: 'Geist', sans-serif; font-size: 12px; font-weight: 500;
+  letter-spacing: -0.005em; margin-bottom: 8px;
+}
+.ds-field-label--on-dark { color: var(--c-text); }
+.ds-field-label--on-light { color: var(--text-on-light); }
+.ds-helper { display: block; font-size: 12px; margin-top: 8px; }
+.ds-helper--on-dark { color: var(--c-text-subtle); }
+.ds-helper.is-error { color: var(--color-error); }
+.ds-input[aria-invalid="true"], .ds-textarea[aria-invalid="true"], .ds-select[aria-invalid="true"] {
+  border-color: var(--color-error); animation: ds-input-buzz 120ms var(--ease-ui);
+}
+@keyframes ds-input-buzz {
+  0%,100% { transform: translateX(0); } 20% { transform: translateX(-3px); }
+  40% { transform: translateX(3px); } 60% { transform: translateX(-2px); } 80% { transform: translateX(2px); }
+}
+.ds-checkbox, .ds-radio {
+  width: 18px; height: 18px; appearance: none; -webkit-appearance: none; border: 1px solid;
+  cursor: pointer; position: relative; margin: 0; flex-shrink: 0;
+}
+.ds-radio { border-radius: var(--r-control); }
+.ds-checkbox { border-radius: var(--r-subtle); }
+.ds-checkbox--dark, .ds-radio--dark { background: var(--c-surface-2); border-color: var(--c-border-strong); }
+.ds-checkbox--light, .ds-radio--light { background: #fff; border-color: var(--grey-400); }
+.ds-checkbox:checked, .ds-radio:checked { background: var(--orange-500); border-color: var(--orange-500); }
+.ds-checkbox:checked::after {
+  content: ''; position: absolute; left: 5px; top: 1px; width: 6px; height: 10px;
+  border: solid #fff; border-width: 0 2px 2px 0; transform: rotate(45deg);
+}
+.ds-radio:checked::after { content: ''; position: absolute; inset: 4px; background: #fff; border-radius: 9999px; }
+
+/* ───────────────────────── Pills / tags / status ───────────────────────── */
+.ds-tag-chip {
+  display: inline-block; padding: 4px 10px; border-radius: var(--r-subtle);
+  font-family: 'JetBrains Mono', monospace; font-size: 11px; letter-spacing: 0.1em;
+  text-transform: uppercase; border: 1px solid;
+}
+.ds-tag-chip--dark { background: var(--c-hover-2); color: var(--c-text-muted); border-color: var(--c-border-strong); }
+.ds-tag-chip--light { background: rgba(0,0,0,0.04); color: var(--text-on-light-muted); border-color: var(--border-on-light-strong); }
+.ds-pill-status {
+  display: inline-flex; align-items: center; gap: 8px; padding: 6px 14px; border-radius: var(--r-control);
+  font-family: 'JetBrains Mono', monospace; font-size: 11px; font-weight: 500; letter-spacing: 0.14em;
+  text-transform: uppercase; border: 1px solid transparent;
+}
+.ds-pill-status--orange { background: rgba(var(--orange-rgb), 0.10); color: var(--orange-500); border-color: rgba(var(--orange-rgb), 0.40); }
+.ds-pill-status--dark { background: var(--grey-700); color: #fff; border-color: var(--grey-700); }
+.ds-pill-status--muted-dark { background: var(--c-hover); color: var(--c-text-subtle); border-color: var(--c-border); }
+.ds-pill-status--muted-light { background: rgba(0,0,0,0.04); color: var(--text-on-light-subtle); border-color: var(--border-on-light-strong); }
+.ds-pill-status__dot { width: 6px; height: 6px; border-radius: 9999px; background: currentColor; flex-shrink: 0; }
+
+/* ───────────────────────── Content card text ───────────────────────── */
+.ds-content-card__title { font-family: 'Geist', sans-serif; font-size: 18px; font-weight: 500; letter-spacing: -0.01em; line-height: 1.3; margin: 0; }
+.ds-content-card__lead { font-family: 'Geist', sans-serif; font-size: 14px; line-height: 1.5; margin: 0; }
+
+/* ───────────────────────── Header chrome ───────────────────────── */
+.ds-header-nav {
+  position: sticky; top: 0; z-index: 40; width: 100%;
+  border-bottom: 1px solid var(--c-border);
+  background: var(--c-chrome);
+  backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
+}
+
+/* ───────────────────────── Motion utilities ─────────────────────────
+   Existing app animation classes, retuned for the dark surface. */
+.ds-reveal { opacity: 0; transform: translateY(18px); transition: opacity 720ms var(--ease-out), transform 720ms var(--ease-out); will-change: opacity, transform; }
+.ds-reveal.is-revealed { opacity: 1; transform: translateY(0); will-change: auto; }
+
+.thinking-shimmer {
+  width: max-content; color: transparent;
+  background: linear-gradient(90deg, rgba(255,255,255,0.45) 0%, rgba(255,255,255,0.45) 38%, var(--orange-500) 50%, rgba(255,255,255,0.45) 62%, rgba(255,255,255,0.45) 100%);
+  background-size: 250% 100%; background-clip: text; -webkit-background-clip: text;
+  animation: text-shimmer 1.6s linear infinite;
+}
+@keyframes text-shimmer { from { background-position: 130% 0; } to { background-position: -130% 0; } }
+.thinking-dots span { animation: dot-pulse 1.4s ease-in-out infinite; }
+.thinking-dots span:nth-child(2) { animation-delay: 0.18s; }
+.thinking-dots span:nth-child(3) { animation-delay: 0.36s; }
+@keyframes dot-pulse { 0%,60%,100% { opacity: 0.25; } 30% { opacity: 1; } }
+
+.animate-message { animation: rise-in 0.35s cubic-bezier(0.21,1.02,0.73,1) both; }
+.animate-rise { animation: rise-in 0.4s cubic-bezier(0.21,1.02,0.73,1) both; }
+@keyframes rise-in { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+.status-dot-running { animation: status-pulse 1.4s ease-in-out infinite; }
+@keyframes status-pulse {
+  0%,100% { opacity: 1; box-shadow: 0 0 0 0 rgba(var(--orange-rgb), 0.4); }
+  50% { opacity: 0.7; box-shadow: 0 0 0 4px rgba(var(--orange-rgb), 0); }
+}
+
+.composer-dock { background: linear-gradient(to top, var(--c-bg) 62%, transparent); pointer-events: none; }
+.composer-dock > div { pointer-events: auto; }
+
+/* Hand-drawn illustration helpers (PhD-comics style) */
+.sketch-stroke { stroke-linecap: round; stroke-linejoin: round; }
+@keyframes deliver-buzz {
+  0%, 100% { transform: rotate(0deg); }
+  25% { transform: rotate(-7deg); } 75% { transform: rotate(7deg); }
+}
+.deliver-buzz { animation: deliver-buzz 1.6s var(--ease-ui) infinite; transform-origin: center; }
+@keyframes float-bob { 0%,100% { transform: translateY(0); } 50% { transform: translateY(-5px); } }
+.float-bob { animation: float-bob 3s ease-in-out infinite; }
+
+@media (hover: hover) {
+  .hover-lift { transition: transform 180ms var(--ease-ui); }
+  .hover-lift:hover { transform: translateY(-3px); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ds-reveal, .ds-reveal.is-revealed, .animate-message, .animate-rise,
+  .thinking-shimmer, .thinking-dots span, .status-dot-running,
+  .deliver-buzz, .float-bob, .ds-btn__spinner { animation: none; transition: none; }
+  .ds-reveal { opacity: 1; transform: none; }
+  html { scroll-behavior: auto; }
+}

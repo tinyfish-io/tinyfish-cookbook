@@ -1,0 +1,110 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --bg: #F5F7FA;
+  --surface: #FFFFFF;
+  --surface-alt: #F1F4F9;
+  --border: #E2E8F0;
+  --text-primary: #0F172A;
+  --text-secondary: #64748B;
+  --text-muted: #94A3B8;
+  --accent: #2563EB;
+  --accent-dark: #1D4ED8;
+  --accent-soft: rgba(37, 99, 235, 0.08);
+  --success: #16A34A;
+  --warning: #D97706;
+  --danger: #DC2626;
+  --shadow-sm: 0 1px 2px rgba(15, 23, 42, 0.05);
+  --shadow-md: 0 4px 16px rgba(15, 23, 42, 0.08), 0 1px 2px rgba(15, 23, 42, 0.06);
+  --shadow-glow: 0 0 0 1px rgba(37, 99, 235, 0.12);
+}
+
+[data-theme="dark"] {
+  --bg: #0B1220;
+  --surface: #111827;
+  --surface-alt: #1A2333;
+  --border: #263244;
+  --text-primary: #E5E9F2;
+  --text-secondary: #94A3B8;
+  --text-muted: #64748B;
+  --accent: #3B82F6;
+  --accent-dark: #2563EB;
+  --accent-soft: rgba(59, 130, 246, 0.12);
+  --success: #22C55E;
+  --warning: #F59E0B;
+  --danger: #EF4444;
+  --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.3);
+  --shadow-md: 0 8px 24px rgba(0, 0, 0, 0.4), 0 1px 2px rgba(0, 0, 0, 0.3);
+  --shadow-glow: 0 0 0 1px rgba(59, 130, 246, 0.10);
+}
+
+* {
+  border-color: var(--border);
+}
+
+html {
+  color-scheme: light;
+}
+html[data-theme="dark"] {
+  color-scheme: dark;
+}
+
+body {
+  background: var(--bg);
+  color: var(--text-primary);
+  transition: background 0.15s ease, color 0.15s ease;
+}
+
+::selection {
+  background: var(--accent);
+  color: #fff;
+}
+
+table {
+  border-collapse: collapse;
+}
+
+.tabular {
+  font-variant-numeric: tabular-nums;
+}
+
+.card-surface {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  box-shadow: var(--shadow-sm);
+  position: relative;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease, transform 0.2s ease;
+}
+
+.card-surface:hover {
+  border-color: var(--accent);
+  box-shadow: var(--shadow-md);
+  transform: scale(1.012);
+  z-index: 10;
+}
+
+.card-elevated {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  box-shadow: var(--shadow-md);
+}
+
+@keyframes skeleton-pulse {
+  0%, 100% { opacity: 0.5; }
+  50% { opacity: 1; }
+}
+.skeleton {
+  background: var(--surface-alt);
+  border-radius: 8px;
+  animation: skeleton-pulse 1.4s ease-in-out infinite;
+}
+
+@keyframes scan-sweep {
+  0% { transform: translateX(-120%); }
+  100% { transform: translateX(220%); }
+}
+.scan-sweep {
+  animation: scan-sweep 1.8s ease-in-out infinite;
+}

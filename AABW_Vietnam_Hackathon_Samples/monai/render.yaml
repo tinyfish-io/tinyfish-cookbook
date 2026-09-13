@@ -1,0 +1,20 @@
+# Render Blueprint — free tier web service only.
+# Default plan is "starter" ($7/mo) if plan: free is omitted.
+services:
+  - type: web
+    name: monai-backend
+    runtime: python
+    plan: free
+    buildCommand: pip install -r requirements.txt
+    startCommand: uvicorn main:app --host 0.0.0.0 --port $PORT
+    healthCheckPath: /health
+    envVars:
+      - key: PYTHON_VERSION
+        value: "3.12.8"
+      - key: TINYFISH_API_KEY
+        sync: false
+      - key: OPENAI_API_KEY
+        sync: false
+      - key: ALLOWED_ORIGINS
+        sync: false
+        # Set in Render dashboard, e.g. https://mon-ai-alpha.vercel.app

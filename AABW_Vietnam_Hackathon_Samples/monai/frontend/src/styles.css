@@ -1,0 +1,475 @@
+@import "tailwindcss";
+
+@theme {
+  /* Bánh Mì palette — oklch */
+  --color-cream: oklch(0.94 0.03 85);
+  --color-crust: oklch(0.78 0.14 75);
+  --color-toasted: oklch(0.58 0.12 55);
+  --color-chili: oklch(0.52 0.18 25);
+  --color-cilantro: oklch(0.45 0.1 145);
+  --color-nuoc: oklch(0.25 0.04 45);
+  --color-foam: oklch(0.87 0.08 85);
+
+  /* Semantic aliases */
+  --color-background: var(--color-cream);
+  --color-foreground: var(--color-nuoc);
+  --color-primary: var(--color-chili);
+  --color-primary-foreground: var(--color-cream);
+  --color-secondary: var(--color-crust);
+  --color-secondary-foreground: var(--color-nuoc);
+  --color-accent: var(--color-cilantro);
+  --color-accent-foreground: var(--color-cream);
+  --color-muted: oklch(0.9 0.025 85);
+  --color-muted-foreground: oklch(0.42 0.05 45);
+  --color-card: oklch(0.97 0.02 85);
+  --color-card-foreground: var(--color-nuoc);
+  --color-border: oklch(0.82 0.04 75);
+  --color-ring: var(--color-chili);
+  --color-input: oklch(0.82 0.04 75);
+  --color-popover: var(--color-card);
+  --color-popover-foreground: var(--color-card-foreground);
+  --color-destructive: var(--color-chili);
+  --color-destructive-foreground: var(--color-cream);
+  --color-ring-offset: var(--color-background);
+
+  /* Sidebar */
+  --color-sidebar: var(--color-nuoc);
+  --color-sidebar-foreground: var(--color-cream);
+  --color-sidebar-primary: var(--color-chili);
+  --color-sidebar-primary-foreground: var(--color-cream);
+  --color-sidebar-accent: oklch(0.32 0.05 45);
+  --color-sidebar-accent-foreground: var(--color-cream);
+  --color-sidebar-border: oklch(0.35 0.05 45);
+  --color-sidebar-ring: var(--color-chili);
+
+  --font-display: "Playfair Display", Georgia, serif;
+  --font-punch: "Bebas Neue", "Arial Narrow", sans-serif;
+  --font-vn: "Be Vietnam Pro", system-ui, sans-serif;
+  --font-sans: var(--font-vn);
+}
+
+@layer base {
+  *,
+  *::before,
+  *::after {
+    box-sizing: border-box;
+  }
+
+  html {
+    scroll-behavior: smooth;
+  }
+
+  body {
+    margin: 0;
+    min-height: 100vh;
+    font-family: var(--font-vn);
+    color: var(--color-foreground);
+    background-color: var(--color-background);
+    -webkit-font-smoothing: antialiased;
+  }
+}
+
+/* Rice-paper / newsprint texture */
+.paper-texture {
+  background-color: var(--color-cream);
+  background-image:
+    url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
+}
+
+/* Banana-leaf section divider */
+.leaf-divider {
+  background-image: url("./assets/leaf.webp");
+  background-size: cover;
+  background-position: center;
+  min-height: 0.75rem;
+  opacity: 0.92;
+}
+
+/* Chopstick underline on headings */
+.chopstick-heading {
+  position: relative;
+  display: inline-block;
+}
+
+.chopstick-heading::after {
+  content: "";
+  display: block;
+  width: 100%;
+  height: 3px;
+  margin-top: 0.35rem;
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    var(--color-toasted) 8%,
+    var(--color-toasted) 42%,
+    transparent 46%,
+    transparent 54%,
+    var(--color-toasted) 58%,
+    var(--color-toasted) 92%,
+    transparent 100%
+  );
+  border-radius: 1px;
+}
+
+/* Rubber stamp seals */
+.stamp {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.35rem 0.85rem;
+  font-family: var(--font-punch);
+  font-size: 0.75rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--color-chili);
+  border: 2.5px solid var(--color-chili);
+  border-radius: 3px;
+  transform: rotate(-4deg);
+  box-shadow: inset 0 0 0 1px color-mix(in oklch, var(--color-chili) 30%, transparent);
+  opacity: 0.92;
+}
+
+.stamp--hot {
+  transform: rotate(3deg);
+}
+
+/* Vietnamese star bullet */
+.vn-star {
+  display: inline-block;
+  width: 0.65em;
+  height: 0.65em;
+  background: var(--color-chili);
+  clip-path: polygon(
+    50% 0%,
+    61% 35%,
+    98% 35%,
+    68% 57%,
+    79% 91%,
+    50% 70%,
+    21% 91%,
+    32% 57%,
+    2% 35%,
+    39% 35%
+  );
+  flex-shrink: 0;
+}
+
+/* Chili pepper divider */
+.chili-divider {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  color: var(--color-chili);
+  font-size: 0.65rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+}
+
+.chili-divider::before,
+.chili-divider::after {
+  content: "";
+  flex: 1;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--color-chili), transparent);
+}
+
+/* Steam animation */
+@keyframes steam-rise {
+  0% {
+    opacity: 0;
+    transform: translateY(0) scaleX(1);
+  }
+  30% {
+    opacity: 0.5;
+  }
+  100% {
+    opacity: 0;
+    transform: translateY(-28px) scaleX(1.3);
+  }
+}
+
+.steam-wisp {
+  position: absolute;
+  width: 8px;
+  height: 20px;
+  border-radius: 50%;
+  background: color-mix(in oklch, var(--color-foam) 60%, transparent);
+  filter: blur(3px);
+  animation: steam-rise 2.8s ease-in-out infinite;
+}
+
+.steam-wisp:nth-child(2) {
+  left: 12px;
+  animation-delay: 0.6s;
+  height: 24px;
+}
+
+.steam-wisp:nth-child(3) {
+  left: -8px;
+  animation-delay: 1.2s;
+  height: 18px;
+}
+
+/* Hero plate collage */
+.hero-plate {
+  position: relative;
+  width: min(100%, 420px);
+  aspect-ratio: 1;
+  margin-inline: auto;
+}
+
+.hero-plate__rim {
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  background: radial-gradient(
+    circle at 40% 35%,
+    var(--color-chili) 0%,
+    color-mix(in oklch, var(--color-chili) 85%, var(--color-nuoc)) 100%
+  );
+  box-shadow:
+    0 20px 50px color-mix(in oklch, var(--color-nuoc) 25%, transparent),
+    inset 0 -4px 12px color-mix(in oklch, var(--color-nuoc) 30%, transparent);
+}
+
+.hero-plate__inner {
+  position: absolute;
+  inset: 8%;
+  border-radius: 50%;
+  background: var(--color-cream);
+  overflow: hidden;
+}
+
+.hero-plate__item {
+  position: absolute;
+  object-fit: contain;
+  filter: drop-shadow(0 4px 8px color-mix(in oklch, var(--color-nuoc) 20%, transparent));
+}
+
+/* Chalkboard menu */
+.chalkboard {
+  background: var(--color-nuoc);
+  border: 4px solid var(--color-toasted);
+  border-radius: 0.5rem;
+  box-shadow:
+    inset 0 0 40px color-mix(in oklch, black 30%, transparent),
+    4px 6px 0 var(--color-toasted);
+  color: var(--color-cream);
+  font-family: var(--font-punch);
+}
+
+.chalkboard-row {
+  display: grid;
+  grid-template-columns: 1fr auto auto;
+  gap: 1rem;
+  padding: 0.65rem 0;
+  border-bottom: 1px dashed color-mix(in oklch, var(--color-cream) 25%, transparent);
+  align-items: baseline;
+}
+
+.chalkboard-row:last-child {
+  border-bottom: none;
+}
+
+/* Newsprint ticker */
+@keyframes ticker-scroll {
+  0% {
+    transform: translateX(0);
+  }
+  100% {
+    transform: translateX(-50%);
+  }
+}
+
+.ticker-track {
+  display: flex;
+  width: max-content;
+  animation: ticker-scroll 35s linear infinite;
+}
+
+.ticker-track:hover {
+  animation-play-state: paused;
+}
+
+/* Bento feature cards */
+.features-bento {
+  display: grid;
+  gap: 1.25rem;
+  grid-template-columns: 1fr;
+}
+
+@media (min-width: 640px) {
+  .features-bento {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (min-width: 1024px) {
+  .features-bento {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+.feature-card {
+  position: relative;
+  overflow: hidden;
+  border-radius: 1rem;
+  border: 2px solid var(--color-border);
+  background: var(--color-card);
+  padding: 1.5rem;
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.feature-card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 12px 32px color-mix(in oklch, var(--color-nuoc) 12%, transparent);
+}
+
+.feature-card__img {
+  width: 100%;
+  max-height: 140px;
+  object-fit: contain;
+  margin-bottom: 1rem;
+}
+
+/* Bánh mì workflow timeline */
+.banhmi-timeline {
+  position: relative;
+  padding-left: 2.5rem;
+}
+
+.banhmi-timeline::before {
+  content: "";
+  position: absolute;
+  left: 0.85rem;
+  top: 0;
+  bottom: 0;
+  width: 6px;
+  border-radius: 3px;
+  background: linear-gradient(
+    180deg,
+    var(--color-crust) 0%,
+    var(--color-toasted) 15%,
+    var(--color-chili) 30%,
+    var(--color-cilantro) 50%,
+    var(--color-foam) 70%,
+    var(--color-crust) 100%
+  );
+}
+
+.banhmi-step {
+  position: relative;
+  padding-bottom: 2rem;
+}
+
+.banhmi-step::before {
+  content: "";
+  position: absolute;
+  left: -1.65rem;
+  top: 0.35rem;
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  border: 2px solid var(--color-cream);
+  background: var(--color-crust);
+  box-shadow: 0 0 0 2px var(--color-toasted);
+}
+
+/* User stamped cards */
+.user-card {
+  position: relative;
+  padding: 1.75rem 1.5rem;
+  border: 2px dashed var(--color-border);
+  border-radius: 0.5rem;
+  background: var(--color-card);
+  transition: border-color 0.2s;
+}
+
+.user-card:hover {
+  border-color: var(--color-chili);
+}
+
+.user-card .stamp {
+  position: absolute;
+  top: -0.6rem;
+  right: 1rem;
+  font-size: 0.6rem;
+  padding: 0.2rem 0.5rem;
+}
+
+/* CTA footer banana-leaf border */
+.cta-leaf-border {
+  border: 4px solid var(--color-cilantro);
+  border-image: linear-gradient(
+      135deg,
+      var(--color-cilantro),
+      color-mix(in oklch, var(--color-cilantro) 70%, var(--color-crust)),
+      var(--color-cilantro)
+    )
+    1;
+  background: color-mix(in oklch, var(--color-cilantro) 8%, var(--color-cream));
+}
+
+/* Wordmark tone marks */
+.wordmark {
+  font-family: var(--font-punch);
+  font-size: clamp(3.5rem, 12vw, 7rem);
+  line-height: 0.95;
+  letter-spacing: 0.02em;
+  color: var(--color-nuoc);
+}
+
+.wordmark .tone-chili {
+  color: var(--color-chili);
+}
+
+.wordmark .tone-leaf {
+  color: var(--color-cilantro);
+}
+
+/* Buttons */
+.btn-primary {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  padding: 0.75rem 1.75rem;
+  font-family: var(--font-vn);
+  font-weight: 600;
+  font-size: 0.95rem;
+  color: var(--color-primary-foreground);
+  background: var(--color-chili);
+  border: none;
+  border-radius: 0.375rem;
+  cursor: pointer;
+  transition: background 0.2s, transform 0.15s;
+  text-decoration: none;
+}
+
+.btn-primary:hover {
+  background: color-mix(in oklch, var(--color-chili) 85%, var(--color-nuoc));
+  transform: translateY(-1px);
+}
+
+.btn-outline {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  padding: 0.75rem 1.75rem;
+  font-family: var(--font-vn);
+  font-weight: 600;
+  font-size: 0.95rem;
+  color: var(--color-nuoc);
+  background: transparent;
+  border: 2px solid var(--color-toasted);
+  border-radius: 0.375rem;
+  cursor: pointer;
+  transition: background 0.2s, border-color 0.2s;
+  text-decoration: none;
+}
+
+.btn-outline:hover {
+  background: color-mix(in oklch, var(--color-crust) 25%, transparent);
+  border-color: var(--color-chili);
+}

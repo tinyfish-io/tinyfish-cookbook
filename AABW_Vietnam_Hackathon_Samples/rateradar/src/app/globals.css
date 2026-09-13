@@ -1,0 +1,51 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  h1, h2, h3, .font-display {
+    font-family: 'Playfair Display', serif;
+  }
+  ::selection { background: #7A1330; color: #F3ECE4; }
+}
+
+@layer components {
+  .card-surface {
+    transition: border-color 180ms ease, box-shadow 180ms ease, transform 180ms ease;
+  }
+  .card-surface:hover {
+    border-color: rgba(201,162,39,0.55);
+    box-shadow: 0 10px 32px rgba(122,19,48,0.3);
+    transform: scale(1.02);
+    z-index: 1;
+    position: relative;
+  }
+  .fade-in-up { animation: fadeInUp 550ms ease both; }
+  .live-dot { animation: pulseGold 1.8s ease-in-out infinite; }
+  .ghost-fill { animation: ghostGlow 900ms ease-out; }
+  .hero-zoom { animation: heroZoom 20s ease-in-out infinite alternate; }
+}
+
+@keyframes fadeInUp {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+@keyframes pulseGold {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(201,162,39,0.5); }
+  50% { box-shadow: 0 0 0 6px rgba(201,162,39,0); }
+}
+@keyframes ghostGlow {
+  0% { box-shadow: 0 0 0 0 rgba(201,162,39,0); border-color: rgba(201,162,39,0.15); }
+  35% { box-shadow: 0 0 16px 2px rgba(201,162,39,0.45); border-color: rgba(201,162,39,0.6); }
+  100% { box-shadow: 0 0 0 0 rgba(201,162,39,0); border-color: rgba(201,162,39,0.25); }
+}
+@keyframes heroZoom {
+  from { transform: scale(1); }
+  to { transform: scale(1.08); }
+}
+@keyframes floatParticle {
+  0% { transform: translateY(0) translateX(0); opacity: 0; }
+  15% { opacity: 0.7; }
+  85% { opacity: 0.5; }
+  100% { transform: translateY(-90px) translateX(12px); opacity: 0; }
+}

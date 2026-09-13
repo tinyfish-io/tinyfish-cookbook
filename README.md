@@ -99,6 +99,14 @@ tinyfish fetch content get https://example.com
 
 The CLI writes results to the filesystem instead of piping them through your model's context window — tokens stay low, output stays structured.
 
+### Scripts
+
+Drop TinyFish into everyday tools with small copyable scripts.
+
+| Script | Description |
+|--------|-------------|
+| [Raycast TinyFish Search](./scripts/raycast-tinyfish-search) | Search the web from Raycast and get formatted result URLs, titles, and snippets |
+
 ### Agent Skill
 
 One-line install. Works with Claude Code, Codex, Cursor, OpenCode, Antigravity, and other coding agents. The Skill teaches your agent **when** to reach for Search vs. Fetch vs. Agent, and **how** to call them.
@@ -139,6 +147,19 @@ These use the latest TinyFish SDK and are deployed with live demos you can try r
 | [summer-school-finder](./summer-school-finder) | Discover and compare summer school programs from universities around the world | [Demo](https://cookbook-summer-school-finder.vercel.app/) |
 | [tinyskills](./tinyskills) | Multi-source AI skill guide generator that scrapes docs, GitHub, and blogs into a single SKILL.md | [Demo](https://cookbook-tinyskills.vercel.app/) |
 | [saigon-happy-hour-sniper](./saigon-happy-hour-sniper) | Find happy hour deals across Saigon in seconds | [Demo](https://saigon-happy-hour-sniper.vercel.app/) |
+| [worldcup-briefing](./worldcup-briefing) | AI-powered football highlight reels — discover match footage with TinyFish Search, compile clips with VideoDB | [Demo](https://worldcup-briefing.vercel.app) |
+### AABW Vietnam Hackathon Samples
+
+Built for the [Agentic AI Build Week (AABW)](https://aabw.genaifund.ai/) hackathon — July 8-12, 2026, Ho Chi Minh City. See the [full track mapping](./AABW_Vietnam_Hackathon_Samples/README.md).
+
+| Recipe | Track(s) | Live demo |
+|--------|----------|-----------|
+| [fareguard](./AABW_Vietnam_Hackathon_Samples/fareguard) | Mobility (Tasco), Aviation (Vietjet) | [Demo](https://fareguard.vercel.app/) |
+| [finsight](./AABW_Vietnam_Hackathon_Samples/finsight) | Financial Services I (Shinhan), Financial Services II (GoTymeX) | [Demo](https://finsight.vercel.app/) |
+| [founder-mode](./AABW_Vietnam_Hackathon_Samples/founder-mode) | Founder Mode (GenAI Fund) | [Demo](https://founder-mode-brown.vercel.app/) |
+| [market-pulse](./AABW_Vietnam_Hackathon_Samples/market-pulse) | Retail (Phong Vu), Retail & Hospitality (Guardian) | [Demo](https://marketpulse-gray.vercel.app/) |
+| [monai](./AABW_Vietnam_Hackathon_Samples/monai) | F&B (KFC) | [Demo](https://mon-ai-alpha.vercel.app/) |
+| [rateradar](./AABW_Vietnam_Hackathon_Samples/rateradar) | Financial Services I (Shinhan), Financial Services II (GoTymeX) | [Demo](https://rateradar-teal.vercel.app/) |
 
 ### Shopping & Deals
 

@@ -1,0 +1,20 @@
+<svg width="64" height="64" viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Football">
+  <defs>
+    <clipPath id="ballclip"><circle cx="32" cy="32" r="28"/></clipPath>
+  </defs>
+  <circle cx="32" cy="32" r="28" fill="#ffffff"/>
+  <g clip-path="url(#ballclip)">
+    <line x1="32" y1="23" x2="32" y2="6" stroke="#1f1f1e" stroke-width="2"/>
+    <line x1="40.56" y1="29.22" x2="56.73" y2="23.97" stroke="#1f1f1e" stroke-width="2"/>
+    <line x1="37.29" y1="39.28" x2="47.28" y2="53.03" stroke="#1f1f1e" stroke-width="2"/>
+    <line x1="26.71" y1="39.28" x2="16.72" y2="53.03" stroke="#1f1f1e" stroke-width="2"/>
+    <line x1="23.44" y1="29.22" x2="7.27" y2="23.97" stroke="#1f1f1e" stroke-width="2"/>
+    <polygon points="32,-0.5 38.18,3.99 35.82,11.26 28.18,11.26 25.82,3.99" fill="#1f1f1e"/>
+    <polygon points="56.73,17.47 62.91,21.96 60.55,29.23 52.91,29.23 50.55,21.96" fill="#1f1f1e"/>
+    <polygon points="47.28,46.53 53.46,51.02 51.10,58.29 43.46,58.29 41.10,51.02" fill="#1f1f1e"/>
+    <polygon points="16.72,46.53 22.90,51.02 20.54,58.29 12.90,58.29 10.54,51.02" fill="#1f1f1e"/>
+    <polygon points="7.27,17.47 13.45,21.96 11.09,29.23 3.45,29.23 1.09,21.96" fill="#1f1f1e"/>
+    <polygon points="32,23 40.56,29.22 37.29,39.28 26.71,39.28 23.44,29.22" fill="#FF6700"/>
+  </g>
+  <circle cx="32" cy="32" r="28" fill="none" stroke="#1f1f1e" stroke-width="2.5"/>
+</svg>

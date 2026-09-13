@@ -1,3 +1,5 @@
+'use client';
+
 import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { RotateCcw, Shield, Clock, X } from 'lucide-react';
@@ -66,7 +68,7 @@ export function ComparisonDashboard({
             </h2>
           </div>
           <div className="flex flex-wrap items-center gap-2 text-sm text-muted-foreground">
-            <span>"{searchParams.city}"</span>
+            <span>&ldquo;{searchParams.city}&rdquo;</span>
             {searchParams.allergens.length > 0 && (
               <>
                 <span className="text-border">|</span>

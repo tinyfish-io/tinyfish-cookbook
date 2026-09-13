@@ -13,3 +13,8 @@
 **/*.test.*
 **/*.spec.*
 **/*_test.*
+
+# Exclude minified/bundled vendored JS from scanning
+# These are build artifacts, not source; semgrep times out on large minified files
+# (e.g. rrweb.min.js) and `--error` turns the timeout into a hard CI failure.
+**/*.min.js
