@@ -71,7 +71,7 @@ for i, q in enumerate(queries):
         for item in results:
             item["_qi"] = i
         all_results.extend(results)
-    except:
+    except Exception:
         pass
 
 # === DEDUP ===
@@ -140,7 +140,7 @@ for item in relevant:
             item["_date"] = dt.isoformat()
             (in_window if dt >= CUTOFF else out_window).append(item)
             continue
-        except:
+        except Exception:
             pass
 
     # Snippet date patterns
@@ -155,7 +155,7 @@ for item in relevant:
                 item["_date"] = dt.isoformat()
                 (in_window if dt >= CUTOFF else out_window).append(item)
                 break
-            except:
+            except Exception:
                 continue
     else:
         # Reddit relative dates
