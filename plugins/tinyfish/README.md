@@ -2,6 +2,14 @@
 
 The complete web toolkit for your agent — search, fetch, browser automation, and headless browser control.
 
+## Install across agents
+
+If you want TinyFish in more than one coding agent:
+
+```bash
+npx universal-agent-plugins add tinyfish
+```
+
 ## Skills
 
 `search`, `fetch`, and `agent` are built on TinyFish's hosted MCP server (bundled via `.mcp.json`). No install, no CLI needed — first use triggers an OAuth sign-in to your TinyFish account (requires an account with available credits). They work in any environment, including sandboxed surfaces without terminal access.
