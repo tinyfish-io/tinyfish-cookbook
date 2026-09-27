@@ -1,0 +1,326 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Docs Drift Radar</title>
+    <style>
+      :root {
+        color-scheme: dark;
+        --bg: #0f1115; --panel: #171a21; --border: #262b36;
+        --text: #e6e8ee; --muted: #99a1b3; --accent: #526ce5; --danger: #ff6b6b;
+      }
+      * { box-sizing: border-box; }
+      body { margin: 0; background: var(--bg); color: var(--text);
+        font: 15px/1.5 ui-sans-serif, system-ui, -apple-system, Segoe UI, sans-serif; }
+      header { padding: 28px 24px 18px; border-bottom: 1px solid var(--border); }
+      h1 { margin: 0 0 6px; font-size: 22px; letter-spacing: -0.01em; }
+      .sub { color: var(--muted); font-size: 13px; }
+      main { padding: 20px 24px 60px; max-width: 1100px; margin: 0 auto; }
+      section { margin-bottom: 28px; }
+      h2 { font-size: 14px; text-transform: uppercase; letter-spacing: 0.08em;
+        color: var(--muted); margin: 0 0 12px; }
+      .row { display: flex; gap: 8px; flex-wrap: wrap; align-items: center; }
+      input, button { font: inherit; border-radius: 8px; border: 1px solid var(--border);
+        background: var(--panel); color: var(--text); padding: 9px 12px; }
+      input { flex: 1 1 320px; }
+      button { cursor: pointer; }
+      button.primary { background: var(--accent); border-color: var(--accent);
+        color: #fff; font-weight: 600; }
+      button:disabled { opacity: 0.55; cursor: default; }
+      table { width: 100%; border-collapse: collapse; font-size: 14px; }
+      th, td { text-align: left; padding: 9px 10px; border-bottom: 1px solid var(--border);
+        vertical-align: top; }
+      th { color: var(--muted); font-weight: 500; font-size: 12px;
+        text-transform: uppercase; letter-spacing: 0.06em; }
+      code, pre { font-family: ui-monospace, SFMono-Regular, Menlo, monospace; }
+      .badge { display: inline-block; padding: 2px 7px; border-radius: 999px;
+        border: 1px solid var(--border); font-size: 12px; margin-right: 4px; }
+      .badge.breaking { color: var(--danger); border-color: var(--danger); }
+      pre { background: #0b0d11; border: 1px solid var(--border); border-radius: 8px;
+        padding: 12px; overflow: auto; max-height: 320px; font-size: 12.5px;
+        margin: 8px 0 0; white-space: pre-wrap; word-break: break-word; }
+      #log { background: #0b0d11; border: 1px solid var(--border); border-radius: 8px;
+        padding: 12px; max-height: 240px; overflow: auto;
+        font-family: ui-monospace, monospace; font-size: 12.5px; white-space: pre-wrap; }
+      .empty { color: var(--muted); font-size: 14px; }
+      a { color: var(--accent); }
+    </style>
+  </head>
+  <body>
+    <header>
+      <h1>Docs Drift Radar</h1>
+      <div class="sub">
+        Watched docs pages, fetched with the TinyFish Fetch endpoint.
+        <span id="health">…</span>
+      </div>
+    </header>
+
+    <main>
+      <section>
+        <h2>Scan</h2>
+        <div class="row">
+          <button id="scan" class="primary">Scan all sources</button>
+          <button id="refresh">Refresh</button>
+          <span class="empty" id="scan-summary"></span>
+        </div>
+        <div id="log" hidden></div>
+      </section>
+
+      <section>
+        <h2>Watch a new URL</h2>
+        <form class="row" id="add-form">
+          <input id="add-url" type="url"
+                 placeholder="https://docs.example.com/changelog" required />
+          <button type="submit">Add</button>
+        </form>
+      </section>
+
+      <section>
+        <h2>Watched sources</h2>
+        <div id="sources"></div>
+      </section>
+
+      <section>
+        <h2>Detected drift</h2>
+        <div id="drifts"></div>
+      </section>
+    </main>
+
+    <script>
+      "use strict";
+
+      const $ = (id) => document.getElementById(id);
+
+      // Event names come from the API rather than being hard-coded here. If the server
+      // ever renames one, this client notices instead of silently waiting forever for a
+      // message that will never arrive.
+      let contract = { events: [], outcomes: [] };
+
+      const logLine = (text) => {
+        const box = $("log");
+        box.hidden = false;
+        box.append(`${new Date().toLocaleTimeString()}  ${text}\n`);
+        box.scrollTop = box.scrollHeight;
+      };
+
+      const el = (tag, className, text) => {
+        const node = document.createElement(tag);
+        if (className) node.className = className;
+        if (text !== undefined) node.textContent = String(text);
+        return node;
+      };
+
+      async function api(path, options) {
+        const response = await fetch(path, options);
+        if (!response.ok) {
+          let detail = response.statusText;
+          try {
+            const body = await response.json();
+            if (body && body.detail) detail = body.detail;
+          } catch { /* keep statusText */ }
+          throw new Error(detail);
+        }
+        return response;
+      }
+
+      function renderHealth(health) {
+        const key = health.api_key_configured ? "" : " · TINYFISH_API_KEY not set";
+        $("health").textContent =
+          `${health.sources} source(s) · ${health.drifts} drift(s)${key}`;
+      }
+
+      function renderSources(sources) {
+        const host = $("sources");
+        host.replaceChildren();
+        if (!sources.length) {
+          host.append(el("p", "empty", "Nothing watched yet. Add a URL or seed sources.yaml."));
+          return;
+        }
+
+        const table = el("table");
+        const head = el("tr");
+        ["Source", "URL", "Snapshots", "Drifts", ""].forEach((label) =>
+          head.append(el("th", null, label))
+        );
+        table.append(el("thead")).append(head);
+
+        const body = el("tbody");
+        for (const source of sources) {
+          const tr = el("tr");
+          tr.append(el("td", null, source.label || source.slug));
+
+          const urlCell = el("td");
+          const link = el("a", null, source.url);
+          link.href = source.url;
+          link.target = "_blank";
+          link.rel = "noopener noreferrer";
+          urlCell.append(link);
+          tr.append(urlCell);
+
+          tr.append(el("td", null, source.snapshot_count));
+          tr.append(el("td", null, source.drift_count));
+
+          const actions = el("td");
+          const remove = el("button", null, "Remove");
+          remove.addEventListener("click", async () => {
+            remove.disabled = true;
+            try {
+              await api(`/api/sources/${encodeURIComponent(source.slug)}`, { method: "DELETE" });
+              await refresh();
+            } catch (error) {
+              logLine(`delete failed: ${error.message}`);
+              remove.disabled = false;
+            }
+          });
+          actions.append(remove);
+          tr.append(actions);
+
+          body.append(tr);
+        }
+
+        table.append(body);
+        host.append(table);
+      }
+
+      function renderDrifts(drifts) {
+        const host = $("drifts");
+        host.replaceChildren();
+        if (!drifts.length) {
+          host.append(el("p", "empty", "No drift recorded yet."));
+          return;
+        }
+        for (const drift of drifts) {
+          const card = el("div");
+
+          const title = el("div");
+          title.append(el("strong", null, drift.label || drift.slug));
+          if (drift.is_breaking) title.append(el("span", "badge breaking", "breaking"));
+          for (const label of drift.labels) {
+            if (label !== "breaking") title.append(el("span", "badge", label));
+          }
+          card.append(title);
+
+          card.append(
+            el("div", "empty", `${drift.detected_at} · +${drift.added} / −${drift.removed}`)
+          );
+          card.append(el("pre", null, drift.diff || "(diff not stored)"));
+
+          host.append(card);
+        }
+      }
+
+      async function refresh() {
+        const [health, sources, drifts] = await Promise.all([
+          api("/api/health").then((response) => response.json()),
+          api("/api/sources").then((response) => response.json()),
+          api("/api/drifts?limit=25").then((response) => response.json()),
+        ]);
+        renderHealth(health);
+        renderSources(sources.sources);
+        renderDrifts(drifts.drifts);
+      }
+
+      function handleEvent(event) {
+        if (!contract.events.includes(event.type)) {
+          console.warn("unknown scan event — the server/client contract drifted", event);
+          logLine(`unexpected event type: ${event.type}`);
+          return;
+        }
+        switch (event.type) {
+          case "source_start":
+            logLine(`→ ${event.slug}`);
+            break;
+          case "source_complete":
+            logLine(
+              `  ${event.slug}: ${event.status}` +
+              (event.status === "changed" ? ` +${event.added}/−${event.removed}` : "")
+            );
+            break;
+          case "source_error":
+            logLine(`  ${event.slug || "scan"}: error — ${event.error}`);
+            break;
+          case "scan_complete":
+            $("scan-summary").textContent =
+              `${event.scanned} scanned · ${event.changed} changed · ${event.errors} failed` +
+              (event.breaking ? " · breaking change detected" : "");
+            logLine("scan complete");
+            break;
+          default:
+            break;
+        }
+      }
+
+      async function scan() {
+        const button = $("scan");
+        button.disabled = true;
+        $("scan-summary").textContent = "";
+        $("log").textContent = "";
+        logLine("scan started");
+
+        try {
+          // A streaming POST: fetch + ReadableStream parses the SSE frames, which is why
+          // this does not use EventSource (EventSource cannot issue a POST).
+          const response = await api("/api/scan", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({}),
+          });
+
+          const reader = response.body.getReader();
+          const decoder = new TextDecoder();
+          let buffer = "";
+
+          while (true) {
+            const { done, value } = await reader.read();
+            if (done) break;
+            buffer += decoder.decode(value, { stream: true });
+
+            const frames = buffer.split("\n\n");
+            buffer = frames.pop() ?? "";
+
+            for (const frame of frames) {
+              const line = frame.split("\n").find((part) => part.startsWith("data: "));
+              if (line) handleEvent(JSON.parse(line.slice(6)));
+            }
+          }
+        } catch (error) {
+          logLine(`scan failed: ${error.message}`);
+        } finally {
+          button.disabled = false;
+          await refresh();
+        }
+      }
+
+      $("scan").addEventListener("click", scan);
+      $("refresh").addEventListener("click", () =>
+        refresh().catch((error) => logLine(error.message))
+      );
+      $("add-form").addEventListener("submit", async (submitEvent) => {
+        submitEvent.preventDefault();
+        const input = $("add-url");
+        try {
+          await api("/api/sources", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ url: input.value.trim() }),
+          });
+          input.value = "";
+          await refresh();
+        } catch (error) {
+          logLine(`add failed: ${error.message}`);
+        }
+      });
+
+      (async () => {
+        try {
+          contract = await api("/api/events").then((response) => response.json());
+          logLine(`event contract: ${contract.events.join(", ")}`);
+        } catch (error) {
+          logLine(`contract unavailable: ${error.message}`);
+        }
+        await refresh();
+      })().catch((error) => logLine(error.message));
+    </script>
+  </body>
+</html>
