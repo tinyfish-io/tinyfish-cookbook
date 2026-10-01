@@ -195,16 +195,22 @@ tinyfish agent batch cancel <batch_id>
 Spin up a remote browser instance. Returns a CDP WebSocket URL for programmatic control.
 
 ```bash
-tinyfish browser session create [--url <url>] [--pretty]
+tinyfish browser session create [--url <url>] [--proxy-country <code> | --proxy-url <url> [--proxy-username <user>] | --no-proxy] [--pretty]
 ```
 
 - `--url` optionally navigates to a page after creation
 - Returns `session_id`, `cdp_url` (WebSocket), and `base_url`
 - Use the `cdp_url` with Playwright, Puppeteer, or any CDP client
+- By default traffic exits through the TinyFish proxy in the US, with the same IP for the whole session
+- `--proxy-country <code>` picks another exit country (ISO 3166-1 alpha-2, e.g. `DE`, `JP`)
+- `--proxy-url <url>` routes through the user's own HTTP(S) proxy; `--proxy-username <user>` for auth, password via `TINYFISH_PROXY_PASSWORD` env (never a flag)
+- `--no-proxy` connects directly, without a proxy
 
 ```bash
 tinyfish browser session create --url "https://example.com"
 # Returns: { session_id, cdp_url: "wss://...", base_url: "https://..." }
+
+tinyfish browser session create --url "https://example.de" --proxy-country DE
 ```
 
 ---
