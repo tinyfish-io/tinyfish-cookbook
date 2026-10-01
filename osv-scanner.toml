@@ -1,0 +1,1 @@
+# Required by the shared osv-scan workflow (--config osv-scanner.toml). Add [[IgnoredVulns]] entries here.
