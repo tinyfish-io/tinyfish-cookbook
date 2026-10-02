@@ -1,0 +1,11 @@
+# Example watchlist for docs-drift-radar.
+#
+# `slug` is optional — it is derived from the URL when omitted. Pass an explicit
+# slug when you want a short, stable name in reports and the dashboard.
+sources:
+  - label: TinyFish Agent Endpoints
+    url: https://docs.tinyfish.ai/key-concepts/endpoints
+  - label: Next.js Releases
+    url: https://nextjs.org/blog
+  - label: FastAPI Release Notes
+    url: https://fastapi.tiangolo.com/release-notes/
