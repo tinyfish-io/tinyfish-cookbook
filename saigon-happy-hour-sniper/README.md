@@ -2,7 +2,7 @@
 
 > Find happy hour deals across Saigon in seconds — powered by [TinyFish](https://tinyfish.ai/) parallel browser agents.
 
-**Live demo → [saigon-happy-hour-sniper.vercel.app](https://saigon-happy-hour-sniper.vercel.app)**
+**Live demo:** Currently unavailable.
 
 ---
 

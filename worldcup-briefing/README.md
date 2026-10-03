@@ -1,5 +1,5 @@
 # World Cup Briefing
-**Live Demo: https://worldcup-briefing.vercel.app**
+**Live demo:** Currently unavailable.
 
 **AI-powered football highlight reels — find match footage with TinyFish Search & Agent, then compile playable clips with VideoDB.**
 
