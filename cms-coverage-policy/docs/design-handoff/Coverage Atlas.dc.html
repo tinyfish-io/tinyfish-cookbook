@@ -1,0 +1,398 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Albert+Sans:wght@400;500;600;700;800&family=Source+Serif+4:ital,opsz,wght@0,8..60,600;0,8..60,700;1,8..60,400;1,8..60,500&display=swap" rel="stylesheet">
+<style>
+body{margin:0;background:#FAF7F1;font-family:'Albert Sans',sans-serif;color:#2E2A24;-webkit-font-smoothing:antialiased}
+a{color:oklch(0.52 0.13 250);text-decoration:none}
+a:hover{color:oklch(0.44 0.13 250);text-decoration:underline}
+button{font-family:'Albert Sans',sans-serif}
+</style>
+</helmet>
+<div style="min-width:1440px;min-height:100vh">
+  <header style="display:flex;align-items:center;gap:40px;padding:20px 64px;border-bottom:1px solid #EDE6DA;background:#FFFDF9">
+    <div style="display:flex;align-items:center;gap:12px">
+      <div style="width:36px;height:36px;border-radius:11px;background:oklch(0.52 0.13 250);display:grid;place-items:center">
+        <div style="width:14px;height:14px;border-radius:50%;background:#FFFDF9;box-shadow:8px -6px 0 -4px #FFFDF9,-8px 7px 0 -5px #FFFDF9"></div>
+      </div>
+      <div style="font-weight:800;font-size:19px;letter-spacing:-0.01em">Coverage Atlas</div>
+    </div>
+    <nav style="display:flex;gap:6px">
+      <sc-for list="{{ nav }}" as="t" hint-placeholder-count="3">
+        <button onClick="{{ t.go }}" style="border:none;cursor:pointer;padding:10px 18px;border-radius:999px;font-size:15px;font-weight:{{ t.w }};background:{{ t.bg }};color:{{ t.fg }}" style-hover="background:#F1EBE0">{{ t.label }}</button>
+      </sc-for>
+    </nav>
+    <div style="margin-left:auto;display:flex;align-items:center;gap:14px">
+      <div style="display:flex;align-items:center;gap:8px;background:#F4EFE6;border-radius:999px;padding:8px 16px;font-size:14px;color:#6E6557">
+        <span style="width:7px;height:7px;border-radius:50%;background:oklch(0.62 0.14 155)"></span>
+        Agents last swept all 51 policies today, 6:00 AM
+      </div>
+      <div style="width:36px;height:36px;border-radius:50%;background:oklch(0.85 0.05 250);display:grid;place-items:center;font-weight:700;font-size:13px;color:oklch(0.4 0.12 250)">JR</div>
+    </div>
+  </header>
+
+  <sc-if value="{{ isMap }}" hint-placeholder-val="{{ true }}">
+  <main data-screen-label="Coverage map" style="padding:40px 64px 72px;max-width:1440px;margin:0 auto;box-sizing:border-box">
+    <div style="display:flex;align-items:flex-end;gap:24px;margin-bottom:28px">
+      <div>
+        <div style="display:flex;gap:8px;margin-bottom:12px">
+          <span style="background:#FFFDF9;border:1px solid #E5DCCC;border-radius:999px;padding:7px 16px;font-size:14px;font-weight:600;color:#5B5346">GLP-1 weight-loss drugs (obesity)</span>
+          <span style="background:#FFFDF9;border:1px solid #E5DCCC;border-radius:999px;padding:7px 16px;font-size:14px;font-weight:600;color:#5B5346">Medicaid</span>
+        </div>
+        <h1 style="font-family:'Source Serif 4',serif;font-weight:700;font-size:38px;line-height:1.15;margin:0;letter-spacing:-0.01em">Where Medicaid covers GLP-1s for weight loss</h1>
+      </div>
+      <div style="margin-left:auto;display:flex;gap:12px">
+        <sc-for list="{{ stats }}" as="s" hint-placeholder-count="3">
+          <div style="background:#FFFDF9;border:1px solid #EDE6DA;border-radius:18px;padding:16px 22px;min-width:150px">
+            <div style="font-family:'Source Serif 4',serif;font-weight:700;font-size:28px;color:{{ s.color }}">{{ s.big }}</div>
+            <div style="font-size:13.5px;color:#6E6557;line-height:1.35;margin-top:2px">{{ s.sub }}</div>
+          </div>
+        </sc-for>
+      </div>
+    </div>
+
+    <div style="display:flex;gap:36px;align-items:flex-start">
+      <div style="flex:1;min-width:0">
+        <div style="display:grid;grid-template-columns:repeat(11, 1fr);gap:7px">
+          <sc-for list="{{ tiles }}" as="t" hint-placeholder-count="12">
+            <button onClick="{{ t.pick }}" title="{{ t.title }}" style="grid-row:{{ t.r }};grid-column:{{ t.c }};aspect-ratio:1;border-radius:12px;border:{{ t.border }};background:{{ t.bg }};color:{{ t.fg }};font-family:'Albert Sans',sans-serif;font-weight:700;font-size:15px;cursor:pointer;position:relative;outline:{{ t.outline }};outline-offset:2px;transition:transform 0.12s" style-hover="transform:translateY(-2px)">
+              {{ t.a }}
+              <sc-if value="{{ t.dropped }}" hint-placeholder-val="{{ false }}">
+                <span title="Dropped coverage this year" style="position:absolute;top:5px;right:5px;width:9px;height:9px;border-radius:50%;background:#FFFDF9;border:2.5px solid oklch(0.6 0.13 40)"></span>
+              </sc-if>
+            </button>
+          </sc-for>
+        </div>
+        <div style="display:flex;flex-wrap:wrap;gap:18px;margin-top:22px;align-items:center">
+          <sc-for list="{{ legend }}" as="l" hint-placeholder-count="5">
+            <div style="display:flex;align-items:center;gap:8px;font-size:14px;color:#5B5346">
+              <span style="width:16px;height:16px;border-radius:5px;background:{{ l.bg }};border:{{ l.border }}"></span>{{ l.label }}
+            </div>
+          </sc-for>
+          <sc-if value="{{ showDropped }}" hint-placeholder-val="{{ true }}">
+            <div style="display:flex;align-items:center;gap:8px;font-size:14px;color:#5B5346">
+              <span style="width:12px;height:12px;border-radius:50%;background:#FFFDF9;border:3px solid oklch(0.6 0.13 40)"></span>Dropped coverage this year
+            </div>
+          </sc-if>
+        </div>
+        <p style="max-width:620px;font-size:15px;line-height:1.55;color:#6E6557;margin:20px 0 0">Most states haven't opened a pathway yet — that's the honest picture today. The 11 that have are spread across the country, and each sets its own rules. Click any state for the exact policy, in its own words.</p>
+      </div>
+
+      <aside style="width:440px;flex:none;background:#FFFDF9;border:1px solid #EDE6DA;border-radius:24px;padding:30px 32px;box-shadow:0 2px 12px rgba(90,75,50,0.05)">
+        <div style="display:flex;align-items:center;justify-content:space-between;gap:12px">
+          <h2 style="font-family:'Source Serif 4',serif;font-weight:700;font-size:27px;margin:0">{{ d.name }}</h2>
+          <span style="display:inline-flex;align-items:center;gap:7px;background:#FFFDF9;border:1px solid #E5DCCC;border-radius:999px;padding:6px 13px;font-size:12.5px;font-weight:600;color:#5B5346;white-space:nowrap">
+            <span style="width:7px;height:7px;border-radius:50%;background:oklch(0.62 0.14 155)"></span>{{ d.checked }}
+          </span>
+        </div>
+        <div style="display:flex;align-items:center;gap:8px;margin-top:14px">
+          <span style="background:{{ d.pillBg }};color:{{ d.pillFg }};border-radius:999px;padding:7px 15px;font-size:14.5px;font-weight:700">{{ d.statusLabel }}</span>
+          <sc-if value="{{ d.dropped }}" hint-placeholder-val="{{ false }}">
+            <span style="background:oklch(0.95 0.03 40);color:oklch(0.5 0.12 40);border-radius:999px;padding:7px 15px;font-size:14px;font-weight:600">Dropped this year</span>
+          </sc-if>
+        </div>
+        <div style="display:grid;grid-template-columns:auto 1fr;gap:9px 16px;margin-top:20px;font-size:15px">
+          <span style="color:#8A8072">Effective</span><span style="font-weight:600">{{ d.effective }}</span>
+          <span style="color:#8A8072">Run by</span><span style="font-weight:600">{{ d.agency }}</span>
+          <span style="color:#8A8072">Source</span><span><a href="#" style="font-weight:600">{{ d.source }}</a></span>
+        </div>
+        <sc-if value="{{ d.hasQuote }}" hint-placeholder-val="{{ true }}">
+          <figure style="margin:22px 0 0;background:#F7F2E9;border-radius:16px;padding:18px 20px">
+            <div style="font-size:12px;font-weight:700;letter-spacing:0.06em;text-transform:uppercase;color:#8A8072;margin-bottom:8px">What the policy says, word for word</div>
+            <blockquote style="margin:0;font-family:'Source Serif 4',serif;font-style:italic;font-size:16px;line-height:1.6;color:#4A4438">"{{ d.quote }}"</blockquote>
+          </figure>
+        </sc-if>
+        <sc-if value="{{ d.plain }}" hint-placeholder-val="{{ false }}">
+          <p style="margin:18px 0 0;font-size:15px;line-height:1.55;color:#5B5346">{{ d.plain }}</p>
+        </sc-if>
+        <div style="margin-top:24px;display:flex;flex-direction:column;gap:10px">
+          <button onClick="{{ checkAgain }}" style="border:none;cursor:pointer;background:{{ checkBtnBg }};color:#FFFDF9;border-radius:14px;padding:14px 20px;font-size:15.5px;font-weight:700;transition:background 0.15s" style-hover="background:oklch(0.45 0.13 250)">{{ checkLabel }}</button>
+          <div style="font-size:13px;color:#8A8072;text-align:center">Sends a live agent to re-read the official policy page right now</div>
+        </div>
+      </aside>
+    </div>
+  </main>
+  </sc-if>
+
+  <sc-if value="{{ isChanges }}" hint-placeholder-val="{{ false }}">
+  <main data-screen-label="What changed" style="padding:40px 64px 72px;max-width:1080px;margin:0 auto;box-sizing:border-box">
+    <div style="display:flex;gap:8px;margin-bottom:12px">
+      <span style="background:#FFFDF9;border:1px solid #E5DCCC;border-radius:999px;padding:7px 16px;font-size:14px;font-weight:600;color:#5B5346">GLP-1 weight-loss drugs (obesity)</span>
+      <span style="background:#FFFDF9;border:1px solid #E5DCCC;border-radius:999px;padding:7px 16px;font-size:14px;font-weight:600;color:#5B5346">Medicaid</span>
+    </div>
+    <h1 style="font-family:'Source Serif 4',serif;font-weight:700;font-size:38px;margin:0 0 8px;letter-spacing:-0.01em">What changed this year</h1>
+    <p style="font-size:16px;color:#6E6557;margin:0 0 40px;max-width:640px;line-height:1.55">Every policy change our agents caught in the last 12 months, newest first. Each one links to the official document it came from.</p>
+    <div style="display:flex;flex-direction:column">
+      <sc-for list="{{ changes }}" as="ch" hint-placeholder-count="4">
+        <div style="display:grid;grid-template-columns:130px 28px 1fr;gap:0 18px">
+          <div style="font-size:14.5px;font-weight:700;color:#8A8072;padding-top:26px;text-align:right">{{ ch.date }}</div>
+          <div style="display:flex;flex-direction:column;align-items:center">
+            <div style="width:2px;flex:1;background:#E5DCCC"></div>
+            <div style="width:14px;height:14px;border-radius:50%;background:{{ ch.dotBg }};border:3px solid #FAF7F1;box-shadow:0 0 0 2px {{ ch.dotBg }};margin:4px 0"></div>
+            <div style="width:2px;flex:1;background:#E5DCCC"></div>
+          </div>
+          <div style="background:#FFFDF9;border:1px solid #EDE6DA;border-radius:20px;padding:22px 26px;margin:10px 0">
+            <h3 style="font-family:'Source Serif 4',serif;font-weight:700;font-size:21px;margin:0 0 12px;letter-spacing:-0.005em">{{ ch.headline }}</h3>
+            <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap">
+              <span style="background:{{ ch.fromBg }};color:{{ ch.fromFg }};border-radius:999px;padding:5px 13px;font-size:13.5px;font-weight:700">{{ ch.from }}</span>
+              <span style="color:#B5AA97;font-size:15px">→</span>
+              <span style="background:{{ ch.toBg }};color:{{ ch.toFg }};border-radius:999px;padding:5px 13px;font-size:13.5px;font-weight:700">{{ ch.to }}</span>
+            </div>
+            <sc-if value="{{ ch.note }}" hint-placeholder-val="{{ false }}">
+              <div style="margin-top:14px;background:#F7F2E9;border-radius:12px;padding:12px 16px;font-size:14.5px;line-height:1.5;color:#5B5346"><strong style="color:#4A4438">What happened next:</strong> {{ ch.note }}</div>
+            </sc-if>
+            <div style="display:flex;align-items:center;gap:16px;margin-top:16px;font-size:13.5px;color:#8A8072;flex-wrap:wrap">
+              <span>Effective <strong style="color:#5B5346">{{ ch.effective }}</strong></span>
+              <span>·</span>
+              <a href="#" style="font-weight:600">{{ ch.source }}</a>
+              <span style="margin-left:auto;display:inline-flex;align-items:center;gap:6px;border:1px solid #E5DCCC;border-radius:999px;padding:4px 11px;font-size:12px;font-weight:600;color:#5B5346"><span style="width:6px;height:6px;border-radius:50%;background:oklch(0.62 0.14 155)"></span>{{ ch.checked }}</span>
+            </div>
+          </div>
+        </div>
+      </sc-for>
+    </div>
+  </main>
+  </sc-if>
+
+  <sc-if value="{{ isCompare }}" hint-placeholder-val="{{ false }}">
+  <main data-screen-label="Compare states" style="padding:40px 64px 72px;max-width:1240px;margin:0 auto;box-sizing:border-box">
+    <div style="display:flex;gap:8px;margin-bottom:12px">
+      <span style="background:#FFFDF9;border:1px solid #E5DCCC;border-radius:999px;padding:7px 16px;font-size:14px;font-weight:600;color:#5B5346">Continuous glucose monitors</span>
+      <span style="background:#FFFDF9;border:1px solid #E5DCCC;border-radius:999px;padding:7px 16px;font-size:14px;font-weight:600;color:#5B5346">Medicaid</span>
+    </div>
+    <h1 style="font-family:'Source Serif 4',serif;font-weight:700;font-size:38px;margin:0 0 8px;letter-spacing:-0.01em">South Carolina vs. Texas</h1>
+    <p style="font-size:16px;color:#6E6557;margin:0 0 32px;max-width:640px;line-height:1.55">The same device, two rulebooks. Rows where the states disagree are gently highlighted.</p>
+
+    <div style="display:grid;grid-template-columns:200px 1fr 1fr;gap:14px 14px;align-items:stretch">
+      <div></div>
+      <sc-for list="{{ sides }}" as="sd" hint-placeholder-count="2">
+        <div style="background:#FFFDF9;border:1px solid #EDE6DA;border-radius:20px;padding:22px 26px">
+          <div style="display:flex;align-items:center;justify-content:space-between;gap:10px">
+            <h2 style="font-family:'Source Serif 4',serif;font-weight:700;font-size:23px;margin:0">{{ sd.name }}</h2>
+            <span style="display:inline-flex;align-items:center;gap:6px;border:1px solid #E5DCCC;border-radius:999px;padding:5px 11px;font-size:12px;font-weight:600;color:#5B5346;white-space:nowrap"><span style="width:6px;height:6px;border-radius:50%;background:oklch(0.62 0.14 155)"></span>{{ sd.checked }}</span>
+          </div>
+          <span style="display:inline-block;margin-top:12px;background:{{ sd.pillBg }};color:{{ sd.pillFg }};border-radius:999px;padding:6px 14px;font-size:14px;font-weight:700">{{ sd.status }}</span>
+          <div style="margin-top:14px;font-size:13.5px;color:#8A8072;line-height:1.7">Effective <strong style="color:#5B5346">{{ sd.effective }}</strong> · Run by <strong style="color:#5B5346">{{ sd.agency }}</strong><br><a href="#" style="font-weight:600">{{ sd.source }}</a></div>
+        </div>
+      </sc-for>
+
+      <sc-for list="{{ rows }}" as="row" hint-placeholder-count="5">
+        <div style="display:grid;grid-column:1 / -1;grid-template-columns:200px 1fr 1fr;gap:14px">
+          <div style="font-size:15px;font-weight:700;color:#5B5346;padding:20px 0 0 4px;line-height:1.35">{{ row.label }}<sc-if value="{{ row.differsTag }}" hint-placeholder-val="{{ false }}"><div style="margin-top:6px;display:inline-block;background:oklch(0.93 0.06 85);color:oklch(0.45 0.1 70);border-radius:999px;padding:3px 10px;font-size:11.5px;font-weight:700;letter-spacing:0.03em">DIFFERS</div></sc-if></div>
+          <div style="background:{{ row.cellBg }};border:1px solid {{ row.cellBorder }};border-radius:16px;padding:18px 22px;font-size:15.5px;line-height:1.5;color:#3E392F">{{ row.sc }}</div>
+          <div style="background:{{ row.cellBg }};border:1px solid {{ row.cellBorder }};border-radius:16px;padding:18px 22px;font-size:15.5px;line-height:1.5;color:#3E392F">{{ row.tx }}</div>
+          <div></div>
+          <div style="grid-column:2 / -1">
+            <button onClick="{{ row.toggle }}" style="border:none;background:none;cursor:pointer;padding:2px 4px;font-size:13.5px;font-weight:600;color:oklch(0.52 0.13 250)" style-hover="text-decoration:underline">{{ row.toggleLabel }}</button>
+            <sc-if value="{{ row.open }}" hint-placeholder-val="{{ false }}">
+              <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:8px">
+                <blockquote style="margin:0;background:#F7F2E9;border-radius:14px;padding:14px 18px;font-family:'Source Serif 4',serif;font-style:italic;font-size:14.5px;line-height:1.6;color:#4A4438">"{{ row.scQuote }}"</blockquote>
+                <blockquote style="margin:0;background:#F7F2E9;border-radius:14px;padding:14px 18px;font-family:'Source Serif 4',serif;font-style:italic;font-size:14.5px;line-height:1.6;color:#4A4438">"{{ row.txQuote }}"</blockquote>
+              </div>
+            </sc-if>
+          </div>
+        </div>
+      </sc-for>
+    </div>
+  </main>
+  </sc-if>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{
+  &quot;screen&quot;: { &quot;editor&quot;: &quot;enum&quot;, &quot;default&quot;: &quot;map&quot;, &quot;options&quot;: [&quot;map&quot;, &quot;changes&quot;, &quot;compare&quot;], &quot;tsType&quot;: &quot;string&quot;, &quot;section&quot;: &quot;View&quot; },
+  &quot;showDroppedMarkers&quot;: { &quot;editor&quot;: &quot;boolean&quot;, &quot;default&quot;: true, &quot;tsType&quot;: &quot;boolean&quot;, &quot;section&quot;: &quot;Map&quot; },
+  &quot;highlightDifferences&quot;: { &quot;editor&quot;: &quot;boolean&quot;, &quot;default&quot;: true, &quot;tsType&quot;: &quot;boolean&quot;, &quot;section&quot;: &quot;Compare&quot; }
+}">
+class Component extends DCLogic {
+  state = { screen: null, sel: 'NC', checking: false, checkedNow: {}, openRows: {} };
+
+  STATUS = {
+    covered:  { label: 'Covered',              tileBg: 'oklch(0.62 0.13 155)', tileFg: '#FFFDF9', pillBg: 'oklch(0.93 0.05 155)', pillFg: 'oklch(0.38 0.1 155)' },
+    limits:   { label: 'Covered with limits',  tileBg: 'oklch(0.8 0.11 95)',  tileFg: '#4A3F1E', pillBg: 'oklch(0.94 0.06 95)',  pillFg: 'oklch(0.42 0.1 85)' },
+    prior:    { label: 'Needs prior approval', tileBg: 'oklch(0.78 0.1 60)',  tileFg: '#4A3320', pillBg: 'oklch(0.94 0.05 60)',  pillFg: 'oklch(0.45 0.11 50)' },
+    not:      { label: 'Not covered',          tileBg: '#EBE4D7', tileFg: '#8A8072', pillBg: '#EFE9DF', pillFg: '#6E6557' },
+    none:     { label: 'No published policy',  tileBg: '#FDFCF8', tileFg: '#B5AA97', pillBg: '#F7F4EE', pillFg: '#9C917E', dashed: true }
+  };
+
+  STATES = [
+    ['AK','Alaska',1,1,'none'],['ME','Maine',1,11,'not'],
+    ['VT','Vermont',2,10,'none'],['NH','New Hampshire',2,11,'not'],
+    ['WA','Washington',3,1,'not'],['ID','Idaho',3,2,'none'],['MT','Montana',3,3,'not'],['ND','North Dakota',3,4,'none'],['MN','Minnesota',3,5,'covered'],['IL','Illinois',3,6,'not'],['WI','Wisconsin',3,7,'limits'],['MI','Michigan',3,8,'covered'],['NY','New York',3,9,'not'],['MA','Massachusetts',3,10,'not',1],
+    ['OR','Oregon',4,1,'not'],['NV','Nevada',4,2,'not'],['WY','Wyoming',4,3,'none'],['SD','South Dakota',4,4,'not'],['IA','Iowa',4,5,'not'],['IN','Indiana',4,6,'not'],['OH','Ohio',4,7,'not'],['PA','Pennsylvania',4,8,'covered'],['NJ','New Jersey',4,9,'not'],['CT','Connecticut',4,10,'not'],['RI','Rhode Island',4,11,'limits'],
+    ['CA','California',5,1,'covered'],['UT','Utah',5,2,'not'],['CO','Colorado',5,3,'not'],['NE','Nebraska',5,4,'not',1],['MO','Missouri',5,5,'not'],['KY','Kentucky',5,6,'not'],['WV','West Virginia',5,7,'not',1],['VA','Virginia',5,8,'prior'],['MD','Maryland',5,9,'not'],['DE','Delaware',5,10,'covered'],
+    ['AZ','Arizona',6,2,'not',1],['NM','New Mexico',6,3,'not'],['KS','Kansas',6,4,'prior'],['AR','Arkansas',6,5,'not'],['TN','Tennessee',6,6,'not'],['NC','North Carolina',6,7,'limits'],['SC','South Carolina',6,8,'not'],['DC','District of Columbia',6,9,'not'],
+    ['OK','Oklahoma',7,4,'not'],['LA','Louisiana',7,5,'not'],['MS','Mississippi',7,6,'prior'],['AL','Alabama',7,7,'not'],['GA','Georgia',7,8,'not'],
+    ['HI','Hawaii',8,1,'not'],['TX','Texas',8,4,'not'],['FL','Florida',8,9,'not']
+  ];
+
+  DETAILS = {
+    NC: { effective: 'Dec 1, 2025', agency: 'NC Medicaid', source: 'NC Medicaid Preferred Drug List, p. 41 (PDF)', checked: 'Checked today, 9:14 AM',
+      quote: '…requires BMI \u2265 30 kg/m\u00B2, documented participation in a lifestyle-modification program for 6 months, and reauthorization every 6 months with \u2265 5% weight loss from baseline…' },
+    MA: { effective: 'Apr 1, 2026', agency: 'MassHealth', source: 'MassHealth Pharmacy Facts #204 (PDF)', checked: 'Checked today, 8:52 AM',
+      plain: 'Massachusetts covered these drugs until this spring, then removed them from the list. Prescriptions fell 64% the following quarter.' },
+    CA: { effective: 'Jan 1, 2026', agency: 'Medi-Cal', source: 'Medi-Cal Contract Drugs List (PDF)', checked: 'Checked today, 9:02 AM',
+      quote: 'GLP-1 receptor agonists indicated for chronic weight management are a covered benefit for members aged 18 and older with an initial BMI \u2265 30 kg/m\u00B2.' },
+    TX: { effective: 'Sep 1, 2025', agency: 'Texas HHS', source: 'Texas Medicaid Formulary Bulletin (PDF)', checked: 'Checked today, 8:47 AM' }
+  };
+  EFF = ['Jan 1, 2026','Jul 1, 2025','Oct 1, 2025','Mar 1, 2026','Jan 1, 2025'];
+  CHK = ['Checked today, 8:41 AM','Checked today, 8:47 AM','Checked today, 8:55 AM','Checked today, 9:02 AM','Checked today, 9:10 AM'];
+
+  detailFor(a) {
+    const s = this.STATES.find(x => x[0] === a);
+    const meta = this.STATUS[s[4]];
+    const d = this.DETAILS[a] || {};
+    const i = this.STATES.indexOf(s);
+    const agency = d.agency || (s[1] + ' Medicaid');
+    const checked = this.state.checkedNow[a] ? 'Checked just now' : (d.checked || this.CHK[i % 5]);
+    const none = s[4] === 'none';
+    return {
+      name: s[1], statusLabel: meta.label, pillBg: meta.pillBg, pillFg: meta.pillFg,
+      dropped: !!s[5],
+      effective: none ? '\u2014 (nothing published)' : (d.effective || this.EFF[i % 5]),
+      agency,
+      source: none ? 'No policy document found in the last sweep' : (d.source || (agency + ' Preferred Drug List (PDF)')),
+      checked,
+      hasQuote: !!d.quote, quote: d.quote || '',
+      plain: d.plain || (none ? 'Our agents found no published rule for this drug class here. We re-check every morning and will flag the moment one appears.' : '')
+    };
+  }
+
+  CHANGES = [
+    { date: 'Jul 8, 2026', headline: 'West Virginia stopped covering GLP-1s for weight loss', from: 'limits', to: 'not', effective: 'Aug 1, 2026', source: 'WV Medicaid PDL update memo (PDF)', checked: 'Checked today, 8:44 AM' },
+    { date: 'May 20, 2026', headline: 'Arizona stopped covering GLP-1s for weight loss', from: 'prior', to: 'not', effective: 'Jun 1, 2026', source: 'AHCCCS drug list revision (PDF)', checked: 'Checked today, 8:58 AM' },
+    { date: 'Apr 2, 2026', headline: 'Kansas now asks for prior approval instead of denying outright', from: 'not', to: 'prior', effective: 'May 1, 2026', source: 'KanCare provider bulletin 26-14 (PDF)', checked: 'Checked today, 9:06 AM' },
+    { date: 'Mar 15, 2026', headline: 'Nebraska stopped covering GLP-1s for weight loss', from: 'covered', to: 'not', effective: 'Apr 1, 2026', source: 'NE DHHS pharmacy notice (PDF)', checked: 'Checked today, 8:49 AM' },
+    { date: 'Jan 30, 2026', headline: 'Massachusetts stopped covering GLP-1s for weight loss', from: 'covered', to: 'not', effective: 'Apr 1, 2026', source: 'MassHealth Pharmacy Facts #204 (PDF)', checked: 'Checked today, 8:52 AM', note: 'Prescriptions fell 64% the following quarter.' },
+    { date: 'Dec 1, 2025', headline: 'North Carolina started covering, with limits', from: 'not', to: 'limits', effective: 'Dec 1, 2025', source: 'NC Medicaid Preferred Drug List, p. 41 (PDF)', checked: 'Checked today, 9:14 AM' },
+    { date: 'Nov 12, 2025', headline: 'Delaware dropped its 6-month diet-program requirement', from: 'limits', to: 'covered', effective: 'Jan 1, 2026', source: 'DE Medicaid pharmacy update (PDF)', checked: 'Checked today, 9:00 AM' }
+  ];
+
+  CMP_ROWS = [
+    { id: 'who', label: 'Who qualifies', diff: true,
+      sc: 'Adults and children with diabetes who use insulin \u2014 type 1 or type 2.',
+      tx: 'Anyone with type 1 diabetes. Type 2 only if on an intensive insulin routine.',
+      scQuote: 'Continuous glucose monitoring systems are covered for beneficiaries with diabetes mellitus treated with insulin.',
+      txQuote: 'CGM is a benefit for clients with Type 1 diabetes mellitus. For Type 2 diabetes mellitus, the client must be managed with an intensive insulin regimen.' },
+    { id: 'insulin', label: 'How much insulin', diff: true,
+      sc: '3 or more injections a day, or an insulin pump.',
+      tx: 'Any insulin use for type 1. For type 2: 3 or more injections a day.',
+      scQuote: '\u2026treated with three or more insulin administrations per day or continuous subcutaneous insulin infusion via pump.',
+      txQuote: 'An intensive insulin regimen is defined as three or more insulin injections per day or use of an insulin pump.' },
+    { id: 'pa', label: 'Approval before starting', diff: true,
+      sc: 'Not needed \u2014 a doctor\u2019s order is enough.',
+      tx: 'Needed before the first device, and again each year.',
+      scQuote: 'Prior authorization is not required for CGM systems meeting the criteria above.',
+      txQuote: 'Prior authorization is required for initial issuance and must be renewed annually with documentation of continued medical necessity.' },
+    { id: 'visit', label: 'Recent doctor visit', diff: true,
+      sc: 'A diabetes checkup within the last 12 months.',
+      tx: 'A diabetes checkup within the last 6 months.',
+      scQuote: 'The beneficiary must have an in-person or telehealth evaluation for diabetes management within twelve (12) months prior to the order.',
+      txQuote: 'The client must have been evaluated by the treating practitioner within six (6) months prior to the request.' },
+    { id: 'logs', label: 'Blood-sugar logs', diff: true,
+      sc: 'No log required.',
+      tx: '4+ finger-stick checks a day, logged for 30 days. Waived if on a pump.',
+      scQuote: 'Self-monitoring blood glucose logs are not required for coverage determination.',
+      txQuote: '\u2026must submit self-monitoring blood glucose logs demonstrating testing four or more times per day for the 30 days preceding the request. This requirement is waived for clients on insulin pump therapy.' },
+    { id: 'age', label: 'Age', diff: false,
+      sc: 'Age 2 and up.',
+      tx: 'Age 2 and up.',
+      scQuote: 'Coverage applies to beneficiaries two (2) years of age and older.',
+      txQuote: 'CGM is a benefit for clients two (2) years of age and older.' },
+    { id: 'refill', label: 'Getting supplies', diff: true,
+      sc: 'Sensors shipped every 90 days from the pharmacy.',
+      tx: 'Every 30 days, only through an approved equipment supplier.',
+      scQuote: 'CGM supplies may be dispensed through the pharmacy benefit in quantities of up to a 90-day supply.',
+      txQuote: 'CGM supplies must be obtained through an enrolled DME provider and are limited to a 30-day supply per dispensing.' }
+  ];
+
+  renderVals() {
+    const screen = this.state.screen ?? this.props.screen ?? 'map';
+    const showDropped = this.props.showDroppedMarkers ?? true;
+    const hi = this.props.highlightDifferences ?? true;
+    const nav = [
+      { id: 'map', label: 'Coverage map' },
+      { id: 'changes', label: 'What changed' },
+      { id: 'compare', label: 'Compare states' }
+    ].map(t => ({ ...t,
+      go: () => this.setState({ screen: t.id }),
+      bg: screen === t.id ? 'oklch(0.52 0.13 250)' : 'transparent',
+      fg: screen === t.id ? '#FFFDF9' : '#5B5346',
+      w: screen === t.id ? 700 : 500
+    }));
+
+    const tiles = this.STATES.map(s => {
+      const m = this.STATUS[s[4]];
+      return {
+        a: s[0], r: s[2], c: s[3], bg: m.tileBg, fg: m.tileFg,
+        border: m.dashed ? '1.5px dashed #D8D0C2' : '1.5px solid rgba(0,0,0,0.02)',
+        outline: this.state.sel === s[0] ? '3px solid oklch(0.52 0.13 250)' : 'none',
+        dropped: showDropped && !!s[5],
+        title: s[1] + ' \u2014 ' + m.label,
+        pick: () => this.setState({ sel: s[0] })
+      };
+    });
+
+    const legend = ['covered','limits','prior','not','none'].map(k => ({
+      label: this.STATUS[k].label, bg: this.STATUS[k].tileBg,
+      border: this.STATUS[k].dashed ? '1.5px dashed #D8D0C2' : '1px solid rgba(0,0,0,0.05)'
+    }));
+
+    const stats = [
+      { big: '11 of 51', sub: 'states cover it today', color: 'oklch(0.45 0.11 155)' },
+      { big: '4', sub: 'states dropped it this year', color: 'oklch(0.5 0.12 40)' },
+      { big: '~80%', sub: 'of patients have no covered pathway', color: '#5B5346' }
+    ];
+
+    const changes = this.CHANGES.map(ch => {
+      const f = this.STATUS[ch.from], t = this.STATUS[ch.to];
+      return { ...ch, from: f.label, fromBg: f.pillBg, fromFg: f.pillFg,
+        to: t.label, toBg: t.pillBg, toFg: t.pillFg,
+        dotBg: (ch.to === 'not') ? 'oklch(0.6 0.13 40)' : 'oklch(0.62 0.13 155)' };
+    });
+
+    const sides = [
+      { name: 'South Carolina', status: 'Covered with limits', pillBg: this.STATUS.limits.pillBg, pillFg: this.STATUS.limits.pillFg,
+        effective: 'Jul 1, 2025', agency: 'SC Healthy Connections', source: 'SC DHHS DME provider manual, \u00A74.12 (PDF)', checked: 'Checked today, 9:08 AM' },
+      { name: 'Texas', status: 'Needs prior approval', pillBg: this.STATUS.prior.pillBg, pillFg: this.STATUS.prior.pillFg,
+        effective: 'Sep 1, 2025', agency: 'Texas HHS', source: 'Texas Medicaid TMPPM, ch. 2.2.14 (PDF)', checked: 'Checked today, 8:47 AM' }
+    ];
+
+    const rows = this.CMP_ROWS.map(r => {
+      const open = !!this.state.openRows[r.id];
+      const isDiff = hi && r.diff;
+      return { ...r, open,
+        differsTag: isDiff,
+        cellBg: isDiff ? 'oklch(0.97 0.03 95)' : '#FFFDF9',
+        cellBorder: isDiff ? 'oklch(0.88 0.06 95)' : '#EDE6DA',
+        toggleLabel: open ? 'Hide exact policy wording \u25B4' : 'See exact policy wording \u25BE',
+        toggle: () => this.setState(s => ({ openRows: { ...s.openRows, [r.id]: !s.openRows[r.id] } }))
+      };
+    });
+
+    return {
+      nav, isMap: screen === 'map', isChanges: screen === 'changes', isCompare: screen === 'compare',
+      tiles, legend, stats, showDropped,
+      d: this.detailFor(this.state.sel),
+      checkAgain: () => {
+        if (this.state.checking) return;
+        this.setState({ checking: true });
+        const sel = this.state.sel;
+        setTimeout(() => this.setState(s => ({ checking: false, checkedNow: { ...s.checkedNow, [sel]: true } })), 1500);
+      },
+      checkLabel: this.state.checking ? 'Re-reading the policy\u2026' : 'Check again now',
+      checkBtnBg: this.state.checking ? 'oklch(0.65 0.08 250)' : 'oklch(0.52 0.13 250)',
+      changes, sides, rows
+    };
+  }
+}
+</script>
+</body>
+</html>
