@@ -1,0 +1,13 @@
+<svg width="32" height="32" viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="fp-icon-amber" x1="3" y1="27" x2="29" y2="5" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#B8631A"/>
+      <stop offset="1" stop-color="#F4C27E"/>
+    </linearGradient>
+  </defs>
+  <rect width="32" height="32" rx="7" fill="#10141A"/>
+  <path d="M7 21 L10 14 H22 L25 21 Z" fill="url(#fp-icon-amber)" fill-opacity="0.2" stroke="url(#fp-icon-amber)" stroke-width="1.5" stroke-linejoin="round"/>
+  <path d="M5 23 H27" stroke="url(#fp-icon-amber)" stroke-width="1.6" stroke-linecap="round"/>
+  <circle cx="11" cy="23" r="1.8" fill="url(#fp-icon-amber)"/>
+  <circle cx="21" cy="23" r="1.8" fill="url(#fp-icon-amber)"/>
+</svg>

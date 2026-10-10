@@ -1,0 +1,92 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --bg: #F5F6F7;
+  --surface: #FFFFFF;
+  --surface-alt: #EAECEF;
+  --border: #D8DCE1;
+  --text-primary: #1A2129;
+  --text-secondary: #5B6572;
+  --text-muted: #8D96A1;
+  --accent: #D97A1F;
+  --accent-dark: #B8631A;
+  --accent-soft: rgba(217, 122, 31, 0.10);
+  --steel: #35495E;
+  --success: #3E7D5C;
+  --warning: #C77E1B;
+  --danger: #B8433A;
+  --shadow-sm: 0 1px 2px rgba(20, 26, 33, 0.06);
+  --shadow-md: 0 8px 24px rgba(20, 26, 33, 0.10), 0 1px 2px rgba(20, 26, 33, 0.06);
+}
+
+[data-theme="dark"] {
+  --bg: #10141A;
+  --surface: #1A2029;
+  --surface-alt: #232A35;
+  --border: #333C49;
+  --text-primary: #EEF1F4;
+  --text-secondary: #9DA8B5;
+  --text-muted: #6B7683;
+  --accent: #E8912F;
+  --accent-dark: #D97A1F;
+  --accent-soft: rgba(232, 145, 47, 0.14);
+  --steel: #4A6280;
+  --success: #4F9C74;
+  --warning: #E0A03D;
+  --danger: #D6584C;
+  --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.4);
+  --shadow-md: 0 12px 32px rgba(0, 0, 0, 0.5), 0 1px 2px rgba(0, 0, 0, 0.4);
+}
+
+* { border-color: var(--border); }
+html { color-scheme: dark; }
+html:not([data-theme="dark"]) { color-scheme: light; }
+body { background: var(--bg); color: var(--text-primary); }
+::selection { background: var(--accent); color: #fff; }
+.tabular { font-variant-numeric: tabular-nums; }
+
+.card-surface {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  box-shadow: var(--shadow-sm);
+  position: relative;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease, transform 0.2s ease;
+}
+.card-surface:hover {
+  border-color: var(--accent);
+  box-shadow: var(--shadow-md);
+  transform: translateY(-2px);
+  z-index: 10;
+}
+
+@keyframes skeleton-pulse {
+  0%, 100% { opacity: 0.5; }
+  50% { opacity: 1; }
+}
+.skeleton { background: var(--surface-alt); border-radius: 8px; animation: skeleton-pulse 1.4s ease-in-out infinite; }
+
+@keyframes mesh-drift-1 {
+  0%, 100% { transform: translate(0%, 0%) scale(1); }
+  50% { transform: translate(7%, -8%) scale(1.1); }
+}
+@keyframes mesh-drift-2 {
+  0%, 100% { transform: translate(0%, 0%) scale(1); }
+  50% { transform: translate(-8%, 6%) scale(1.08); }
+}
+.mesh-blob-1 { animation: mesh-drift-1 20s ease-in-out infinite; }
+.mesh-blob-2 { animation: mesh-drift-2 24s ease-in-out infinite; }
+
+@keyframes shimmer {
+  0% { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
+}
+.text-shimmer {
+  background: linear-gradient(90deg, var(--accent) 0%, #F4C27E 50%, var(--accent) 100%);
+  background-size: 200% auto;
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  animation: shimmer 6s linear infinite;
+}
