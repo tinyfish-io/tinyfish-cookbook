@@ -88,6 +88,12 @@ Drop the server URL into Claude Code, Cursor, Codex, ChatGPT desktop, or any MCP
 }
 ```
 
+### DeepSeek Harness
+
+Paste one prompt into your coding agent and have it build, install, and test a local TinyFish Search and Fetch provider for the official DeepSeek Harness. No published integration package or Harness fork is required.
+
+See the [DeepSeek Harness prompt recipe](./deepseek-harness) for the complete prompt, architecture, safety requirements, and verification checklist.
+
 ### CLI
 
 ```bash
@@ -206,6 +212,7 @@ Built for the [Agentic AI Build Week (AABW)](https://aabw.genaifund.ai/) hackath
 | Recipe | Description |
 |--------|-------------|
 | [code-reference-finder](./code-reference-finder) | Find real-world usage examples for any code snippet from GitHub and Stack Overflow |
+| [deepseek-harness](./deepseek-harness) | Native TinyFish Search and Fetch providers for the official DeepSeek Harness |
 | [fast-qa](./fast-qa) | No-code QA testing platform with parallel test execution and live browser previews |
 | [tinyskills](./tinyskills) | Generates comprehensive SKILL.md guides from docs, GitHub, and developer blogs |
 
