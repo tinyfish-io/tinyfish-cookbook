@@ -249,7 +249,6 @@ export async function POST(request: Request) {
           content: p.content,
           wordCount: p.wordCount,
           error: p.error,
-          streamingUrl: p.streamingUrl,
         };
       });
 
