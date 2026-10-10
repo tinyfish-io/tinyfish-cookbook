@@ -146,8 +146,7 @@ These use the latest TinyFish SDK and are deployed with live demos you can try r
 | [silicon-signal](./silicon-signal) | Semiconductor supply chain tracker for lifecycle, availability, and lead-time signals | [Demo](https://cookbook-silicon-signal.vercel.app/) |
 | [summer-school-finder](./summer-school-finder) | Discover and compare summer school programs from universities around the world | [Demo](https://cookbook-summer-school-finder.vercel.app/) |
 | [tinyskills](./tinyskills) | Multi-source AI skill guide generator that scrapes docs, GitHub, and blogs into a single SKILL.md | [Demo](https://cookbook-tinyskills.vercel.app/) |
-| [saigon-happy-hour-sniper](./saigon-happy-hour-sniper) | Find happy hour deals across Saigon in seconds | [Demo](https://saigon-happy-hour-sniper.vercel.app/) |
-| [worldcup-briefing](./worldcup-briefing) | AI-powered football highlight reels — discover match footage with TinyFish Search, compile clips with VideoDB | [Demo](https://worldcup-briefing.vercel.app) |
+
 ### AABW Vietnam Hackathon Samples
 
 Built for the [Agentic AI Build Week (AABW)](https://aabw.genaifund.ai/) hackathon — July 8-12, 2026, Ho Chi Minh City. See the [full track mapping](./AABW_Vietnam_Hackathon_Samples/README.md).
@@ -192,6 +191,7 @@ Built for the [Agentic AI Build Week (AABW)](https://aabw.genaifund.ai/) hackath
 | [competitor-scout-cli](./competitor-scout-cli) | Natural-language CLI for researching competitor feature decisions |
 | [logistics-sentry](./logistics-sentry) | Port congestion and carrier-risk tracking |
 | [tenders-finder](./tenders-finder) | Singapore government tender discovery across multiple portals |
+| [worldcup-briefing](./worldcup-briefing) | Discover football match footage with TinyFish Search and compile highlight reels with VideoDB |
 
 ### Education & Discovery
 
