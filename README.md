@@ -97,7 +97,7 @@ tinyfish search query "web automation tools"
 tinyfish fetch content get https://example.com
 ```
 
-The CLI writes results to the filesystem instead of piping them through your model's context window — tokens stay low, output stays structured.
+The CLI prints structured JSON results to **stdout** (your terminal/context window). To keep tokens low and persist output, redirect it to a file yourself, e.g. `tinyfish fetch ... > out.json`.
 
 ### Scripts
 
