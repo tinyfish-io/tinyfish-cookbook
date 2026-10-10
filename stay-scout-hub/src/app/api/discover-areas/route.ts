@@ -17,7 +17,7 @@ function getPurposeDescription(purpose: string, customPurpose?: string): string 
   return purposes[purpose] || "General travel";
 }
 
-function generateFallbackAreas(city: string, purpose: string) {
+function generateFallbackAreas(city: string) {
   return [
     { id: "city-center", name: `${city} City Center`, type: "neighborhood", description: "The central business and commercial district", whyRecommended: "Central location with easy access to transport, restaurants, and main attractions", keyLocations: ["Main Train Station", "Central Business District"] },
     { id: "near-airport", name: `${city} Airport Area`, type: "area", description: "Hotels near the main airport", whyRecommended: "Convenient for early flights or late arrivals, shuttle services available", keyLocations: ["International Airport", "Airport Express"] },
@@ -52,7 +52,7 @@ export async function POST(request: Request) {
       .slice(0, 4);
 
     if (!urls.length) {
-      return Response.json({ areas: generateFallbackAreas(city, purpose) });
+      return Response.json({ areas: generateFallbackAreas(city) });
     }
 
     // Step 2 — Fetch content from the travel guides
@@ -64,7 +64,7 @@ export async function POST(request: Request) {
       .slice(0, 6000);
 
     if (!pagesContent) {
-      return Response.json({ areas: generateFallbackAreas(city, purpose) });
+      return Response.json({ areas: generateFallbackAreas(city) });
     }
 
     // Step 3 — Gemini extracts structured neighborhood recommendations
@@ -103,11 +103,11 @@ Return ONLY valid JSON — no markdown, no code blocks:
       if (jsonMatch) areas = JSON.parse(jsonMatch[0]);
       else throw new Error("No JSON array found");
     } catch {
-      areas = generateFallbackAreas(city, purpose);
+      areas = generateFallbackAreas(city);
     }
 
     return Response.json({ areas });
   } catch {
-    return Response.json({ areas: generateFallbackAreas(city, purpose) });
+    return Response.json({ areas: generateFallbackAreas(city) });
   }
 }
