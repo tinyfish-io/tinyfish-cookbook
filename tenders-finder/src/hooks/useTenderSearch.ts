@@ -220,7 +220,8 @@ Return ONLY this JSON with no extra text:
   const toggleTenderSelection = useCallback((tenderId: string) => {
     setState((prev) => {
       const newSelected = new Set(prev.selectedTenders);
-      newSelected.has(tenderId) ? newSelected.delete(tenderId) : newSelected.add(tenderId);
+      if (newSelected.has(tenderId)) newSelected.delete(tenderId);
+      else newSelected.add(tenderId);
       return { ...prev, selectedTenders: newSelected };
     });
   }, []);

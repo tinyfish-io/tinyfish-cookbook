@@ -1,5 +1,5 @@
 "use client";
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { X, Monitor, Maximize2, Minimize2, Loader2 } from "lucide-react";
 import { cn } from "@/lib/utils";
@@ -13,9 +13,11 @@ interface LiveBrowserModalProps {
 
 export function LiveBrowserModal({ isOpen, streamingUrl, platformName, onClose }: LiveBrowserModalProps) {
   const [isFullscreen, setIsFullscreen] = useState(false);
-  const [isLoading, setIsLoading] = useState(true);
+  const [loadedUrl, setLoadedUrl] = useState<string | null>(null);
 
-  useEffect(() => { setIsLoading(true); }, [streamingUrl]);
+  // Derived rather than reset in an effect, so a new URL shows the spinner again
+  // without a synchronising render pass.
+  const isLoading = loadedUrl !== streamingUrl;
 
   if (!isOpen) return null;
 
@@ -75,7 +77,7 @@ export function LiveBrowserModal({ isOpen, streamingUrl, platformName, onClose }
               src={streamingUrl}
               className="w-full h-full border-0"
               title={`Live preview for ${platformName}`}
-              onLoad={() => setIsLoading(false)}
+              onLoad={() => setLoadedUrl(streamingUrl)}
             />
           </div>
         </motion.div>
