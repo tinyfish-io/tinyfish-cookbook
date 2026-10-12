@@ -23,7 +23,7 @@ Claude will run parallel TinyFish agents across GitHub, awesome-selfhosted, and 
 
 ## Requirements
 
-- TinyFish CLI installed: `npm install -g tinyfish`
+- TinyFish CLI installed: `npm install -g @tiny-fish/cli`
 - Authenticated: `tinyfish auth login`
 
 ## Install

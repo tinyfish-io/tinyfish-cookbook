@@ -23,7 +23,7 @@ Enter any keyword or problem space — authentication, Kubernetes, ORMs, deploym
 
 ## Requirements
 
-- TinyFish CLI: `npm install -g tinyfish`
+- TinyFish CLI: `npm install -g @tiny-fish/cli`
 - Authenticated: `tinyfish auth login`
 
 ## Install
