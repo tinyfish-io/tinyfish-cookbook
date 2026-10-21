@@ -1,6 +1,6 @@
 # Bounty Drop 001 Winners
 
-![Bounty Drop 001 results](./cover.jpg)
+![Bounty Drop 001 results](./cover.png)
 
 The winning builds from the first Bounty Drop of the [TinyFish Student Program](https://tinyfish.ai/students) and [Ambassador Program](https://tinyfish.ai/ambassadors).
 
