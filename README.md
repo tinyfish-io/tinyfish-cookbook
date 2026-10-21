@@ -161,6 +161,10 @@ Built for the [Agentic AI Build Week (AABW)](https://aabw.genaifund.ai/) hackath
 | [monai](./AABW_Vietnam_Hackathon_Samples/monai) | F&B (KFC) | [Demo](https://mon-ai-alpha.vercel.app/) |
 | [rateradar](./AABW_Vietnam_Hackathon_Samples/rateradar) | Financial Services I (Shinhan), Financial Services II (GoTymeX) | [Demo](https://rateradar-teal.vercel.app/) |
 
+### Bounty Drop 001 Winners
+
+The 12 winning builds from the first Bounty Drop of the [TinyFish Student](https://tinyfish.ai/students) and [Ambassador](https://tinyfish.ai/ambassadors) Programs: job finders, AI-readiness auditors, brand guide generators and iMessage assistants. See [all the winners](./Bounty_Drop_001_Winners/README.md).
+
 ### Shopping & Deals
 
 | Recipe | Description |
