@@ -1,0 +1,53 @@
+{
+  "schema_version": 1,
+  "event": "Example Sprint 2026 (synthetic)",
+  "claims": [
+    {
+      "id": "submission-deadline",
+      "kind": "deadline",
+      "value": {
+        "local": "2026-10-15T23:59",
+        "zone": "America/Los_Angeles"
+      },
+      "evidence": [
+        {
+          "source_id": "s1",
+          "quote": "Submissions close October 15, 2026 at 11:59 PM US Pacific Time."
+        }
+      ]
+    },
+    {
+      "id": "student-status",
+      "kind": "eligibility",
+      "value": "Currently enrolled college students only.",
+      "evidence": [
+        {
+          "source_id": "s1",
+          "quote": "Participants must be currently enrolled college students."
+        }
+      ]
+    },
+    {
+      "id": "required-repository",
+      "kind": "deliverable",
+      "value": "Provide a public repository link.",
+      "evidence": [
+        {
+          "source_id": "s1",
+          "quote": "Submit a public repository link and a two-minute demo video."
+        }
+      ]
+    },
+    {
+      "id": "required-demo",
+      "kind": "deliverable",
+      "value": "Provide a two-minute demo video.",
+      "evidence": [
+        {
+          "source_id": "s1",
+          "quote": "Submit a public repository link and a two-minute demo video."
+        }
+      ]
+    }
+  ]
+}

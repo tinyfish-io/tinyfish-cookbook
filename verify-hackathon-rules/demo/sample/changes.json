@@ -1,0 +1,10 @@
+{
+  "sources": [
+    {
+      "url": "https://sprint.example.org/rules",
+      "status": "changed"
+    }
+  ],
+  "after_fetch_errors": [],
+  "notice": "Changed text requires claim re-extraction; unavailable does not mean a rule was removed."
+}

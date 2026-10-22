@@ -1,0 +1,39 @@
+{
+  "schema_version": 1,
+  "mode": "fixture",
+  "created_at": "2026-10-14T03:02:00+00:00",
+  "allowed_domains": [
+    "sprint.example.org"
+  ],
+  "api_requests": 0,
+  "requested_urls": [
+    "https://sprint.example.org/rules"
+  ],
+  "candidates": [
+    {
+      "url": "https://sprint.example.org/rules#deadline",
+      "title": "Example Sprint 2026"
+    },
+    {
+      "url": "https://sprint.example.org/rules",
+      "title": "Duplicate"
+    },
+    {
+      "url": "https://unrelated.example.org/old",
+      "title": "Old edition"
+    }
+  ],
+  "sources": [
+    {
+      "id": "s1",
+      "url": "https://sprint.example.org/rules",
+      "final_url": "https://sprint.example.org/rules",
+      "title": "Example Sprint 2026",
+      "text": "# Example Sprint 2026 (synthetic fixture)\nSubmissions close October 15, 2026 at 11:59 PM US Pacific Time.\nParticipants must be currently enrolled college students.\nSubmit a public repository link and a two-minute demo video.\n",
+      "sha256": "323d33cdcd671ed78db303d77f286e1caa3dd3716798d5498f5c7fbf05e1c14d",
+      "fetched_at": "2026-10-14T03:02:00+00:00"
+    }
+  ],
+  "errors": [],
+  "fixture_note": "Synthetic contract replay; no TinyFish requests were made."
+}
