@@ -1,0 +1,139 @@
+{
+  "project": "careers-scout",
+  "version": "1.0.0",
+  "base_commit": "63cd841bdfd1c2feba50f617ee81ec6be95cca37",
+  "intended_branch": "muthukumaran/fresh-careers-finder",
+  "default_provider": "greenhouse",
+  "experimental_providers": [
+    "lever",
+    "ashby"
+  ],
+  "tinyfish_endpoints": [
+    "https://api.search.tinyfish.ai",
+    "https://api.fetch.tinyfish.ai"
+  ],
+  "live_transport_verified": "tinyfish-playground captures imported into deterministic helper",
+  "rest_network_adapter": "mock-tested only; not claimed live-validated",
+  "validation_date_utc": "2026-10-16",
+  "tests": {
+    "passed": 99,
+    "failed": 0,
+    "malformed_optional_field_subcases": 336,
+    "python": "3.12.14",
+    "compile": "passed",
+    "skill_validator": "passed",
+    "repository_skills_validator": "passed; Claude CLI strict check unavailable"
+  },
+  "live_cases": [
+    {
+      "report": "demo/software-new-york.json",
+      "matching_jobs": 2,
+      "employers": [
+        "New York ISO",
+        "Hudson River Trading"
+      ]
+    },
+    {
+      "report": "demo/design-london.json",
+      "matching_jobs": 2,
+      "employers": [
+        "Figma",
+        "SumUp"
+      ]
+    }
+  ],
+  "live_validation_calls": {
+    "search_requests": 6,
+    "fetch_requests": 11,
+    "fetched_urls": 12
+  },
+  "demo_gif": "Rendered walkthrough of executed Skill output; not a browser recording",
+  "privacy": "No API keys, account screenshots, full raw provider responses, resumes, or applicant details are published",
+  "files": [
+    {
+      "path": ".github/workflows/careers-scout.yml",
+      "bytes": 693,
+      "sha256": "58c3d768907ecdf3f89fe7703440d9bf24a067d475830c2dffd300fc0fa16767"
+    },
+    {
+      "path": "careers-scout/.env.example",
+      "bytes": 101,
+      "sha256": "ae75325855ba2fdc61771cb36ce597f3e9038add2ed15e6447740f18b1238eb2"
+    },
+    {
+      "path": "careers-scout/.gitignore",
+      "bytes": 53,
+      "sha256": "3f525ab8f62d03519a7060dbd65bf31e7608a09478d2a1ec1d7f9ed1a726700a"
+    },
+    {
+      "path": "careers-scout/README.md",
+      "bytes": 6993,
+      "sha256": "a613b1b1bc04b1b746d1da52e311698d393b01e2efee3fa43516ea90f40f6125"
+    },
+    {
+      "path": "careers-scout/SKILL.md",
+      "bytes": 5157,
+      "sha256": "4292e13d8302ec245645e95297262d3950faab85247172af0c4757eeedb39d7a"
+    },
+    {
+      "path": "careers-scout/agents/openai.yaml",
+      "bytes": 212,
+      "sha256": "0fae070f77fbd415ea4bda96e03dbe0f3b808d0d2a374255f83c10edea6d5b6a"
+    },
+    {
+      "path": "careers-scout/demo/VALIDATION.md",
+      "bytes": 4482,
+      "sha256": "7edca8ddab57e9f0858c26bbf7368d03d981bf3807bfb95d850efaebd2e44a64"
+    },
+    {
+      "path": "careers-scout/demo/design-london.html",
+      "bytes": 7072,
+      "sha256": "2d70bdb536561b34561bc4809c35ad47972b042161e17186e0390ba797a8b476"
+    },
+    {
+      "path": "careers-scout/demo/design-london.json",
+      "bytes": 9274,
+      "sha256": "08aec35dab9ba861391faff84ed2a9dbc6cd57fe892c291ae5ea54f043a8f78e"
+    },
+    {
+      "path": "careers-scout/demo/software-new-york.html",
+      "bytes": 7189,
+      "sha256": "11c03b881462c2945a7f0fcf66f19c0128413dd22c0522eaa9205a4fb47fa826"
+    },
+    {
+      "path": "careers-scout/demo/software-new-york.json",
+      "bytes": 9280,
+      "sha256": "18a524675756f5ca972c3b831131622ac75c840287fe6b51768d27cd482ee8ba"
+    },
+    {
+      "path": "careers-scout/demo/walkthrough.gif",
+      "bytes": 220565,
+      "sha256": "8e142088dc65c6036b2358b5ebf71e949d05f959c698f8e603c7315075e6f6dd"
+    },
+    {
+      "path": "careers-scout/examples/synthetic.json",
+      "bytes": 4596,
+      "sha256": "817ee6869c87fbb643d03b022137f601cc729ba86f0889d70b67d9611d7dc587"
+    },
+    {
+      "path": "careers-scout/references/contract.md",
+      "bytes": 6666,
+      "sha256": "26f21f6e28f50c1464b4d683e4ba989a691ab4aadaf6c5fabb8e39e1bf12b8ef"
+    },
+    {
+      "path": "careers-scout/references/transports.md",
+      "bytes": 5469,
+      "sha256": "5215fdafd5141903a04c69d26fe2a7e9f14de77e2644b751390edae2d7edf16b"
+    },
+    {
+      "path": "careers-scout/scripts/careers.py",
+      "bytes": 47299,
+      "sha256": "84b1a57e1c100abdf89e02d98b84d7c49d2024457f222b4f60ff340090b09c5f"
+    },
+    {
+      "path": "careers-scout/tests/test_careers.py",
+      "bytes": 50014,
+      "sha256": "590010eb7a4daa42dadf40a25aca412745a8f9730c7ff5b573140309210930ef"
+    }
+  ]
+}

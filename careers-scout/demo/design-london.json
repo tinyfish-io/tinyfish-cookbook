@@ -1,0 +1,224 @@
+{
+  "schema_version": "1.0",
+  "mode": "playground_capture",
+  "status": "ok",
+  "generated_at": "2026-10-16T04:59:38Z",
+  "preferences": {
+    "roles": [
+      "product designer"
+    ],
+    "location": "London",
+    "keywords": [
+      "Figma"
+    ],
+    "exclude": [],
+    "remote": "any",
+    "require_keywords": false,
+    "country": "GB",
+    "language": "en",
+    "providers": [
+      "greenhouse"
+    ]
+  },
+  "tinyfish_endpoints": [
+    "https://api.search.tinyfish.ai",
+    "https://api.fetch.tinyfish.ai"
+  ],
+  "jobs": [
+    {
+      "id": "6193686004",
+      "title": "Product Designer, Roundtripping (London, United Kingdom)",
+      "company": "Figma",
+      "employer_board": "figma",
+      "provider": "greenhouse",
+      "locations": [
+        "London, England"
+      ],
+      "work_mode": null,
+      "employment_type": null,
+      "salary": null,
+      "application_deadline": null,
+      "posted_at": "2026-09-16T16:07:42-04:00",
+      "updated_at": "2026-09-16T16:07:42-04:00",
+      "apply_url": "https://boards.greenhouse.io/figma/jobs/6193686004?gh_jid=6193686004",
+      "canonical_job_url": "https://job-boards.greenhouse.io/figma/jobs/6193686004?gh_jid=6193686004",
+      "source_board_url": "https://job-boards.greenhouse.io/figma",
+      "source_feed_url": "https://boards-api.greenhouse.io/v1/boards/figma/jobs/6193686004",
+      "observed_at": "2026-10-16T04:45:18.843Z",
+      "availability": "listed_on_public_board",
+      "score": 88,
+      "match_reasons": [
+        "Title matches: product designer",
+        "Exact role phrase in title",
+        "Listed location matches: London",
+        "Keywords found: Figma"
+      ],
+      "keyword_evidence": [
+        {
+          "keyword": "Figma",
+          "excerpt": "Product Designer, Roundtripping (London, United Kingdom) Figma is growing our team of passionate creatives and builders on a mission to make design accessible to all. "
+        }
+      ],
+      "description_excerpt": "Figma is growing our team of passionate creatives and builders on a mission to make design accessible to all. Figma’s platform helps teams bring ideas to life—whether you're brainstorming, creating a prototype, translating designs into code, or iterating with AI. From idea to product, Figma empowers teams to streamline",
+      "caveats": [
+        "Employer board identifier is preserved; missing company names are not inferred.",
+        "Listed when fetched; availability and eligibility can change."
+      ]
+    },
+    {
+      "id": "8427124002",
+      "title": "Senior Product Designer",
+      "company": "SumUp",
+      "employer_board": "sumup",
+      "provider": "greenhouse",
+      "locations": [
+        "London, England, United Kingdom"
+      ],
+      "work_mode": null,
+      "employment_type": null,
+      "salary": null,
+      "application_deadline": null,
+      "posted_at": "2026-04-08T18:06:52-04:00",
+      "updated_at": "2026-09-27T14:35:00-04:00",
+      "apply_url": "https://sumup.com/careers/positions/8427124002?gh_jid=8427124002",
+      "canonical_job_url": "https://sumup.com/careers/positions/8427124002?gh_jid=8427124002",
+      "source_board_url": "https://job-boards.greenhouse.io/sumup",
+      "source_feed_url": "https://boards-api.greenhouse.io/v1/boards/sumup/jobs/8427124002",
+      "observed_at": "2026-10-16T04:45:18.843Z",
+      "availability": "listed_on_public_board",
+      "score": 88,
+      "match_reasons": [
+        "Title matches: product designer",
+        "Exact role phrase in title",
+        "Listed location matches: London",
+        "Keywords found: Figma"
+      ],
+      "keyword_evidence": [
+        {
+          "keyword": "Figma",
+          "excerpt": "Engineering Design intuitive, high-quality mobile experiences in Figma that drive key metrics including activation, engagement, and retention Validate solutions through protot"
+        }
+      ],
+      "description_excerpt": "SumUp | Product & Design | London, United Kingdom Competitive salary · Office-first This role does not support Visa sponsorship and candidates must have the right to work in the UK. About the team The Consumer Bank squad sits at the heart of one of SumUp's most exciting growth bets — scaling SumUp Pay, our consumer fin",
+      "caveats": [
+        "Employer board identifier is preserved; missing company names are not inferred.",
+        "Listed when fetched; availability and eligibility can change."
+      ]
+    }
+  ],
+  "coverage": {
+    "boards_discovered": 7,
+    "boards_selected": 2,
+    "boards_attempted": 2,
+    "boards_fetched": 2,
+    "job_records_parsed": 2,
+    "matching_jobs": 2,
+    "jobs_returned": 2,
+    "rejected": {},
+    "scope": "Bounded discovery: prefer one Search-discovered posting per employer. Full Lever boards capped at 100 listings."
+  },
+  "sources": [
+    {
+      "provider": "greenhouse",
+      "employer_board": "figma",
+      "board_url": "https://job-boards.greenhouse.io/figma",
+      "feed_url": "https://boards-api.greenhouse.io/v1/boards/figma/jobs/6193686004",
+      "observed_at": "2026-10-16T04:45:18.843Z",
+      "freshness": "ttl_zero_requested",
+      "records_parsed": 1
+    },
+    {
+      "provider": "greenhouse",
+      "employer_board": "sumup",
+      "board_url": "https://job-boards.greenhouse.io/sumup",
+      "feed_url": "https://boards-api.greenhouse.io/v1/boards/sumup/jobs/8427124002",
+      "observed_at": "2026-10-16T04:45:18.843Z",
+      "freshness": "ttl_zero_requested",
+      "records_parsed": 1
+    }
+  ],
+  "discoveries": [
+    {
+      "query": "(\"product designer\") London Figma (site:job-boards.greenhouse.io OR site:boards.greenhouse.io)",
+      "board": "greenhouse:global:figma",
+      "result_url": "https://job-boards.greenhouse.io/figma/jobs/6193686004?gh_jid=6193686004"
+    },
+    {
+      "query": "(\"product designer\") London Figma (site:job-boards.greenhouse.io OR site:boards.greenhouse.io)",
+      "board": "greenhouse:global:sumup",
+      "result_url": "https://job-boards.greenhouse.io/sumup/jobs/8427124002"
+    },
+    {
+      "query": "(\"product designer\") London Figma (site:job-boards.greenhouse.io OR site:boards.greenhouse.io)",
+      "board": "greenhouse:global:devrev",
+      "result_url": "https://job-boards.greenhouse.io/devrev/jobs/6018050004"
+    },
+    {
+      "query": "(\"product designer\") London Figma (site:job-boards.greenhouse.io OR site:boards.greenhouse.io)",
+      "board": "greenhouse:global:flohealth",
+      "result_url": "https://job-boards.greenhouse.io/flohealth/jobs/7758437003"
+    },
+    {
+      "query": "(\"product designer\") London Figma (site:job-boards.greenhouse.io OR site:boards.greenhouse.io)",
+      "board": "greenhouse:global:drive",
+      "result_url": "https://job-boards.greenhouse.io/drive/jobs/8794218002"
+    },
+    {
+      "query": "(\"product designer\") London Figma (site:job-boards.greenhouse.io OR site:boards.greenhouse.io)",
+      "board": "greenhouse:global:autogenai",
+      "result_url": "https://job-boards.greenhouse.io/autogenai/jobs/5429830008"
+    },
+    {
+      "query": "(\"product designer\") London Figma (site:job-boards.greenhouse.io OR site:boards.greenhouse.io)",
+      "board": "greenhouse:global:blacklane",
+      "result_url": "https://job-boards.greenhouse.io/blacklane/jobs/8754731002"
+    },
+    {
+      "query": "(\"product designer\") London Figma (site:job-boards.greenhouse.io OR site:boards.greenhouse.io)",
+      "board": "greenhouse:global:figma",
+      "result_url": "https://job-boards.greenhouse.io/figma/jobs/6218349004"
+    }
+  ],
+  "errors": [],
+  "api_calls": [
+    {
+      "operation": "search",
+      "transport": "tinyfish-playground",
+      "captured_at": "2026-10-16T04:38:58.567Z",
+      "source": "https://agent.tinyfish.ai/playground/search",
+      "response_sha256": "4c12f37346c78745e67af73efbb7c9f43d7506529e865234da0428bba0995687",
+      "query": "(\"product designer\") London Figma (site:job-boards.greenhouse.io OR site:boards.greenhouse.io)",
+      "urls": null,
+      "request": {
+        "country": "GB",
+        "language": "en"
+      }
+    },
+    {
+      "operation": "fetch",
+      "transport": "tinyfish-playground",
+      "captured_at": "2026-10-16T04:45:18.843Z",
+      "source": "https://agent.tinyfish.ai/playground/fetch",
+      "response_sha256": "0125b8672485b8013c80334af5d57ec586fb8a5d4606a480e9a8a412543e560c",
+      "query": null,
+      "urls": [
+        "https://boards-api.greenhouse.io/v1/boards/figma/jobs/6193686004",
+        "https://boards-api.greenhouse.io/v1/boards/sumup/jobs/8427124002"
+      ],
+      "request": {
+        "format": "markdown",
+        "ttl": 0,
+        "urls": [
+          "https://boards-api.greenhouse.io/v1/boards/figma/jobs/6193686004",
+          "https://boards-api.greenhouse.io/v1/boards/sumup/jobs/8427124002"
+        ]
+      }
+    }
+  ],
+  "notes": [
+    "Only listed public jobs with explicit HTTPS application links are returned.",
+    "Locations are literal, case-insensitive matches; no geographic or visa eligibility is inferred.",
+    "Missing fields are null. Ranking is a transparent keyword heuristic, not a hiring recommendation.",
+    "Imported TinyFish responses: authenticity depends on the supplied capture; Python REST was not exercised. Origin caching may still return older content."
+  ]
+}
