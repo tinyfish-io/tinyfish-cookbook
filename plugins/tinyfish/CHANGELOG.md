@@ -1,5 +1,11 @@
 # Changelog
 
+## 1.2.5 (2026-09-18)
+
+### Added
+- Agent Plugins 1.0 package files: root `plugin.json` and `mcp.json` for the hosted TinyFish MCP server (`https://agent.tinyfish.ai/mcp`). Claude marketplace install is unchanged.
+- Short multi-agent install note: `npx universal-agent-plugins add tinyfish`.
+
 ## 1.2.4 (2026-08-18)
 
 ### Fixed

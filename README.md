@@ -117,6 +117,14 @@ npx skills add github.com/tinyfish-io/tinyfish-cookbook --skill use-tinyfish
 
 Browse it on [skills.sh/tinyfish-io/tinyfish-cookbook/use-tinyfish](https://skills.sh/tinyfish-io/tinyfish-cookbook/use-tinyfish).
 
+### Multiple agents
+
+If you want TinyFish in more than one coding agent:
+
+```bash
+npx universal-agent-plugins add tinyfish
+```
+
 ### SDKs
 
 ```bash
