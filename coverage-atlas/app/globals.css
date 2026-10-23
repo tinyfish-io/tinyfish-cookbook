@@ -1,0 +1,81 @@
+@import 'tailwindcss';
+@import 'tw-animate-css';
+@import 'shadcn/tailwind.css';
+
+@theme inline {
+  --font-sans: var(--font-geist), ui-sans-serif, sans-serif;
+  --font-mono: var(--font-geist-mono), ui-monospace, monospace;
+  --color-background: var(--background); --color-foreground: var(--foreground);
+  --color-card: var(--card); --color-card-foreground: var(--foreground);
+  --color-popover: var(--card); --color-popover-foreground: var(--foreground);
+  --color-primary: var(--primary); --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--muted); --color-secondary-foreground: var(--foreground);
+  --color-muted: var(--muted); --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent); --color-accent-foreground: var(--foreground);
+  --color-destructive: var(--destructive); --color-border: var(--border);
+  --color-input: var(--border); --color-ring: var(--primary);
+  --color-sidebar: var(--sidebar); --color-sidebar-foreground: var(--foreground);
+  --color-sidebar-accent: var(--sidebar-accent); --color-sidebar-accent-foreground: var(--foreground);
+  --radius-sm: .25rem; --radius-md: .375rem; --radius-lg: .5rem;
+}
+
+:root {
+  color-scheme: light;
+  --background: #f7f8fa;
+  --foreground: #172033;
+  --card: #ffffff;
+  --primary: #2457a7;
+  --primary-foreground: #ffffff;
+  --muted: #eef1f5;
+  --muted-foreground: #667085;
+  --accent: #e8eef8;
+  --destructive: #b42318;
+  --border: #dfe3e8;
+  --sidebar: #fbfcfd;
+  --sidebar-accent: #e8eef8;
+  --policy-covered: #3a7864;
+  --policy-conditional: #d1a149;
+  --policy-limited: #b76a45;
+  --policy-uncovered: #8f5f57;
+  --policy-unpublished: #c3c8d0;
+  --difference: #fff4d6;
+
+  /* The friction ramp. A separate scale from the status palette on purpose:
+     "how is it labelled" and "how hard is it to actually get" are different
+     questions, and the map answers one at a time. */
+  --friction-1: #dceee4;
+  --friction-2: #a8d3bd;
+  --friction-3: #d8bb72;
+  --friction-4: #c0754a;
+  --friction-5: #7c4a3f;
+
+  --scan-live: #2457a7;
+}
+
+@layer base {
+  * { @apply border-border outline-ring/50; }
+  html { @apply bg-background; }
+  body { @apply bg-background text-foreground; font-size: 14px; }
+  button, select { cursor: pointer; }
+  button:focus-visible, input:focus-visible, select:focus-visible { @apply outline-2 outline-offset-2 outline-ring; }
+}
+
+@layer utilities {
+  /* The scan console's live pulse — the only motion in the interface, reserved
+     for the one thing that is genuinely happening in real time. */
+  @keyframes atlas-pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: .35; }
+  }
+  .atlas-pulse { animation: atlas-pulse 1.4s ease-in-out infinite; }
+
+  @keyframes atlas-land {
+    from { opacity: .25; transform: scale(.94); }
+    to { opacity: 1; transform: scale(1); }
+  }
+  .atlas-land { animation: atlas-land .35s ease-out; }
+
+  @media (prefers-reduced-motion: reduce) {
+    .atlas-pulse, .atlas-land { animation: none; }
+  }
+}
