@@ -26,7 +26,7 @@ IT / Software · Construction · Healthcare · Consulting · Logistics · Educat
 
 ## Requirements
 
-- TinyFish CLI: `npm install -g tinyfish`
+- TinyFish CLI: `npm install -g @tiny-fish/cli`
 - Authenticated: `tinyfish auth login`
 
 ## Install

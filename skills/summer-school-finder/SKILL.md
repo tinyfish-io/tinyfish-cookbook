@@ -29,7 +29,7 @@ tinyfish --version
 tinyfish auth status
 ```
 
-If not installed: `npm install -g tinyfish`
+If not installed: `npm install -g @tiny-fish/cli`
 If not authenticated: `tinyfish auth login`
 
 ---

@@ -22,7 +22,7 @@ Claude fires parallel TinyFish agents across 7-8 real university program pages s
 
 ## Requirements
 
-- TinyFish CLI: `npm install -g tinyfish`
+- TinyFish CLI: `npm install -g @tiny-fish/cli`
 - Authenticated: `tinyfish auth login`
 
 ## Install
