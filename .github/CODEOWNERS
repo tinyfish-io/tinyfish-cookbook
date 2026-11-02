@@ -5,6 +5,7 @@
 
 .github/dependabot.yaml @tinyfish-io/security_team
 .github/dependabot.yml @tinyfish-io/security_team
-.github/workflows/** @tinyfish-io/security_team
+.github/workflows/secrets-scanner.yml @tinyfish-io/security_team
+.github/workflows/vuln-scanner-pr.yml @tinyfish-io/security_team
 .semgrepignore @tinyfish-io/security_team
 osv-scanner.toml @tinyfish-io/security_team
