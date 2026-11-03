@@ -1,0 +1,22 @@
+# pnpm refuses to run a dependency's install scripts unless told to, and on a
+# clean CI install it errors rather than warning (ERR_PNPM_IGNORED_BUILDS). Both
+# packages below must be decided explicitly — leaving either undeclared fails the
+# build, so "no" has to be written down as deliberately as "yes".
+#
+# These settings live here rather than under a `pnpm` key in package.json: pnpm 11
+# ignores that key entirely, which is what produced the lockfile-config mismatch
+# this repo hit first. `allowBuilds` is pnpm 11's spelling; the two keys below it
+# are pnpm 10's, kept so an older toolchain reaches the same decision.
+allowBuilds:
+  # esbuild's postinstall links its platform-specific binary. Without it `tsx`
+  # cannot run, and `tsx` is how the collection agent CLI runs.
+  esbuild: true
+  # msw arrives through shadcn's tree. Its script writes a browser mock service
+  # worker into a public directory — irrelevant here, and not something we want
+  # touching public/ during a deploy.
+  msw: false
+
+onlyBuiltDependencies:
+  - esbuild
+ignoredBuiltDependencies:
+  - msw
