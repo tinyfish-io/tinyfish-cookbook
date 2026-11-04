@@ -1,0 +1,13 @@
+[
+  {
+    "payload": {
+      "test": "alert",
+      "monitor": "demo"
+    }
+  },
+  {
+    "payload": {
+      "event": "test_ping"
+    }
+  }
+]

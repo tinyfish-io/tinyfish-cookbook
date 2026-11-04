@@ -1,0 +1,11 @@
+# LoanGuard — Python dependencies
+# Install:  pip install -r requirements.txt
+# (Playwright browser already provisioned on this machine.)
+
+fastapi>=0.110
+uvicorn[standard]>=0.29
+httpx>=0.27
+tinyfish>=0.11.0
+playwright>=1.40
+python-dotenv>=1.0
+pytest>=8.0
