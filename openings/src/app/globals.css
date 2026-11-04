@@ -1,0 +1,129 @@
+@import "tailwindcss";
+
+/* Tokens from DESIGN.md (hex.tech visual language). Light only.
+   Ink #14141C, plum #31263B, slate #717A94, hairline #DBD7DA are observed; the rest inferred. */
+:root {
+  color-scheme: light;
+  --background: #f7f6f8;
+  --surface: #ffffff;
+  --sunken: #f1eff3;
+  --foreground: #14141c;
+  --muted: #5f6680; /* slate, darkened from #717A94 to pass 4.5:1 on sunken */
+  --border: #dbd7da;
+  --accent: #31263b; /* brand plum: primary buttons, links, chips */
+  --accent-ink: #ffffff;
+  --highlight: #6a4ff0; /* violet from the data palette: live/active states */
+  --ok: #107a55;
+  --warn: #9a5b06;
+  --danger: #b4264a;
+  --data-violet: #7b61ff;
+  --data-blue: #4c7dff;
+  --data-pink: #e0609e;
+  --data-teal: #1fa99a;
+  --data-amber: #e9a23b;
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-surface: var(--surface);
+  --color-sunken: var(--sunken);
+  --color-foreground: var(--foreground);
+  --color-muted: var(--muted);
+  --color-border: var(--border);
+  --color-accent: var(--accent);
+  --color-accent-ink: var(--accent-ink);
+  --color-highlight: var(--highlight);
+  --color-ok: var(--ok);
+  --color-warn: var(--warn);
+  --color-danger: var(--danger);
+  --color-data-violet: var(--data-violet);
+  --color-data-blue: var(--data-blue);
+  --color-data-pink: var(--data-pink);
+  --color-data-teal: var(--data-teal);
+  --color-data-amber: var(--data-amber);
+  --font-sans: var(--ff-sans), ui-sans-serif, system-ui, sans-serif;
+  --font-display: var(--ff-display), ui-sans-serif, system-ui, sans-serif;
+  --font-serif: var(--ff-serif), ui-serif, Georgia, serif;
+  --font-mono: var(--ff-mono), ui-monospace, monospace;
+}
+
+html {
+  background: var(--background);
+}
+
+body {
+  background: var(--background);
+  color: var(--foreground);
+}
+
+/* Headlines: wide, bold sans (PP Formula SemiExtended → Archivo at 115% width). */
+.font-display {
+  font-weight: 600;
+  font-stretch: 115%;
+  letter-spacing: -0.02em;
+}
+/* One word per headline in italic serif, Hex-style. */
+.font-display em {
+  font-family: var(--ff-serif), ui-serif, Georgia, serif;
+  font-style: italic;
+  font-weight: 400;
+  font-stretch: 100%;
+  letter-spacing: -0.01em;
+}
+
+/* Floating product panel shadow. */
+.panel-shadow {
+  box-shadow:
+    0 1px 2px rgb(20 20 28 / 0.04),
+    0 24px 48px -24px rgb(49 38 59 / 0.28);
+}
+
+/* Faint technical grid behind the hero. */
+.grid-lines {
+  background-image:
+    linear-gradient(to right, rgb(49 38 59 / 0.06) 1px, transparent 1px),
+    linear-gradient(to bottom, rgb(49 38 59 / 0.06) 1px, transparent 1px);
+  background-size: 64px 64px;
+  mask-image: radial-gradient(ellipse at 50% 30%, black 30%, transparent 75%);
+}
+
+::selection {
+  background: rgb(123 97 255 / 0.22);
+}
+
+:focus-visible {
+  outline: 2px solid var(--highlight);
+  outline-offset: 2px;
+}
+
+@keyframes reveal {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+.reveal {
+  animation: reveal 0.5s cubic-bezier(0.2, 0.7, 0.2, 1) both;
+  animation-delay: calc(var(--i, 0) * 60ms);
+}
+
+@keyframes pulse-dot {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.35;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .reveal,
+  .motion-safe-anim {
+    animation: none !important;
+  }
+}
