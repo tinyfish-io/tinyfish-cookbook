@@ -9,13 +9,13 @@ Browser evidence, cited Research, and optional Monitor support.
 
 ## Demo
 
-No genuine screen recording or optimized GIF was available in the source
-workspace, so none is included or claimed here. Add the original recording
-as `demo/loanguard-demo.mp4` or an optimized GIF before opening a contribution
-PR.
+Watch the live LoanGuard walkthrough:
 
-Demo mode itself is runnable without an API key and replays the clearly
-labelled fictional data in `demo/sample_events.json`.
+[▶ Watch LoanGuard Demo](demo/loanguard-demo.mp4)
+
+The walkthrough demonstrates the six TinyFish capabilities,
+the investigation timeline, risk assessment, visual evidence,
+Research report, and optional monitoring.
 
 ## TinyFish integrations
 
