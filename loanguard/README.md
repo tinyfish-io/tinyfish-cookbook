@@ -11,7 +11,7 @@ Browser evidence, cited Research, and optional Monitor support.
 
 Watch the live LoanGuard walkthrough:
 
-[▶ Watch LoanGuard Demo](demo/loanguard-demo.mp4)
+[Watch LoanGuard Demo](https://chatgpt.com/c/demo/loanguard-demo.mp4)
 
 The walkthrough demonstrates the six TinyFish capabilities,
 the investigation timeline, risk assessment, visual evidence,
