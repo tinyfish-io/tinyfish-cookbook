@@ -1,0 +1,393 @@
+{
+  "run_id": "8aa6f979-a068-4bbb-89ed-96956fb72b3f",
+  "status": "COMPLETED",
+  "created_at": "2026-11-01T07:22:23Z",
+  "started_at": "2026-11-01T07:22:45Z",
+  "finished_at": "2026-11-01T07:25:55Z",
+  "num_of_steps": 21,
+  "result": {
+    "fees": [
+      {
+        "name": "Delivery charge",
+        "amount": 25,
+        "first_seen_at_step": 3,
+        "included_in_first_price": false
+      },
+      {
+        "name": "Handling charge",
+        "amount": 2,
+        "first_seen_at_step": 3,
+        "included_in_first_price": false
+      }
+    ],
+    "steps": [
+      {
+        "url": "https://blinkit.com/",
+        "note": "Access denied initially, reconfigured browser to bypass bot detection, set delivery location to Koramangala, Bengaluru 560034. Searched for milk.",
+        "page": "homepage",
+        "step": 1,
+        "price_shown": 0
+      },
+      {
+        "url": "https://blinkit.com/s/?q=milk",
+        "note": "Search results for milk. First item: Country Delight Buffalo Fresh Milk 450 ml, ₹52 (MRP ₹62, 16% OFF). Added one to cart.",
+        "page": "search results",
+        "step": 2,
+        "price_shown": 52
+      },
+      {
+        "url": "https://blinkit.com/s/?q=milk",
+        "note": "Cart modal opened with 1 item. Bill details: Items total ₹52 (MRP ₹62, saved ₹10), Delivery charge ₹25, Handling charge ₹2, Grand total ₹79. Proceed button said '₹79 TOTAL Login to Proceed'.",
+        "page": "cart modal",
+        "step": 3,
+        "price_shown": 79
+      },
+      {
+        "url": "https://blinkit.com/s/?q=milk",
+        "note": "Login modal appeared requiring mobile number to proceed. Consent text: 'By continuing, you agree to our Terms of service & Privacy policy'. No separate checkbox to decline.",
+        "page": "login wall",
+        "step": 4,
+        "price_shown": 0
+      }
+    ],
+    "terms": [
+      {
+        "term": "renewal",
+        "quote": "",
+        "shown_where": "not_shown",
+        "seen_at_step": null
+      },
+      {
+        "term": "cancellation",
+        "quote": "Cancellation Policy",
+        "shown_where": "main_page",
+        "seen_at_step": 3
+      }
+    ],
+    "origin": "",
+    "currency": "₹",
+    "item_name": "Country Delight Buffalo Fresh Milk",
+    "plan_name": "",
+    "stop_note": "After adding Country Delight Buffalo Fresh Milk (450 ml, ₹52) to cart and proceeding to checkout, the site required a login with mobile number. The cart showed: Items total ₹52 (MRP ₹62, saved ₹10), Delivery charge ₹25, Handling charge ₹2, Grand total ₹79. The login modal stated 'India's last minute app - Log in or Sign up' with a field for mobile number and consent text 'By continuing, you agree to our Terms of service & Privacy policy' which does not have a separate checkbox to decline separately.",
+    "stopped_at": "login_wall",
+    "destination": "Koramangala, Bengaluru",
+    "final_price": 79,
+    "intro_price": 0,
+    "consent_text": [
+      {
+        "text": "By continuing, you agree to our Terms of service & Privacy policy",
+        "seen_at_step": 4,
+        "can_decline_separately": false
+      }
+    ],
+    "intro_period": "",
+    "plan_options": [],
+    "bill_itemised": true,
+    "login_wall_at": "https://blinkit.com/s/?q=milk",
+    "billing_period": "",
+    "pattern_checks": [
+      {
+        "note": "No countdown or scarcity messages observed",
+        "quote": "",
+        "status": "not_found",
+        "pattern": "false_urgency",
+        "seen_at_step": 0
+      },
+      {
+        "note": "No items added without asking",
+        "quote": "",
+        "status": "not_found",
+        "pattern": "basket_sneaking",
+        "seen_at_step": 0
+      },
+      {
+        "note": "No guilt/shame wording observed",
+        "quote": "",
+        "status": "not_found",
+        "pattern": "confirm_shaming",
+        "seen_at_step": 0
+      },
+      {
+        "note": "Account required only for checkout, not for product viewing",
+        "quote": "",
+        "status": "not_found",
+        "pattern": "forced_action",
+        "seen_at_step": 0
+      },
+      {
+        "note": "No subscription offered",
+        "quote": "",
+        "status": "not_found",
+        "pattern": "subscription_trap",
+        "seen_at_step": 0
+      },
+      {
+        "note": "No layout hiding of cheaper options",
+        "quote": "",
+        "status": "not_found",
+        "pattern": "interface_interference",
+        "seen_at_step": 0
+      },
+      {
+        "note": "No discrepancy between advertised and offered price",
+        "quote": "",
+        "status": "not_found",
+        "pattern": "bait_and_switch",
+        "seen_at_step": 0
+      },
+      {
+        "note": "Prices were shown clearly upfront, delivery and handling fees shown in cart before login",
+        "quote": "",
+        "status": "not_found",
+        "pattern": "drip_pricing",
+        "seen_at_step": 0
+      },
+      {
+        "note": "No ads presented as content",
+        "quote": "",
+        "status": "not_found",
+        "pattern": "disguised_advertisement",
+        "seen_at_step": 0
+      },
+      {
+        "note": "No repeated interruptions",
+        "quote": "",
+        "status": "not_found",
+        "pattern": "nagging",
+        "seen_at_step": 0
+      },
+      {
+        "note": "No confusing wording",
+        "quote": "",
+        "status": "not_found",
+        "pattern": "trick_question",
+        "seen_at_step": 0
+      },
+      {
+        "note": "No recurring charges",
+        "quote": "",
+        "status": "not_found",
+        "pattern": "saas_billing",
+        "seen_at_step": 0
+      },
+      {
+        "note": "No suspicious download prompts",
+        "quote": "",
+        "status": "not_found",
+        "pattern": "rogue_malware",
+        "seen_at_step": 0
+      }
+    ],
+    "decline_wording": [],
+    "first_price_shown": 52,
+    "item_listed_price": 52,
+    "pressure_messages": [],
+    "price_after_intro": 0,
+    "removed_from_cart": [],
+    "pre_ticked_options": [],
+    "added_without_asking": [],
+    "plan_default_selected": ""
+  },
+  "error": null,
+  "streaming_url": "https://stream.invalid/live",
+  "steps": [
+    {
+      "id": "fc4b9d10-18a5-4d1b-a4d8-05722bf3014c",
+      "timestamp": "2026-11-01T07:22:46Z",
+      "status": "RUNNING",
+      "action": "Visit Blinkit homepage to start the milk purchase task",
+      "screenshot": "https://agent.tinyfish.ai/runs/8aa6f979-a068-4bbb-89ed-96956fb72b3f/steps/fc4b9d10-18a5-4d1b-a4d8-05722bf3014c/screenshot",
+      "html": "https://agent.tinyfish.ai/runs/8aa6f979-a068-4bbb-89ed-96956fb72b3f/steps/fc4b9d10-18a5-4d1b-a4d8-05722bf3014c/html",
+      "duration": "9.9s"
+    },
+    {
+      "id": "44b58a30-a8b9-4f91-9c2d-3dab529d4d4a",
+      "timestamp": "2026-11-01T07:22:57Z",
+      "status": "RUNNING",
+      "action": "Check current page state and any popups",
+      "screenshot": "https://agent.tinyfish.ai/runs/8aa6f979-a068-4bbb-89ed-96956fb72b3f/steps/44b58a30-a8b9-4f91-9c2d-3dab529d4d4a/screenshot",
+      "html": "https://agent.tinyfish.ai/runs/8aa6f979-a068-4bbb-89ed-96956fb72b3f/steps/44b58a30-a8b9-4f91-9c2d-3dab529d4d4a/html",
+      "duration": "1.9s"
+    },
+    {
+      "id": "f67527d9-1828-42dd-b1f1-efdde84ea026",
+      "timestamp": "2026-11-01T07:23:01Z",
+      "status": "RUNNING",
+      "action": "Check if there is a challenge or bot check to complete",
+      "screenshot": "https://agent.tinyfish.ai/runs/8aa6f979-a068-4bbb-89ed-96956fb72b3f/steps/f67527d9-1828-42dd-b1f1-efdde84ea026/screenshot",
+      "html": "https://agent.tinyfish.ai/runs/8aa6f979-a068-4bbb-89ed-96956fb72b3f/steps/f67527d9-1828-42dd-b1f1-efdde84ea026/html",
+      "duration": "3.1s"
+    },
+    {
+      "id": "ba50113d-81a2-4b7b-a6fd-42a25eb18546",
+      "timestamp": "2026-11-01T07:23:06Z",
+      "status": "RUNNING",
+      "action": "Reconfigure browser to bypass access denied block",
+      "screenshot": "https://agent.tinyfish.ai/runs/8aa6f979-a068-4bbb-89ed-96956fb72b3f/steps/ba50113d-81a2-4b7b-a6fd-42a25eb18546/screenshot",
+      "html": "https://agent.tinyfish.ai/runs/8aa6f979-a068-4bbb-89ed-96956fb72b3f/steps/ba50113d-81a2-4b7b-a6fd-42a25eb18546/html",
+      "duration": "3.1s"
+    },
+    {
+      "id": "2957058a-071e-4eae-afc6-c6c05d71f9ad",
+      "timestamp": "2026-11-01T07:23:10Z",
+      "status": "RUNNING",
+      "action": "Navigate to Blinkit homepage after reconfiguration",
+      "screenshot": "https://agent.tinyfish.ai/runs/8aa6f979-a068-4bbb-89ed-96956fb72b3f/steps/2957058a-071e-4eae-afc6-c6c05d71f9ad/screenshot",
+      "html": "https://agent.tinyfish.ai/runs/8aa6f979-a068-4bbb-89ed-96956fb72b3f/steps/2957058a-071e-4eae-afc6-c6c05d71f9ad/html",
+      "duration": "5.8s"
+    },
+    {
+      "id": "87154d61-4fc5-425d-83d4-2760d03ebed9",
+      "timestamp": "2026-11-01T07:23:22Z",
+      "status": "RUNNING",
+      "action": "Input delivery location Koramangala Bengaluru",
+      "screenshot": "https://agent.tinyfish.ai/runs/8aa6f979-a068-4bbb-89ed-96956fb72b3f/steps/87154d61-4fc5-425d-83d4-2760d03ebed9/screenshot",
+      "html": "https://agent.tinyfish.ai/runs/8aa6f979-a068-4bbb-89ed-96956fb72b3f/steps/87154d61-4fc5-425d-83d4-2760d03ebed9/html",
+      "duration": "1.5s"
+    },
+    {
+      "id": "a09d06a4-d64f-42a9-bb7c-282a0a2e0202",
+      "timestamp": "2026-11-01T07:23:27Z",
+      "status": "RUNNING",
+      "action": "Select first location suggestion",
+      "screenshot": "https://agent.tinyfish.ai/runs/8aa6f979-a068-4bbb-89ed-96956fb72b3f/steps/a09d06a4-d64f-42a9-bb7c-282a0a2e0202/screenshot",
+      "html": "https://agent.tinyfish.ai/runs/8aa6f979-a068-4bbb-89ed-96956fb72b3f/steps/a09d06a4-d64f-42a9-bb7c-282a0a2e0202/html",
+      "duration": "3.3s"
+    },
+    {
+      "id": "1bcb48a2-2380-4d12-8317-b95eb48fdccc",
+      "timestamp": "2026-11-01T07:23:34Z",
+      "status": "RUNNING",
+      "action": "Click search bar to search for milk",
+      "screenshot": "https://agent.tinyfish.ai/runs/8aa6f979-a068-4bbb-89ed-96956fb72b3f/steps/1bcb48a2-2380-4d12-8317-b95eb48fdccc/screenshot",
+      "html": "https://agent.tinyfish.ai/runs/8aa6f979-a068-4bbb-89ed-96956fb72b3f/steps/1bcb48a2-2380-4d12-8317-b95eb48fdccc/html",
+      "duration": "2.9s"
+    },
+    {
+      "id": "98cca226-882e-451c-8471-1af77aa3c9f1",
+      "timestamp": "2026-11-01T07:23:44Z",
+      "status": "RUNNING",
+      "action": "Navigate away from this category page",
+      "screenshot": "https://agent.tinyfish.ai/runs/8aa6f979-a068-4bbb-89ed-96956fb72b3f/steps/98cca226-882e-451c-8471-1af77aa3c9f1/screenshot",
+      "html": "https://agent.tinyfish.ai/runs/8aa6f979-a068-4bbb-89ed-96956fb72b3f/steps/98cca226-882e-451c-8471-1af77aa3c9f1/html",
+      "duration": "2.4s"
+    },
+    {
+      "id": "fb255d9b-39d6-4736-b49b-fa53506224be",
+      "timestamp": "2026-11-01T07:23:49Z",
+      "status": "RUNNING",
+      "action": "Navigate to bread product page",
+      "screenshot": "https://agent.tinyfish.ai/runs/8aa6f979-a068-4bbb-89ed-96956fb72b3f/steps/fb255d9b-39d6-4736-b49b-fa53506224be/screenshot",
+      "html": "https://agent.tinyfish.ai/runs/8aa6f979-a068-4bbb-89ed-96956fb72b3f/steps/fb255d9b-39d6-4736-b49b-fa53506224be/html",
+      "duration": "1.2s"
+    },
+    {
+      "id": "e4c03219-747a-4dba-965f-778f2d4a5801",
+      "timestamp": "2026-11-01T07:23:52Z",
+      "status": "RUNNING",
+      "action": "Find the search bar to search for milk",
+      "screenshot": "https://agent.tinyfish.ai/runs/8aa6f979-a068-4bbb-89ed-96956fb72b3f/steps/e4c03219-747a-4dba-965f-778f2d4a5801/screenshot",
+      "html": "https://agent.tinyfish.ai/runs/8aa6f979-a068-4bbb-89ed-96956fb72b3f/steps/e4c03219-747a-4dba-965f-778f2d4a5801/html",
+      "duration": "2.1s"
+    },
+    {
+      "id": "42003934-b1de-4a1b-8d1f-2dc508fae6bd",
+      "timestamp": "2026-11-01T07:23:54Z",
+      "status": "RUNNING",
+      "action": "Click search area to activate search",
+      "screenshot": "https://agent.tinyfish.ai/runs/8aa6f979-a068-4bbb-89ed-96956fb72b3f/steps/42003934-b1de-4a1b-8d1f-2dc508fae6bd/screenshot",
+      "html": "https://agent.tinyfish.ai/runs/8aa6f979-a068-4bbb-89ed-96956fb72b3f/steps/42003934-b1de-4a1b-8d1f-2dc508fae6bd/html",
+      "duration": "1.2s"
+    },
+    {
+      "id": "f950decc-4101-4cd5-9452-a73acf77bc51",
+      "timestamp": "2026-11-01T07:23:57Z",
+      "status": "RUNNING",
+      "action": "Find the search input field to type milk",
+      "screenshot": "https://agent.tinyfish.ai/runs/8aa6f979-a068-4bbb-89ed-96956fb72b3f/steps/f950decc-4101-4cd5-9452-a73acf77bc51/screenshot",
+      "html": "https://agent.tinyfish.ai/runs/8aa6f979-a068-4bbb-89ed-96956fb72b3f/steps/f950decc-4101-4cd5-9452-a73acf77bc51/html",
+      "duration": "1.5s"
+    },
+    {
+      "id": "80c7ceee-2ebe-4442-8da8-5f3bf947cedb",
+      "timestamp": "2026-11-01T07:23:58Z",
+      "status": "RUNNING",
+      "action": "Go to search page for milk",
+      "screenshot": "https://agent.tinyfish.ai/runs/8aa6f979-a068-4bbb-89ed-96956fb72b3f/steps/80c7ceee-2ebe-4442-8da8-5f3bf947cedb/screenshot",
+      "html": "https://agent.tinyfish.ai/runs/8aa6f979-a068-4bbb-89ed-96956fb72b3f/steps/80c7ceee-2ebe-4442-8da8-5f3bf947cedb/html",
+      "duration": "4.5s"
+    },
+    {
+      "id": "8c206ac9-19a7-49b9-b105-2cf18f7f0a32",
+      "timestamp": "2026-11-01T07:24:04Z",
+      "status": "RUNNING",
+      "action": "Search for milk",
+      "screenshot": "https://agent.tinyfish.ai/runs/8aa6f979-a068-4bbb-89ed-96956fb72b3f/steps/8c206ac9-19a7-49b9-b105-2cf18f7f0a32/screenshot",
+      "html": "https://agent.tinyfish.ai/runs/8aa6f979-a068-4bbb-89ed-96956fb72b3f/steps/8c206ac9-19a7-49b9-b105-2cf18f7f0a32/html",
+      "duration": "2.9s"
+    },
+    {
+      "id": "de9355bd-37ab-431e-8d39-3468f2ed633f",
+      "timestamp": "2026-11-01T07:24:11Z",
+      "status": "RUNNING",
+      "action": "Add one milk product to cart",
+      "screenshot": "https://agent.tinyfish.ai/runs/8aa6f979-a068-4bbb-89ed-96956fb72b3f/steps/de9355bd-37ab-431e-8d39-3468f2ed633f/screenshot",
+      "html": "https://agent.tinyfish.ai/runs/8aa6f979-a068-4bbb-89ed-96956fb72b3f/steps/de9355bd-37ab-431e-8d39-3468f2ed633f/html",
+      "duration": "1.2s"
+    },
+    {
+      "id": "e458e210-ffa6-4c27-86ef-c6b840ef46b4",
+      "timestamp": "2026-11-01T07:24:15Z",
+      "status": "RUNNING",
+      "action": "Open the cart to proceed to checkout",
+      "screenshot": "https://agent.tinyfish.ai/runs/8aa6f979-a068-4bbb-89ed-96956fb72b3f/steps/e458e210-ffa6-4c27-86ef-c6b840ef46b4/screenshot",
+      "html": "https://agent.tinyfish.ai/runs/8aa6f979-a068-4bbb-89ed-96956fb72b3f/steps/e458e210-ffa6-4c27-86ef-c6b840ef46b4/html",
+      "duration": "1.8s"
+    },
+    {
+      "id": "def85a28-8be3-4421-ba20-f52c66453cc5",
+      "timestamp": "2026-11-01T07:24:18Z",
+      "status": "RUNNING",
+      "action": "Wait for cart modal to fully load",
+      "screenshot": "https://agent.tinyfish.ai/runs/8aa6f979-a068-4bbb-89ed-96956fb72b3f/steps/def85a28-8be3-4421-ba20-f52c66453cc5/screenshot",
+      "html": "https://agent.tinyfish.ai/runs/8aa6f979-a068-4bbb-89ed-96956fb72b3f/steps/def85a28-8be3-4421-ba20-f52c66453cc5/html",
+      "duration": "3.3s"
+    },
+    {
+      "id": "6dd36d60-266f-4532-86a6-8e4ac4cc0156",
+      "timestamp": "2026-11-01T07:24:23Z",
+      "status": "RUNNING",
+      "action": "Get full cart and bill details",
+      "screenshot": "https://agent.tinyfish.ai/runs/8aa6f979-a068-4bbb-89ed-96956fb72b3f/steps/6dd36d60-266f-4532-86a6-8e4ac4cc0156/screenshot",
+      "html": "https://agent.tinyfish.ai/runs/8aa6f979-a068-4bbb-89ed-96956fb72b3f/steps/6dd36d60-266f-4532-86a6-8e4ac4cc0156/html",
+      "duration": "8.1s"
+    },
+    {
+      "id": "4efcb23f-d394-4a58-81ec-da122fd71add",
+      "timestamp": "2026-11-01T07:24:37Z",
+      "status": "RUNNING",
+      "action": "Proceed to checkout - this will likely ask for login",
+      "screenshot": "https://agent.tinyfish.ai/runs/8aa6f979-a068-4bbb-89ed-96956fb72b3f/steps/4efcb23f-d394-4a58-81ec-da122fd71add/screenshot",
+      "html": "https://agent.tinyfish.ai/runs/8aa6f979-a068-4bbb-89ed-96956fb72b3f/steps/4efcb23f-d394-4a58-81ec-da122fd71add/html",
+      "duration": "1.4s"
+    },
+    {
+      "id": "641c3845-c398-497b-b205-5a5725982f4d",
+      "timestamp": "2026-11-01T07:25:29Z",
+      "status": "RUNNING",
+      "action": "Finish task - login wall reached at checkout",
+      "screenshot": "https://agent.tinyfish.ai/runs/8aa6f979-a068-4bbb-89ed-96956fb72b3f/steps/641c3845-c398-497b-b205-5a5725982f4d/screenshot",
+      "html": "https://agent.tinyfish.ai/runs/8aa6f979-a068-4bbb-89ed-96956fb72b3f/steps/641c3845-c398-497b-b205-5a5725982f4d/html",
+      "duration": "0.0s"
+    },
+    {
+      "id": "05840376-d93c-4c11-b511-bea306842369",
+      "timestamp": "2026-11-01T07:25:55Z",
+      "status": "COMPLETED",
+      "action": "Task completed",
+      "screenshot": null,
+      "html": null,
+      "duration": null
+    }
+  ]
+}

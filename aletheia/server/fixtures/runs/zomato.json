@@ -1,0 +1,228 @@
+{
+  "run_id": "0abfd204-fcc0-4c6d-955f-806c2792e8cf",
+  "status": "COMPLETED",
+  "goal": "Navigate to https://www.zomato.com/bangalore/delivery to complete the goal: You are a mystery shopper auditing this food delivery site's checkout flow for hidden costs and pre-selected extras. Complete these steps:\n1. Close any cookie banner, login popup, app-download prompt or notification popup (use the X or \"skip\", never log in).\n2. If asked for a delivery location, type \"Koramangala, Bengaluru\" and choose the first suggestion.\n3. Open the first restaurant shown that is open now and delivers online, and add exactly one main-course item to the cart. If a customisation popup appears, keep the defaults and confirm.\n4. Open the cart and proceed toward checkout as far as possible without logging in, stopping at the page that asks for payment (card, UPI, wallet choice).\nAt every page, record the page name, URL and the total price shown. Record every fee or charge with its exact name and amount (item total, delivery fee, platform fee, packaging charge, restaurant charges, small cart fee, surge or rain fee, GST, tip, donation). Record every checkbox, toggle or option that was already selected without you choosing it (tip, donation, membership, cutlery, add-on), with its cost. Record any item or charge added to the cart that you did not add. Record any countdown timer, \"only X left\" or pressure message, and the exact wording of any button or link used to decline an extra.\nRules: Never enter payment details, never click Pay or Place Order, never enter a phone number, never request or enter an OTP, never sign up. Do not change any pre-selected option, only record it. If the site requires login, a phone number or an OTP to continue, stop there, set login_required to true and report everything seen so far. If you see a CAPTCHA, access denied page or bot check, stop and set blocked_by_bot_protection to true.",
+  "created_at": "2026-10-29T15:04:46Z",
+  "started_at": "2026-10-29T15:04:50Z",
+  "finished_at": "2026-10-29T15:07:38Z",
+  "num_of_steps": 16,
+  "result": {
+    "fees": [],
+    "steps": [
+      {
+        "url": "https://www.zomato.com/bangalore/delivery",
+        "note": "Entered 'Koramangala, Bengaluru' as delivery location; first suggestion SMVT Bengaluru Railway Station was selected. No popups or banners needed closing.",
+        "page": "Zomato Delivery Search",
+        "step": 1,
+        "total_shown": 0
+      },
+      {
+        "url": "https://www.zomato.com/bangalore/delivery",
+        "note": "Displayed restaurants including Nandhana Palace, Domino's Pizza, Nandhini Deluxe. Opened first restaurant Nandhana Palace.",
+        "page": "Restaurant Listing Page",
+        "step": 2,
+        "total_shown": 0
+      },
+      {
+        "url": "https://www.zomato.com/bangalore/nandhana-palace-kammanahalli/order",
+        "note": "Restaurant menu with categories. Added 'Murgh Tikka Masala' (Main Course, NON-VEG) from Non-Veg Main Course section. Customisation popup showed Add-Ons For Beverages (Butter Milk ₹69, Kinley 500Ml ₹9.52) - neither checkbox was pre-ticked. Confirmed with 'Add to order ₹389'. Cart subtotal shown as ₹389.",
+        "page": "Nandhana Palace Menu",
+        "step": 3,
+        "total_shown": 389
+      },
+      {
+        "url": "https://www.zomato.com/bangalore/nandhana-palace-kammanahalli/order",
+        "note": "Cart showed 'Your Orders: Murgh Tikka Masala x1 ₹389'. Subtotal: ₹389. No delivery fee, platform fee, packaging charge, small cart fee, surge/rain fee, or GST shown at this stage. No pre-ticked add-ons or extras. No pressure messages visible.",
+        "page": "Cart Summary",
+        "step": 4,
+        "total_shown": 389
+      },
+      {
+        "url": "https://www.zomato.com/bangalore/nandhana-palace-kammanahalli/order",
+        "note": "Clicked 'Continue' button. Page loaded a login modal requiring phone number input with '+91' country code and 'Send One Time Password' button. Also offered 'Continue with Email' and 'Sign in with Google' options. No payment page was reached. Zomato requires login/phone verification before proceeding to checkout.",
+        "page": "Login Wall (OTP Required)",
+        "step": 5,
+        "total_shown": null
+      }
+    ],
+    "currency": "INR",
+    "item_name": "Murgh Tikka Masala",
+    "final_price": null,
+    "login_wall_at": "https://www.zomato.com/bangalore/nandhana-palace-kammanahalli/order",
+    "login_required": true,
+    "stopped_reason": "Login wall: After adding an item to cart and clicking Continue, Zomato presented a login modal requiring phone number + OTP or email to proceed. Stopped before payment page.",
+    "decline_wording": [],
+    "item_listed_price": 389,
+    "pressure_messages": [],
+    "pre_ticked_options": [],
+    "added_without_asking": [],
+    "reached_payment_page": false,
+    "blocked_by_bot_protection": false
+  },
+  "output_schema": {
+    "type": "object",
+    "required": [
+      "reached_payment_page",
+      "login_required",
+      "login_wall_at",
+      "blocked_by_bot_protection",
+      "stopped_reason",
+      "item_name",
+      "item_listed_price",
+      "currency",
+      "steps",
+      "fees",
+      "pre_ticked_options",
+      "added_without_asking",
+      "pressure_messages",
+      "decline_wording",
+      "final_price"
+    ],
+    "properties": {
+      "fees": {
+        "type": "array",
+        "items": {
+          "type": "object",
+          "required": ["name", "amount", "first_seen_at_step"],
+          "properties": {
+            "name": {
+              "type": "string"
+            },
+            "amount": {
+              "type": "number",
+              "nullable": true
+            },
+            "first_seen_at_step": {
+              "type": "integer"
+            }
+          }
+        }
+      },
+      "steps": {
+        "type": "array",
+        "items": {
+          "type": "object",
+          "required": ["step", "page", "url", "total_shown", "note"],
+          "properties": {
+            "url": {
+              "type": "string",
+              "nullable": true
+            },
+            "note": {
+              "type": "string",
+              "nullable": true
+            },
+            "page": {
+              "type": "string"
+            },
+            "step": {
+              "type": "integer"
+            },
+            "total_shown": {
+              "type": "number",
+              "nullable": true
+            }
+          }
+        }
+      },
+      "currency": {
+        "type": "string"
+      },
+      "item_name": {
+        "type": "string",
+        "nullable": true
+      },
+      "final_price": {
+        "type": "number",
+        "nullable": true
+      },
+      "login_wall_at": {
+        "type": "string",
+        "nullable": true
+      },
+      "login_required": {
+        "type": "boolean"
+      },
+      "stopped_reason": {
+        "type": "string"
+      },
+      "decline_wording": {
+        "type": "array",
+        "items": {
+          "type": "string"
+        }
+      },
+      "item_listed_price": {
+        "type": "number",
+        "nullable": true
+      },
+      "pressure_messages": {
+        "type": "array",
+        "items": {
+          "type": "object",
+          "required": ["text", "seen_at_step"],
+          "properties": {
+            "text": {
+              "type": "string"
+            },
+            "seen_at_step": {
+              "type": "integer"
+            }
+          }
+        }
+      },
+      "pre_ticked_options": {
+        "type": "array",
+        "items": {
+          "type": "object",
+          "required": ["label", "cost", "seen_at_step"],
+          "properties": {
+            "cost": {
+              "type": "number",
+              "nullable": true
+            },
+            "label": {
+              "type": "string"
+            },
+            "seen_at_step": {
+              "type": "integer"
+            }
+          }
+        }
+      },
+      "added_without_asking": {
+        "type": "array",
+        "items": {
+          "type": "object",
+          "required": ["name", "cost", "seen_at_step"],
+          "properties": {
+            "cost": {
+              "type": "number",
+              "nullable": true
+            },
+            "name": {
+              "type": "string"
+            },
+            "seen_at_step": {
+              "type": "integer"
+            }
+          }
+        }
+      },
+      "reached_payment_page": {
+        "type": "boolean"
+      },
+      "blocked_by_bot_protection": {
+        "type": "boolean"
+      }
+    }
+  },
+  "profile_attached": false,
+  "profile_id": null,
+  "error": null,
+  "streaming_url": "https://stream.invalid/live",
+  "browser_config": {
+    "proxy_enabled": true,
+    "proxy_country_code": "IN"
+  }
+}

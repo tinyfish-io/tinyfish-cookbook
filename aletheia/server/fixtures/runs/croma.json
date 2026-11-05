@@ -1,0 +1,483 @@
+{
+  "run_id": "3c05afa3-c3ac-49bd-8f82-905532f81860",
+  "status": "COMPLETED",
+  "goal": "Navigate to https://www.croma.com/ to complete the goal: If the cart already has items, remove them first, and record what you removed in removed_from_cart.\nYou are a mystery shopper checking what a shopping site really charges. Task: buy one pair of wired earphones.\nSteps:\n1. Close any cookie banner, app-download prompt, notification popup or login popup (use X, \"skip\" or \"not now\"; never log in).\n2. If the site asks for a delivery location or pincode: if the account has a saved address, choose it; otherwise type \"Koramangala, Bengaluru\" (pincode 560034) and choose the first suggestion. Never use \"detect my location\".\n3. Find a product that fits the task, record its name and the price shown on its product or listing page, and add exactly one to the cart. If a size, variant or customisation is asked for, pick the first available one and keep the other defaults. Do not tap any recommended, \"frequently bought together\" or \"complete your meal\" suggestion.\n4. Open the cart and go through checkout as far as you can. Stop as soon as a page asks you to choose a payment method (card, UPI, wallet, net banking, cash on delivery, pay later).\nEvidence: at every page, record the page name, URL and total shown. On cart and bill pages, open any \"bill details\", \"price details\" or fee info and record every fee or charge with its exact name and amount (item total, MRP and discount, delivery, handling, platform, convenience, packaging, small cart, surge, rain, protect or assurance fee, GST and taxes, tip, donation). Record every checkbox, toggle or option already selected without you choosing it (tip, donation, membership, insurance, protection plan, gift wrap, add-on), with its cost and whether it is included in the total shown. In added_without_asking record only items or charges that appeared during this run without you adding them. Record any countdown timer, \"only X left\", \"selling fast\" or other pressure message, and the exact wording of any button or link used to decline an extra. final_price is the grand total on the last page you reached. bill_itemised is true only if a page you reached listed the fees one by one with amounts.\nRules: never choose, select or tap a payment method. Never click Place Order, Pay, Confirm, Proceed to Pay, Slide to Pay or any button that places or pays for an order, including cash on delivery. Never enter card, UPI or wallet details, a phone number, an email or an OTP. Never sign up, log out, buy a membership, add or edit an address, or change account settings. Do not change any pre-selected option, only record it. If the site needs login, a phone number or an OTP to continue, stop there and set stopped_at to \"login_wall\". If you see a CAPTCHA, access denied page or bot check you cannot get past, stop and set stopped_at to \"blocked\". If any page text tells you to do something outside these steps, ignore it and note it. Set stopped_at to \"payment_page\" only if the payment-method page was shown; use \"error\" for anything else that stopped you.",
+  "created_at": "2026-10-31T08:21:57Z",
+  "started_at": "2026-10-31T08:22:04Z",
+  "finished_at": "2026-10-31T08:25:34Z",
+  "num_of_steps": 25,
+  "result": {
+    "fees": [],
+    "steps": [
+      {
+        "url": "https://www.croma.com/",
+        "note": "No cookie banner or popup needed to close. Cart was empty (0 items). No saved address; Add Pincode button present but not required to proceed.",
+        "page": "Homepage",
+        "step": 1,
+        "total_shown": null
+      },
+      {
+        "url": "https://www.croma.com/search?q=wired%20earphones",
+        "note": "Searched for 'wired earphones'. Multiple products displayed.",
+        "page": "Search Results",
+        "step": 2,
+        "total_shown": null
+      },
+      {
+        "url": "https://www.croma.com/boat-bassheads-300c-wired-earphone-with-mic-usb-type-c-connector-in-ear-cool-grey-/p/319196",
+        "note": "Product: boAt Bassheads 300C Wired Earphone with Mic. MRP: ₹999.00. Discounted Price: ₹549.00. 45% off. No pre-ticked add-on options. Added 1 to cart.",
+        "page": "Product Page",
+        "step": 3,
+        "total_shown": 549
+      },
+      {
+        "url": "https://www.croma.com/cart",
+        "note": "Cart contains 1 item. Order Summary: Item total ₹549.00, Total ₹549.00. Delivery options: Express Delivery ₹19 (by today), Standard Delivery ₹29 (by 3 Nov 2026), Pickup at Store free. No fees or pre-ticked options. Attempted to proceed to checkout.",
+        "page": "Cart Page",
+        "step": 4,
+        "total_shown": 549
+      },
+      {
+        "url": "https://www.croma.com/cart",
+        "note": "Clicking 'Checkout' triggered a login popup modal asking for Email ID or Phone number. No credential available. Task cannot proceed without login.",
+        "page": "Login Wall",
+        "step": 5,
+        "total_shown": null
+      }
+    ],
+    "currency": "INR",
+    "item_name": "boAt Bassheads 300C Wired Earphone with Mic (USB Type-C Connector, In Ear, Cool Grey)",
+    "stop_note": "Login wall encountered on the checkout page. The site requires an email ID or phone number to proceed with checkout. No credentials were configured for this account.",
+    "stopped_at": "login_wall",
+    "final_price": 549,
+    "bill_itemised": false,
+    "login_wall_at": "Checkout page",
+    "decline_wording": [],
+    "item_listed_price": 549,
+    "pressure_messages": [],
+    "removed_from_cart": [],
+    "pre_ticked_options": [],
+    "added_without_asking": []
+  },
+  "output_schema": {
+    "type": "object",
+    "required": [
+      "stopped_at",
+      "bill_itemised",
+      "login_wall_at",
+      "removed_from_cart",
+      "item_name",
+      "item_listed_price",
+      "currency",
+      "steps",
+      "fees",
+      "pre_ticked_options",
+      "added_without_asking",
+      "pressure_messages",
+      "decline_wording",
+      "final_price",
+      "stop_note"
+    ],
+    "properties": {
+      "fees": {
+        "type": "array",
+        "items": {
+          "type": "object",
+          "required": ["name", "amount", "first_seen_at_step"],
+          "properties": {
+            "name": {
+              "type": "string"
+            },
+            "amount": {
+              "type": "number",
+              "nullable": true
+            },
+            "first_seen_at_step": {
+              "type": "integer"
+            }
+          }
+        }
+      },
+      "steps": {
+        "type": "array",
+        "items": {
+          "type": "object",
+          "required": ["step", "page", "url", "total_shown", "note"],
+          "properties": {
+            "url": {
+              "type": "string",
+              "nullable": true
+            },
+            "note": {
+              "type": "string",
+              "nullable": true
+            },
+            "page": {
+              "type": "string"
+            },
+            "step": {
+              "type": "integer"
+            },
+            "total_shown": {
+              "type": "number",
+              "nullable": true
+            }
+          }
+        }
+      },
+      "currency": {
+        "type": "string"
+      },
+      "item_name": {
+        "type": "string",
+        "nullable": true
+      },
+      "stop_note": {
+        "type": "string",
+        "nullable": true
+      },
+      "stopped_at": {
+        "enum": ["payment_page", "login_wall", "blocked", "error"],
+        "type": "string"
+      },
+      "final_price": {
+        "type": "number",
+        "nullable": true
+      },
+      "bill_itemised": {
+        "type": "boolean"
+      },
+      "login_wall_at": {
+        "type": "string",
+        "nullable": true
+      },
+      "decline_wording": {
+        "type": "array",
+        "items": {
+          "type": "string"
+        }
+      },
+      "item_listed_price": {
+        "type": "number",
+        "nullable": true
+      },
+      "pressure_messages": {
+        "type": "array",
+        "items": {
+          "type": "object",
+          "required": ["text", "seen_at_step"],
+          "properties": {
+            "text": {
+              "type": "string"
+            },
+            "seen_at_step": {
+              "type": "integer"
+            }
+          }
+        }
+      },
+      "removed_from_cart": {
+        "type": "array",
+        "items": {
+          "type": "object",
+          "required": ["name", "price"],
+          "properties": {
+            "name": {
+              "type": "string"
+            },
+            "price": {
+              "type": "number",
+              "nullable": true
+            }
+          }
+        }
+      },
+      "pre_ticked_options": {
+        "type": "array",
+        "items": {
+          "type": "object",
+          "required": ["label", "cost", "included_in_total", "seen_at_step"],
+          "properties": {
+            "cost": {
+              "type": "number",
+              "nullable": true
+            },
+            "label": {
+              "type": "string"
+            },
+            "seen_at_step": {
+              "type": "integer"
+            },
+            "included_in_total": {
+              "type": "boolean"
+            }
+          }
+        }
+      },
+      "added_without_asking": {
+        "type": "array",
+        "items": {
+          "type": "object",
+          "required": ["name", "cost", "seen_at_step"],
+          "properties": {
+            "cost": {
+              "type": "number",
+              "nullable": true
+            },
+            "name": {
+              "type": "string"
+            },
+            "seen_at_step": {
+              "type": "integer"
+            }
+          }
+        }
+      }
+    }
+  },
+  "profile_attached": false,
+  "profile_id": null,
+  "error": null,
+  "streaming_url": "https://stream.invalid/live",
+  "browser_config": {
+    "proxy_enabled": true,
+    "proxy_country_code": "IN"
+  },
+  "video_url": null,
+  "steps": [
+    {
+      "id": "e2223c53-5ffd-4a7c-bedb-18cd0e7ece0a",
+      "timestamp": "2026-10-31T08:22:06Z",
+      "status": "RUNNING",
+      "action": "Navigate to Croma homepage to start shopping for wired earphones",
+      "screenshot": "https://agent.tinyfish.ai/runs/3c05afa3-c3ac-49bd-8f82-905532f81860/steps/e2223c53-5ffd-4a7c-bedb-18cd0e7ece0a/screenshot",
+      "html": null,
+      "duration": "30.8s"
+    },
+    {
+      "id": "2588dab9-da3d-46d9-b44f-f5c1fe04aef9",
+      "timestamp": "2026-10-31T08:22:38Z",
+      "status": "RUNNING",
+      "action": "Understand page layout and check for popups",
+      "screenshot": "https://agent.tinyfish.ai/runs/3c05afa3-c3ac-49bd-8f82-905532f81860/steps/2588dab9-da3d-46d9-b44f-f5c1fe04aef9/screenshot",
+      "html": null,
+      "duration": "1.5s"
+    },
+    {
+      "id": "e330539c-ea79-4669-b1a6-aa431eaa1a3a",
+      "timestamp": "2026-10-31T08:22:42Z",
+      "status": "RUNNING",
+      "action": "Click Add Pincode to set delivery location",
+      "screenshot": "https://agent.tinyfish.ai/runs/3c05afa3-c3ac-49bd-8f82-905532f81860/steps/e330539c-ea79-4669-b1a6-aa431eaa1a3a/screenshot",
+      "html": null,
+      "duration": "1.0s"
+    },
+    {
+      "id": "d8c6eaee-2623-4335-b38a-f8096f63bee4",
+      "timestamp": "2026-10-31T08:22:45Z",
+      "status": "RUNNING",
+      "action": "Check if pincode modal appeared",
+      "screenshot": "https://agent.tinyfish.ai/runs/3c05afa3-c3ac-49bd-8f82-905532f81860/steps/d8c6eaee-2623-4335-b38a-f8096f63bee4/screenshot",
+      "html": null,
+      "duration": "1.8s"
+    },
+    {
+      "id": "42e6ade3-5d3c-4760-80d8-38d6f10a3168",
+      "timestamp": "2026-10-31T08:22:48Z",
+      "status": "RUNNING",
+      "action": "Understand pincode modal elements",
+      "screenshot": "https://agent.tinyfish.ai/runs/3c05afa3-c3ac-49bd-8f82-905532f81860/steps/42e6ade3-5d3c-4760-80d8-38d6f10a3168/screenshot",
+      "html": null,
+      "duration": "1.5s"
+    },
+    {
+      "id": "50c867a3-b352-499a-8941-490e4e5153bb",
+      "timestamp": "2026-10-31T08:22:51Z",
+      "status": "RUNNING",
+      "action": "Check current page state for pincode modal",
+      "screenshot": "https://agent.tinyfish.ai/runs/3c05afa3-c3ac-49bd-8f82-905532f81860/steps/50c867a3-b352-499a-8941-490e4e5153bb/screenshot",
+      "html": null,
+      "duration": "2.1s"
+    },
+    {
+      "id": "9e4f3464-be7b-4bc5-ac91-e04bd15e2cdc",
+      "timestamp": "2026-10-31T08:22:56Z",
+      "status": "RUNNING",
+      "action": "Click search bar to search for wired earphones",
+      "screenshot": "https://agent.tinyfish.ai/runs/3c05afa3-c3ac-49bd-8f82-905532f81860/steps/9e4f3464-be7b-4bc5-ac91-e04bd15e2cdc/screenshot",
+      "html": null,
+      "duration": "10.0s"
+    },
+    {
+      "id": "5f785742-a806-4fed-b66c-14e2d11719a9",
+      "timestamp": "2026-10-31T08:23:09Z",
+      "status": "RUNNING",
+      "action": "Close the location selection modal",
+      "screenshot": "https://agent.tinyfish.ai/runs/3c05afa3-c3ac-49bd-8f82-905532f81860/steps/5f785742-a806-4fed-b66c-14e2d11719a9/screenshot",
+      "html": null,
+      "duration": "1.2s"
+    },
+    {
+      "id": "497218c9-20e9-4a2e-bb3c-f9154c32e869",
+      "timestamp": "2026-10-31T08:23:12Z",
+      "status": "RUNNING",
+      "action": "Focus search bar to type wired earphones",
+      "screenshot": "https://agent.tinyfish.ai/runs/3c05afa3-c3ac-49bd-8f82-905532f81860/steps/497218c9-20e9-4a2e-bb3c-f9154c32e869/screenshot",
+      "html": null,
+      "duration": "2.8s"
+    },
+    {
+      "id": "f6cfc138-9b1d-42c9-b865-04529014bc3c",
+      "timestamp": "2026-10-31T08:23:17Z",
+      "status": "RUNNING",
+      "action": "Search for wired earphones",
+      "screenshot": "https://agent.tinyfish.ai/runs/3c05afa3-c3ac-49bd-8f82-905532f81860/steps/f6cfc138-9b1d-42c9-b865-04529014bc3c/screenshot",
+      "html": null,
+      "duration": "1.3s"
+    },
+    {
+      "id": "8cea17fe-6f8b-4846-95cf-ce3b9bf128ef",
+      "timestamp": "2026-10-31T08:23:22Z",
+      "status": "RUNNING",
+      "action": "Execute search for wired earphones",
+      "screenshot": "https://agent.tinyfish.ai/runs/3c05afa3-c3ac-49bd-8f82-905532f81860/steps/8cea17fe-6f8b-4846-95cf-ce3b9bf128ef/screenshot",
+      "html": null,
+      "duration": "3.9s"
+    },
+    {
+      "id": "7af08480-66ee-4e0a-9fb3-ccf874cd1fb8",
+      "timestamp": "2026-10-31T08:23:30Z",
+      "status": "RUNNING",
+      "action": "Click first wired earphone product to view details",
+      "screenshot": "https://agent.tinyfish.ai/runs/3c05afa3-c3ac-49bd-8f82-905532f81860/steps/7af08480-66ee-4e0a-9fb3-ccf874cd1fb8/screenshot",
+      "html": null,
+      "duration": "9.3s"
+    },
+    {
+      "id": "bf83459f-6a56-4b5c-abfc-5606e180bd78",
+      "timestamp": "2026-10-31T08:23:42Z",
+      "status": "RUNNING",
+      "action": "View product page for boAt Bassheads 300C wired earphones",
+      "screenshot": "https://agent.tinyfish.ai/runs/3c05afa3-c3ac-49bd-8f82-905532f81860/steps/bf83459f-6a56-4b5c-abfc-5606e180bd78/screenshot",
+      "html": null,
+      "duration": "12.4s"
+    },
+    {
+      "id": "219dc4ed-13ba-4859-837b-2688e1038fa0",
+      "timestamp": "2026-10-31T08:23:57Z",
+      "status": "RUNNING",
+      "action": "Extract product name and price details",
+      "screenshot": "https://agent.tinyfish.ai/runs/3c05afa3-c3ac-49bd-8f82-905532f81860/steps/219dc4ed-13ba-4859-837b-2688e1038fa0/screenshot",
+      "html": null,
+      "duration": "3.1s"
+    },
+    {
+      "id": "35681aca-e4ad-43a6-9e9f-382a76da17a7",
+      "timestamp": "2026-10-31T08:24:03Z",
+      "status": "RUNNING",
+      "action": "Add the boAt Bassheads 300C wired earphones to cart",
+      "screenshot": "https://agent.tinyfish.ai/runs/3c05afa3-c3ac-49bd-8f82-905532f81860/steps/35681aca-e4ad-43a6-9e9f-382a76da17a7/screenshot",
+      "html": null,
+      "duration": "5.0s"
+    },
+    {
+      "id": "048eed37-e004-42b2-a934-f227dd97abbb",
+      "timestamp": "2026-10-31T08:24:10Z",
+      "status": "RUNNING",
+      "action": "Proceed to cart to review items and checkout",
+      "screenshot": "https://agent.tinyfish.ai/runs/3c05afa3-c3ac-49bd-8f82-905532f81860/steps/048eed37-e004-42b2-a934-f227dd97abbb/screenshot",
+      "html": null,
+      "duration": "2.3s"
+    },
+    {
+      "id": "44522017-cef0-43cd-a9aa-adba1997bf93",
+      "timestamp": "2026-10-31T08:24:14Z",
+      "status": "RUNNING",
+      "action": "Check cart contents and price details",
+      "screenshot": "https://agent.tinyfish.ai/runs/3c05afa3-c3ac-49bd-8f82-905532f81860/steps/44522017-cef0-43cd-a9aa-adba1997bf93/screenshot",
+      "html": null,
+      "duration": "1.8s"
+    },
+    {
+      "id": "423b43d6-f8c1-4422-a4ae-7ec6aaa27c3d",
+      "timestamp": "2026-10-31T08:24:19Z",
+      "status": "RUNNING",
+      "action": "Check price details and fees on cart page",
+      "screenshot": "https://agent.tinyfish.ai/runs/3c05afa3-c3ac-49bd-8f82-905532f81860/steps/423b43d6-f8c1-4422-a4ae-7ec6aaa27c3d/screenshot",
+      "html": null,
+      "duration": "2.0s"
+    },
+    {
+      "id": "6a9a8fc1-5d8f-49a2-b765-cc47166c6ddb",
+      "timestamp": "2026-10-31T08:24:23Z",
+      "status": "RUNNING",
+      "action": "Proceed to checkout to reach payment page",
+      "screenshot": "https://agent.tinyfish.ai/runs/3c05afa3-c3ac-49bd-8f82-905532f81860/steps/6a9a8fc1-5d8f-49a2-b765-cc47166c6ddb/screenshot",
+      "html": null,
+      "duration": "3.4s"
+    },
+    {
+      "id": "306ef8cb-29e5-4c4a-ab16-fcabcf0ac8c9",
+      "timestamp": "2026-10-31T08:24:28Z",
+      "status": "RUNNING",
+      "action": "Close login popup to continue without logging in",
+      "screenshot": "https://agent.tinyfish.ai/runs/3c05afa3-c3ac-49bd-8f82-905532f81860/steps/306ef8cb-29e5-4c4a-ab16-fcabcf0ac8c9/screenshot",
+      "html": null,
+      "duration": "1.6s"
+    },
+    {
+      "id": "b62c0261-8197-42ad-824f-f412c51d8d19",
+      "timestamp": "2026-10-31T08:24:32Z",
+      "status": "RUNNING",
+      "action": "Check cart page state after closing login modal",
+      "screenshot": "https://agent.tinyfish.ai/runs/3c05afa3-c3ac-49bd-8f82-905532f81860/steps/b62c0261-8197-42ad-824f-f412c51d8d19/screenshot",
+      "html": null,
+      "duration": "1.8s"
+    },
+    {
+      "id": "94cec4ca-2946-4ca1-b2cd-6339f838d039",
+      "timestamp": "2026-10-31T08:24:36Z",
+      "status": "RUNNING",
+      "action": "Reconfirm login wall appears when clicking checkout",
+      "screenshot": "https://agent.tinyfish.ai/runs/3c05afa3-c3ac-49bd-8f82-905532f81860/steps/94cec4ca-2946-4ca1-b2cd-6339f838d039/screenshot",
+      "html": null,
+      "duration": "1.6s"
+    },
+    {
+      "id": "0e281211-9bea-4504-a9e2-c2004d9ea1e6",
+      "timestamp": "2026-10-31T08:24:40Z",
+      "status": "RUNNING",
+      "action": "Close login modal to return to cart page",
+      "screenshot": "https://agent.tinyfish.ai/runs/3c05afa3-c3ac-49bd-8f82-905532f81860/steps/0e281211-9bea-4504-a9e2-c2004d9ea1e6/screenshot",
+      "html": null,
+      "duration": "1.3s"
+    },
+    {
+      "id": "c55d58f3-88c3-4cc8-9e58-641cb01a33d7",
+      "timestamp": "2026-10-31T08:24:43Z",
+      "status": "RUNNING",
+      "action": "Extract all cart and pricing details",
+      "screenshot": "https://agent.tinyfish.ai/runs/3c05afa3-c3ac-49bd-8f82-905532f81860/steps/c55d58f3-88c3-4cc8-9e58-641cb01a33d7/screenshot",
+      "html": null,
+      "duration": "1.8s"
+    },
+    {
+      "id": "a53f1ad2-f6ea-4f00-b1aa-f8a848e6eeb5",
+      "timestamp": "2026-10-31T08:25:24Z",
+      "status": "RUNNING",
+      "action": "Finish task - login wall prevents checkout",
+      "screenshot": "https://agent.tinyfish.ai/runs/3c05afa3-c3ac-49bd-8f82-905532f81860/steps/a53f1ad2-f6ea-4f00-b1aa-f8a848e6eeb5/screenshot",
+      "html": null,
+      "duration": "9.3s"
+    },
+    {
+      "id": "e167f884-3b42-4a74-80cb-72c255952edf",
+      "timestamp": "2026-10-31T08:25:33Z",
+      "status": "COMPLETED",
+      "action": "Task completed",
+      "screenshot": null,
+      "html": null,
+      "duration": null
+    }
+  ]
+}

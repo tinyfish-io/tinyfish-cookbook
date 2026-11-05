@@ -1,0 +1,982 @@
+[
+  { "task": "on amazon buy a kindle", "country": "IN", "hosts": ["amazon.in"], "flow": "checkout" },
+  {
+    "task": "buy earbuds on amazon",
+    "country": "GB",
+    "hosts": ["amazon.co.uk"],
+    "flow": "checkout"
+  },
+  { "task": "amazon laptop stand", "country": "DE", "hosts": ["amazon.de"], "flow": "checkout" },
+  { "task": "amazon prime", "country": "IN", "hosts": ["amazon.in"], "flow": "subscription" },
+  {
+    "task": "amazon prime membership",
+    "country": "US",
+    "hosts": ["amazon.com"],
+    "flow": "subscription"
+  },
+  {
+    "task": "prime video subscription",
+    "country": "JP",
+    "hosts": ["amazon.co.jp"],
+    "flow": "subscription"
+  },
+  { "task": "amzon headphones", "country": "IN", "hosts": ["amazon.in"], "flow": "checkout" },
+  { "task": "amazn echo dot", "country": "US", "hosts": ["amazon.com"], "flow": "checkout" },
+  {
+    "task": "cancel my netflix",
+    "country": "IN",
+    "hosts": ["netflix.com"],
+    "flow": "subscription"
+  },
+  {
+    "task": "cancel my netflix",
+    "country": "US",
+    "hosts": ["netflix.com"],
+    "flow": "subscription"
+  },
+  { "task": "netflix", "country": "GB", "hosts": ["netflix.com"], "flow": "subscription" },
+  {
+    "task": "netflx subscription",
+    "country": "IN",
+    "hosts": ["netflix.com"],
+    "flow": "subscription"
+  },
+  {
+    "task": "how do i cancel spotify",
+    "country": "US",
+    "hosts": ["spotify.com"],
+    "flow": "subscription"
+  },
+  { "task": "spotfy premium", "country": "IN", "hosts": ["spotify.com"], "flow": "subscription" },
+  {
+    "task": "spotify family plan",
+    "country": "BR",
+    "hosts": ["spotify.com"],
+    "flow": "subscription"
+  },
+  {
+    "task": "sign up for spotify",
+    "country": "DE",
+    "hosts": ["spotify.com"],
+    "flow": "subscription"
+  },
+  { "task": "youtube premium", "country": "IN", "hosts": ["youtube.com"], "flow": "subscription" },
+  { "task": "yt premium", "country": "US", "hosts": ["youtube.com"], "flow": "subscription" },
+  {
+    "task": "youtube music subscription",
+    "country": "GB",
+    "hosts": ["youtube.com", "music.youtube.com"],
+    "flow": "subscription"
+  },
+  { "task": "disney plus", "country": "US", "hosts": ["disneyplus.com"], "flow": "subscription" },
+  {
+    "task": "disney+ subscription",
+    "country": "FR",
+    "hosts": ["disneyplus.com"],
+    "flow": "subscription"
+  },
+  { "task": "hotstar premium", "country": "IN", "hosts": ["hotstar.com"], "flow": "subscription" },
+  { "task": "jiohotstar plan", "country": "IN", "hosts": ["hotstar.com"], "flow": "subscription" },
+  { "task": "hulu", "country": "US", "hosts": ["hulu.com"], "flow": "subscription" },
+  {
+    "task": "hbo max",
+    "country": "US",
+    "hosts": ["hbomax.com", "max.com"],
+    "flow": "subscription"
+  },
+  {
+    "task": "paramount plus trial",
+    "country": "US",
+    "hosts": ["paramountplus.com"],
+    "flow": "subscription"
+  },
+  { "task": "apple music", "country": "GB", "hosts": ["apple.com"], "flow": "subscription" },
+  {
+    "task": "apple tv plus",
+    "country": "US",
+    "hosts": ["apple.com", "tv.apple.com"],
+    "flow": "subscription"
+  },
+  {
+    "task": "icloud storage upgrade",
+    "country": "IN",
+    "hosts": ["apple.com"],
+    "flow": "subscription"
+  },
+  { "task": "adobe photoshop", "country": "IN", "hosts": ["adobe.com"], "flow": "subscription" },
+  {
+    "task": "photoshop subscription",
+    "country": "US",
+    "hosts": ["adobe.com"],
+    "flow": "subscription"
+  },
+  { "task": "cancel adobe", "country": "GB", "hosts": ["adobe.com"], "flow": "subscription" },
+  {
+    "task": "adobe creative cloud cancel fee",
+    "country": "DE",
+    "hosts": ["adobe.com"],
+    "flow": "subscription"
+  },
+  { "task": "canva pro", "country": "IN", "hosts": ["canva.com"], "flow": "subscription" },
+  {
+    "task": "microsoft 365 family",
+    "country": "US",
+    "hosts": ["microsoft.com"],
+    "flow": "subscription"
+  },
+  {
+    "task": "office 365 personal",
+    "country": "GB",
+    "hosts": ["microsoft.com"],
+    "flow": "subscription"
+  },
+  {
+    "task": "linkedin premium",
+    "country": "IN",
+    "hosts": ["linkedin.com"],
+    "flow": "subscription"
+  },
+  { "task": "duolingo super", "country": "US", "hosts": ["duolingo.com"], "flow": "subscription" },
+  { "task": "nordvpn", "country": "DE", "hosts": ["nordvpn.com"], "flow": "subscription" },
+  {
+    "task": "expressvpn deal",
+    "country": "US",
+    "hosts": ["expressvpn.com"],
+    "flow": "subscription"
+  },
+  { "task": "dropbox plus", "country": "US", "hosts": ["dropbox.com"], "flow": "subscription" },
+  {
+    "task": "google one storage",
+    "country": "IN",
+    "hosts": ["one.google.com", "google.com"],
+    "flow": "subscription"
+  },
+  { "task": "tinder gold", "country": "US", "hosts": ["tinder.com"], "flow": "subscription" },
+  {
+    "task": "audible membership",
+    "country": "GB",
+    "hosts": ["audible.co.uk"],
+    "flow": "subscription"
+  },
+  {
+    "task": "new york times subscription",
+    "country": "US",
+    "hosts": ["nytimes.com"],
+    "flow": "subscription"
+  },
+  {
+    "task": "planet fitness membership",
+    "country": "US",
+    "hosts": ["planetfitness.com"],
+    "flow": "subscription"
+  },
+  {
+    "task": "a music streaming plan",
+    "country": "IN",
+    "hosts": ["spotify.com", "music.apple.com", "apple.com", "youtube.com"],
+    "flow": "subscription"
+  },
+  {
+    "task": "some streaming subscription for movies",
+    "country": "US",
+    "hosts": ["netflix.com", "hulu.com", "disneyplus.com"],
+    "flow": "subscription"
+  },
+  {
+    "task": "ott subscription",
+    "country": "IN",
+    "hosts": ["netflix.com", "hotstar.com", "amazon.in"],
+    "flow": "subscription"
+  },
+  {
+    "task": "a vpn",
+    "country": "US",
+    "hosts": ["nordvpn.com", "expressvpn.com", "surfshark.com"],
+    "flow": "subscription"
+  },
+  {
+    "task": "photo editing software",
+    "country": "GB",
+    "hosts": ["adobe.com", "canva.com"],
+    "flow": "subscription"
+  },
+  {
+    "task": "antivirus for my laptop",
+    "country": "US",
+    "hosts": ["norton.com", "mcafee.com", "bitdefender.com"],
+    "flow": "subscription"
+  },
+  {
+    "task": "language learning app subscription",
+    "country": "DE",
+    "hosts": ["duolingo.com", "babbel.com"],
+    "flow": "subscription"
+  },
+  {
+    "task": "dating app premium",
+    "country": "IN",
+    "hosts": ["tinder.com", "bumble.com"],
+    "flow": "subscription"
+  },
+  {
+    "task": "gym membership online",
+    "country": "GB",
+    "hosts": ["puregym.com", "thegymgroup.com", "onepeloton.com"],
+    "flow": "subscription"
+  },
+  {
+    "task": "cloud storage plan",
+    "country": "US",
+    "hosts": ["dropbox.com", "one.google.com", "google.com", "apple.com"],
+    "flow": "subscription"
+  },
+  { "task": "xbox game pass", "country": "US", "hosts": ["xbox.com"], "flow": "subscription" },
+  {
+    "task": "playstation plus",
+    "country": "GB",
+    "hosts": ["playstation.com"],
+    "flow": "subscription"
+  },
+  {
+    "task": "flights to dubai",
+    "country": "IN",
+    "hosts": ["ixigo.com", "easemytrip.com", "cleartrip.com", "makemytrip.com"],
+    "flow": "checkout"
+  },
+  {
+    "task": "flight delhi to mumbai next friday",
+    "country": "IN",
+    "hosts": ["ixigo.com", "easemytrip.com", "cleartrip.com", "makemytrip.com"],
+    "flow": "checkout"
+  },
+  {
+    "task": "cheap flite to goa",
+    "country": "IN",
+    "hosts": ["ixigo.com", "easemytrip.com", "cleartrip.com", "makemytrip.com"],
+    "flow": "checkout"
+  },
+  {
+    "task": "flights from london to rome",
+    "country": "GB",
+    "hosts": ["skyscanner.net", "expedia.co.uk", "booking.com", "lastminute.com", "ryanair.com"],
+    "flow": "checkout"
+  },
+  {
+    "task": "flights to cancun",
+    "country": "US",
+    "hosts": ["expedia.com", "booking.com", "priceline.com"],
+    "flow": "checkout"
+  },
+  {
+    "task": "flug nach mallorca",
+    "country": "DE",
+    "hosts": ["check24.de", "expedia.de", "booking.com", "opodo.de"],
+    "flow": "checkout"
+  },
+  {
+    "task": "vol paris marseille",
+    "country": "FR",
+    "hosts": ["sncf-connect.com", "opodo.fr", "booking.com", "expedia.fr"],
+    "flow": "checkout"
+  },
+  {
+    "task": "hotel in goa for 2 nights",
+    "country": "IN",
+    "hosts": ["ixigo.com", "easemytrip.com", "cleartrip.com", "makemytrip.com"],
+    "flow": "checkout"
+  },
+  {
+    "task": "hotel in paris this weekend",
+    "country": "FR",
+    "hosts": ["booking.com", "expedia.fr", "opodo.fr", "sncf-connect.com"],
+    "flow": "checkout"
+  },
+  {
+    "task": "weekend hotel near me",
+    "country": "US",
+    "hosts": ["expedia.com", "booking.com", "priceline.com"],
+    "flow": "checkout"
+  },
+  {
+    "task": "book a hotal in bali",
+    "country": "ID",
+    "hosts": ["traveloka.com", "tiket.com", "agoda.com"],
+    "flow": "checkout"
+  },
+  {
+    "task": "booking.com hotel in rome",
+    "country": "GB",
+    "hosts": ["booking.com"],
+    "flow": "checkout"
+  },
+  {
+    "task": "airbnb in lisbon",
+    "country": "GB",
+    "hosts": ["airbnb.com", "airbnb.co.uk"],
+    "flow": "checkout"
+  },
+  {
+    "task": "ryanair dublin to barcelona",
+    "country": "GB",
+    "hosts": ["ryanair.com"],
+    "flow": "checkout"
+  },
+  { "task": "easyjet to nice", "country": "GB", "hosts": ["easyjet.com"], "flow": "checkout" },
+  {
+    "task": "indigo flight to chennai",
+    "country": "IN",
+    "hosts": ["goindigo.in"],
+    "flow": "checkout"
+  },
+  {
+    "task": "emirates dubai to london",
+    "country": "AE",
+    "hosts": ["emirates.com"],
+    "flow": "checkout"
+  },
+  {
+    "task": "make my trip goa package",
+    "country": "IN",
+    "hosts": ["makemytrip.com"],
+    "flow": "checkout"
+  },
+  {
+    "task": "mmt flight to pune",
+    "country": "IN",
+    "hosts": ["makemytrip.com"],
+    "flow": "checkout"
+  },
+  { "task": "goibibo hotel", "country": "IN", "hosts": ["goibibo.com"], "flow": "checkout" },
+  {
+    "task": "train tickets london to manchester",
+    "country": "GB",
+    "hosts": ["thetrainline.com", "nationalrail.co.uk", "trainline.com"],
+    "flow": "checkout"
+  },
+  { "task": "uber ride to airport", "country": "US", "hosts": ["uber.com"], "flow": "checkout" },
+  {
+    "task": "movie tickets for saturday",
+    "country": "IN",
+    "hosts": ["district.in", "in.bookmyshow.com"],
+    "flow": "checkout"
+  },
+  {
+    "task": "bookmyshow tickets",
+    "country": "IN",
+    "hosts": ["in.bookmyshow.com"],
+    "flow": "checkout"
+  },
+  {
+    "task": "book my show jawan",
+    "country": "IN",
+    "hosts": ["in.bookmyshow.com"],
+    "flow": "checkout"
+  },
+  {
+    "task": "bms concert tickets",
+    "country": "IN",
+    "hosts": ["in.bookmyshow.com"],
+    "flow": "checkout"
+  },
+  {
+    "task": "concert tickets",
+    "country": "US",
+    "hosts": ["ticketmaster.com", "stubhub.com", "fandango.com"],
+    "flow": "checkout"
+  },
+  {
+    "task": "taylor swift tickets",
+    "country": "GB",
+    "hosts": ["ticketmaster.co.uk", "seetickets.com", "stubhub.co.uk"],
+    "flow": "checkout"
+  },
+  { "task": "ticketmaster", "country": "AU", "hosts": ["ticketmaster.com.au"], "flow": "checkout" },
+  {
+    "task": "cinema tickets",
+    "country": "GB",
+    "hosts": ["odeon.co.uk", "cineworld.co.uk", "ticketmaster.co.uk", "seetickets.com"],
+    "flow": "checkout"
+  },
+  {
+    "task": "konzertkarten",
+    "country": "DE",
+    "hosts": ["eventim.de", "ticketmaster.de"],
+    "flow": "checkout"
+  },
+  {
+    "task": "ingressos para show",
+    "country": "BR",
+    "hosts": ["ingresso.com", "ticketmaster.com.br", "eventim.com.br", "sympla.com.br"],
+    "flow": "checkout"
+  },
+  {
+    "task": "football match tickets",
+    "country": "GB",
+    "hosts": ["ticketmaster.co.uk", "seetickets.com", "stubhub.co.uk"],
+    "flow": "checkout"
+  },
+  {
+    "task": "order food",
+    "country": "IN",
+    "hosts": ["zomato.com", "swiggy.com"],
+    "flow": "checkout"
+  },
+  {
+    "task": "pizza for tonight",
+    "country": "US",
+    "hosts": ["doordash.com", "ubereats.com", "grubhub.com"],
+    "flow": "checkout"
+  },
+  { "task": "zomato biryani", "country": "IN", "hosts": ["zomato.com"], "flow": "checkout" },
+  { "task": "zomoto order", "country": "IN", "hosts": ["zomato.com"], "flow": "checkout" },
+  { "task": "swigy pizza", "country": "IN", "hosts": ["swiggy.com"], "flow": "checkout" },
+  { "task": "uber eats burger", "country": "US", "hosts": ["ubereats.com"], "flow": "checkout" },
+  { "task": "ubereats", "country": "GB", "hosts": ["ubereats.com"], "flow": "checkout" },
+  { "task": "doordash sushi", "country": "CA", "hosts": ["doordash.com"], "flow": "checkout" },
+  { "task": "deliveroo dinner", "country": "GB", "hosts": ["deliveroo.co.uk"], "flow": "checkout" },
+  { "task": "just eat takeaway", "country": "GB", "hosts": ["just-eat.co.uk"], "flow": "checkout" },
+  {
+    "task": "takeaway tonight",
+    "country": "GB",
+    "hosts": ["just-eat.co.uk", "deliveroo.co.uk", "ubereats.com"],
+    "flow": "checkout"
+  },
+  {
+    "task": "essen bestellen",
+    "country": "DE",
+    "hosts": ["lieferando.de", "wolt.com", "ubereats.com"],
+    "flow": "checkout"
+  },
+  { "task": "ifood pizza", "country": "BR", "hosts": ["ifood.com.br"], "flow": "checkout" },
+  { "task": "grab food lunch", "country": "SG", "hosts": ["grab.com"], "flow": "checkout" },
+  { "task": "foodpanda", "country": "SG", "hosts": ["foodpanda.sg"], "flow": "checkout" },
+  { "task": "talabat shawarma", "country": "AE", "hosts": ["talabat.com"], "flow": "checkout" },
+  {
+    "task": "buy an iphone 16",
+    "country": "IN",
+    "hosts": ["croma.com", "flipkart.com", "amazon.in"],
+    "flow": "checkout"
+  },
+  {
+    "task": "iphone 16 pro",
+    "country": "US",
+    "hosts": ["bestbuy.com", "amazon.com", "walmart.com"],
+    "flow": "checkout"
+  },
+  {
+    "task": "samsung galaxy s25",
+    "country": "GB",
+    "hosts": ["currys.co.uk", "argos.co.uk", "amazon.co.uk"],
+    "flow": "checkout"
+  },
+  {
+    "task": "laptop under 60000",
+    "country": "IN",
+    "hosts": ["croma.com", "flipkart.com", "amazon.in"],
+    "flow": "checkout"
+  },
+  {
+    "task": "gaming laptop",
+    "country": "US",
+    "hosts": ["bestbuy.com", "amazon.com", "walmart.com"],
+    "flow": "checkout"
+  },
+  {
+    "task": "macbook air m3",
+    "country": "AU",
+    "hosts": ["jbhifi.com.au", "harveynorman.com.au", "amazon.com.au"],
+    "flow": "checkout"
+  },
+  {
+    "task": "55 inch tv",
+    "country": "GB",
+    "hosts": ["currys.co.uk", "argos.co.uk", "amazon.co.uk"],
+    "flow": "checkout"
+  },
+  {
+    "task": "washing machine",
+    "country": "IN",
+    "hosts": ["croma.com", "flipkart.com", "amazon.in"],
+    "flow": "checkout"
+  },
+  {
+    "task": "noise cancelling headfones",
+    "country": "US",
+    "hosts": ["bestbuy.com", "amazon.com", "walmart.com"],
+    "flow": "checkout"
+  },
+  {
+    "task": "airpods",
+    "country": "CA",
+    "hosts": ["bestbuy.ca", "amazon.ca", "walmart.ca"],
+    "flow": "checkout"
+  },
+  {
+    "task": "ps5 console",
+    "country": "DE",
+    "hosts": ["mediamarkt.de", "amazon.de", "otto.de"],
+    "flow": "checkout"
+  },
+  {
+    "task": "fernseher kaufen",
+    "country": "DE",
+    "hosts": ["mediamarkt.de", "amazon.de", "otto.de"],
+    "flow": "checkout"
+  },
+  {
+    "task": "acheter un ordinateur portable",
+    "country": "FR",
+    "hosts": ["fnac.com", "darty.com", "amazon.fr", "cdiscount.com"],
+    "flow": "checkout"
+  },
+  {
+    "task": "comprar celular",
+    "country": "BR",
+    "hosts": ["mercadolivre.com.br", "magazineluiza.com.br", "amazon.com.br"],
+    "flow": "checkout"
+  },
+  {
+    "task": "comprar un portatil",
+    "country": "ES",
+    "hosts": ["elcorteingles.es", "pccomponentes.com", "amazon.es", "mediamarkt.es"],
+    "flow": "checkout"
+  },
+  { "task": "flipkart phone", "country": "IN", "hosts": ["flipkart.com"], "flow": "checkout" },
+  { "task": "flipcart laptop", "country": "IN", "hosts": ["flipkart.com"], "flow": "checkout" },
+  { "task": "flpkart shoes", "country": "IN", "hosts": ["flipkart.com"], "flow": "checkout" },
+  { "task": "croma tv", "country": "IN", "hosts": ["croma.com"], "flow": "checkout" },
+  {
+    "task": "reliance digital ac",
+    "country": "IN",
+    "hosts": ["reliancedigital.in"],
+    "flow": "checkout"
+  },
+  { "task": "best buy laptop", "country": "US", "hosts": ["bestbuy.com"], "flow": "checkout" },
+  { "task": "bestbuy tv", "country": "CA", "hosts": ["bestbuy.ca"], "flow": "checkout" },
+  { "task": "walmart air fryer", "country": "US", "hosts": ["walmart.com"], "flow": "checkout" },
+  {
+    "task": "target coffee maker on target",
+    "country": "US",
+    "hosts": ["target.com"],
+    "flow": "checkout"
+  },
+  { "task": "ebay camera", "country": "GB", "hosts": ["ebay.co.uk"], "flow": "checkout" },
+  {
+    "task": "mercado libre celular",
+    "country": "MX",
+    "hosts": ["mercadolibre.com.mx"],
+    "flow": "checkout"
+  },
+  { "task": "shopee earphone", "country": "ID", "hosts": ["shopee.co.id"], "flow": "checkout" },
+  { "task": "tokopedia sepatu", "country": "ID", "hosts": ["tokopedia.com"], "flow": "checkout" },
+  { "task": "lazada phone case", "country": "SG", "hosts": ["lazada.sg"], "flow": "checkout" },
+  { "task": "rakuten headphones", "country": "JP", "hosts": ["rakuten.co.jp"], "flow": "checkout" },
+  { "task": "coupang earbuds", "country": "KR", "hosts": ["coupang.com"], "flow": "checkout" },
+  { "task": "noon perfume", "country": "AE", "hosts": ["noon.com"], "flow": "checkout" },
+  { "task": "allegro telefon", "country": "PL", "hosts": ["allegro.pl"], "flow": "checkout" },
+  { "task": "bol.com boek", "country": "NL", "hosts": ["bol.com"], "flow": "checkout" },
+  { "task": "trendyol ayakkabi", "country": "TR", "hosts": ["trendyol.com"], "flow": "checkout" },
+  { "task": "temu haul", "country": "US", "hosts": ["temu.com"], "flow": "checkout" },
+  {
+    "task": "shein dress",
+    "country": "GB",
+    "hosts": ["shein.co.uk", "shein.com"],
+    "flow": "checkout"
+  },
+  {
+    "task": "aliexpress phone case",
+    "country": "DE",
+    "hosts": ["aliexpress.com"],
+    "flow": "checkout"
+  },
+  { "task": "ikea sofa", "country": "SE", "hosts": ["ikea.com"], "flow": "checkout" },
+  { "task": "wayfair desk", "country": "US", "hosts": ["wayfair.com"], "flow": "checkout" },
+  { "task": "pepperfry bed", "country": "IN", "hosts": ["pepperfry.com"], "flow": "checkout" },
+  {
+    "task": "a sofa",
+    "country": "GB",
+    "hosts": ["ikea.com", "dunelm.com", "wayfair.co.uk", "argos.co.uk"],
+    "flow": "checkout"
+  },
+  {
+    "task": "office chair",
+    "country": "IN",
+    "hosts": ["pepperfry.com", "ikea.com", "amazon.in", "flipkart.com"],
+    "flow": "checkout"
+  },
+  { "task": "myntra kurta", "country": "IN", "hosts": ["myntra.com"], "flow": "checkout" },
+  { "task": "mintra shoes", "country": "IN", "hosts": ["myntra.com"], "flow": "checkout" },
+  { "task": "ajio jeans", "country": "IN", "hosts": ["ajio.com"], "flow": "checkout" },
+  { "task": "nykaa lipstick", "country": "IN", "hosts": ["nykaa.com"], "flow": "checkout" },
+  { "task": "zara jacket", "country": "ES", "hosts": ["zara.com"], "flow": "checkout" },
+  { "task": "h&m t-shirt", "country": "SE", "hosts": ["hm.com"], "flow": "checkout" },
+  { "task": "asos dress", "country": "GB", "hosts": ["asos.com"], "flow": "checkout" },
+  { "task": "zalando sneaker", "country": "DE", "hosts": ["zalando.de"], "flow": "checkout" },
+  { "task": "nike air max", "country": "US", "hosts": ["nike.com"], "flow": "checkout" },
+  {
+    "task": "addidas shoes",
+    "country": "IN",
+    "hosts": ["adidas.co.in", "adidas.com"],
+    "flow": "checkout"
+  },
+  { "task": "uniqlo jacket", "country": "JP", "hosts": ["uniqlo.com"], "flow": "checkout" },
+  {
+    "task": "decathlon running shoes",
+    "country": "FR",
+    "hosts": ["decathlon.fr"],
+    "flow": "checkout"
+  },
+  {
+    "task": "buy shoes on decathlon",
+    "country": "IN",
+    "hosts": ["decathlon.in"],
+    "flow": "checkout"
+  },
+  {
+    "task": "running shoes size 9",
+    "country": "IN",
+    "hosts": ["myntra.com", "flipkart.com", "ajio.com"],
+    "flow": "checkout"
+  },
+  {
+    "task": "womens winter coat",
+    "country": "CA",
+    "hosts": ["thebay.com", "simons.ca", "amazon.ca", "walmart.ca", "sportchek.ca"],
+    "flow": "checkout"
+  },
+  {
+    "task": "airtel broadband plan",
+    "country": "IN",
+    "hosts": ["airtel.in"],
+    "flow": "subscription"
+  },
+  { "task": "jio fiber plan", "country": "IN", "hosts": ["jio.com"], "flow": "subscription" },
+  {
+    "task": "vodafone sim only",
+    "country": "GB",
+    "hosts": ["vodafone.co.uk"],
+    "flow": "subscription"
+  },
+  { "task": "ee broadband", "country": "GB", "hosts": ["ee.co.uk"], "flow": "subscription" },
+  {
+    "task": "verizon unlimited plan",
+    "country": "US",
+    "hosts": ["verizon.com"],
+    "flow": "subscription"
+  },
+  {
+    "task": "t-mobile phone plan",
+    "country": "US",
+    "hosts": ["t-mobile.com"],
+    "flow": "subscription"
+  },
+  { "task": "at&t fiber", "country": "US", "hosts": ["att.com"], "flow": "subscription" },
+  {
+    "task": "mobile plan",
+    "country": "IN",
+    "hosts": ["airtel.in", "jio.com", "myvi.in"],
+    "flow": "subscription"
+  },
+  {
+    "task": "postpaid plan",
+    "country": "IN",
+    "hosts": ["airtel.in", "jio.com", "myvi.in"],
+    "flow": "subscription"
+  },
+  {
+    "task": "broadband deal",
+    "country": "GB",
+    "hosts": ["bt.com", "sky.com", "virginmedia.com", "ee.co.uk"],
+    "flow": "subscription"
+  },
+  {
+    "task": "phone plan",
+    "country": "US",
+    "hosts": ["verizon.com", "t-mobile.com", "att.com"],
+    "flow": "subscription"
+  },
+  {
+    "task": "handyvertrag",
+    "country": "DE",
+    "hosts": ["telekom.de", "vodafone.de", "o2online.de"],
+    "flow": "subscription"
+  },
+  {
+    "task": "forfait mobile",
+    "country": "FR",
+    "hosts": ["orange.fr", "sfr.fr", "bouyguestelecom.fr", "free.fr"],
+    "flow": "subscription"
+  },
+  {
+    "task": "plano de celular",
+    "country": "BR",
+    "hosts": ["vivo.com.br", "claro.com.br", "tim.com.br"],
+    "flow": "subscription"
+  },
+  {
+    "task": "www.ikea.com/in/en/p/billy-bookcase",
+    "country": "IN",
+    "hosts": ["ikea.com"],
+    "flow": "checkout"
+  },
+  {
+    "task": "https://www.nike.com/in/t/air-max",
+    "country": "IN",
+    "hosts": ["nike.com"],
+    "flow": "checkout"
+  },
+  {
+    "task": "check https://www.thomann.de/de/gitarren.html",
+    "country": "DE",
+    "hosts": ["thomann.de"],
+    "flow": "checkout"
+  },
+  { "task": "buy a lamp on ikea.com", "country": "US", "hosts": ["ikea.com"], "flow": "checkout" },
+  { "task": "gymshark.com hoodie", "country": "GB", "hosts": ["gymshark.com"], "flow": "checkout" },
+  { "task": "zalando.fr robe", "country": "FR", "hosts": ["zalando.fr"], "flow": "checkout" },
+  {
+    "task": "kabum.com.br placa de video",
+    "country": "BR",
+    "hosts": ["kabum.com.br"],
+    "flow": "checkout"
+  },
+  { "task": "shop.co.uk lamps", "country": "GB", "hosts": ["shop.co.uk"], "flow": "checkout" },
+  {
+    "task": "buy a mechanical keyboard from keychron.com",
+    "country": "US",
+    "hosts": ["keychron.com"],
+    "flow": "checkout"
+  },
+  {
+    "task": "compare amazon and flipkart for a phone",
+    "country": "IN",
+    "hosts": ["amazon.in", "flipkart.com"],
+    "flow": "checkout"
+  },
+  {
+    "task": "netflix vs hotstar",
+    "country": "IN",
+    "hosts": ["netflix.com", "hotstar.com"],
+    "flow": "subscription"
+  },
+  {
+    "task": "buy shoes on bewakoof",
+    "country": "IN",
+    "hosts": ["bewakoof.com"],
+    "flow": "checkout"
+  },
+  {
+    "task": "a guitar from Sweetwater",
+    "country": "US",
+    "hosts": ["sweetwater.com"],
+    "flow": "checkout"
+  },
+  {
+    "task": "a garden gnome",
+    "country": "GB",
+    "hosts": ["amazon.co.uk", "gardeninggifts.co.uk", "ebay.co.uk"]
+  },
+  {
+    "task": "hiking boots",
+    "country": "KE",
+    "hosts": ["jumia.co.ke", "bata.com"],
+    "flow": "checkout"
+  },
+  { "task": "buy a laptop", "country": "KE", "hosts": ["jumia.co.ke"], "flow": "checkout" },
+  {
+    "task": "order pizza",
+    "country": "NG",
+    "hosts": ["chowdeck.com", "glovoapp.com", "dominos.ng", "dodopizza.ng"],
+    "flow": "checkout"
+  },
+  {
+    "task": "mobile plan",
+    "country": "ZA",
+    "hosts": ["vodacom.co.za", "mtn.co.za", "telkom.co.za", "cellc.co.za"],
+    "flow": "subscription"
+  },
+  { "task": "buy a tent from REI", "country": "US", "hosts": ["rei.com"], "flow": "checkout" },
+  {
+    "task": "order a phone case on casetify",
+    "country": "US",
+    "hosts": ["casetify.com"],
+    "flow": "checkout"
+  },
+  { "task": "hello", "country": "IN", "hosts": [] },
+  { "task": "asdfgh", "country": "US", "hosts": [] },
+  { "task": "something cheap", "country": "GB", "hosts": [] },
+  { "task": "help me buy", "country": "DE", "hosts": [] },
+  { "task": "test", "country": "IN", "hosts": [] },
+  {
+    "task": "need a new phone charger",
+    "country": "IN",
+    "hosts": ["croma.com", "flipkart.com", "amazon.in"],
+    "flow": "checkout"
+  },
+  {
+    "task": "sony wh1000xm5",
+    "country": "US",
+    "hosts": ["bestbuy.com", "amazon.com", "walmart.com", "electronics.sony.com"],
+    "flow": "checkout"
+  },
+  {
+    "task": "cheapest flight to bali",
+    "country": "SG",
+    "hosts": ["singaporeair.com", "flyscoot.com", "agoda.com"],
+    "flow": "checkout"
+  },
+  {
+    "task": "cancel my amazon prime",
+    "country": "GB",
+    "hosts": ["amazon.co.uk"],
+    "flow": "subscription"
+  },
+  {
+    "task": "cancel gym membership",
+    "country": "US",
+    "hosts": ["planetfitness.com", "onepeloton.com"],
+    "flow": "subscription"
+  },
+  { "task": "sky tv package", "country": "GB", "hosts": ["sky.com"], "flow": "subscription" },
+  { "task": "sainsburys", "country": "GB", "hosts": ["sainsburys.co.uk"] },
+  {
+    "task": "buy tickets for coldplay",
+    "country": "IN",
+    "hosts": ["district.in", "in.bookmyshow.com"],
+    "flow": "checkout"
+  },
+  {
+    "task": "ipl tickets",
+    "country": "IN",
+    "hosts": ["district.in", "in.bookmyshow.com"],
+    "flow": "checkout"
+  },
+  { "task": "swiggy instamart", "country": "IN", "hosts": ["swiggy.com"], "flow": "checkout" },
+  { "task": "lenskart glasses", "country": "IN", "hosts": ["lenskart.com"], "flow": "checkout" },
+  { "task": "tata cliq watch", "country": "IN", "hosts": ["tatacliq.com"], "flow": "checkout" },
+  {
+    "task": "flight ticket mumbai bangalore",
+    "country": "IN",
+    "hosts": ["ixigo.com", "easemytrip.com", "cleartrip.com", "makemytrip.com"],
+    "flow": "checkout"
+  },
+  {
+    "task": "hotels in manali",
+    "country": "IN",
+    "hosts": ["ixigo.com", "easemytrip.com", "cleartrip.com", "makemytrip.com"],
+    "flow": "checkout"
+  },
+  {
+    "task": "sony liv subscription",
+    "country": "IN",
+    "hosts": ["sonyliv.com"],
+    "flow": "subscription"
+  },
+  { "task": "zee5 premium", "country": "IN", "hosts": ["zee5.com"], "flow": "subscription" },
+  {
+    "task": "apple watch",
+    "country": "AU",
+    "hosts": ["jbhifi.com.au", "harveynorman.com.au", "amazon.com.au"],
+    "flow": "checkout"
+  },
+  { "task": "kogan tv", "country": "AU", "hosts": ["kogan.com"], "flow": "checkout" },
+  { "task": "uber one membership", "country": "US", "hosts": ["uber.com"], "flow": "subscription" },
+  { "task": "costco membership", "country": "US", "hosts": ["costco.com"], "flow": "subscription" },
+  { "task": "instacart plus", "country": "US", "hosts": ["instacart.com"], "flow": "subscription" },
+  {
+    "task": "southwest flight to denver",
+    "country": "US",
+    "hosts": ["southwest.com"],
+    "flow": "checkout"
+  },
+  { "task": "airbnb in tokyo", "country": "JP", "hosts": ["airbnb.com"], "flow": "checkout" },
+  {
+    "task": "netflix abo kuendigen",
+    "country": "DE",
+    "hosts": ["netflix.com"],
+    "flow": "subscription"
+  },
+  {
+    "task": "waschmaschine kaufen",
+    "country": "DE",
+    "hosts": ["mediamarkt.de", "amazon.de", "otto.de"],
+    "flow": "checkout"
+  },
+  {
+    "task": "billet de train paris lyon",
+    "country": "FR",
+    "hosts": ["sncf-connect.com"],
+    "flow": "checkout"
+  },
+  {
+    "task": "abonnement canal plus",
+    "country": "FR",
+    "hosts": ["canalplus.com"],
+    "flow": "subscription"
+  },
+  {
+    "task": "casque bluetooth",
+    "country": "FR",
+    "hosts": ["fnac.com", "darty.com", "amazon.fr"],
+    "flow": "checkout"
+  },
+  {
+    "task": "passagem aerea para recife",
+    "country": "BR",
+    "hosts": ["decolar.com", "123milhas.com", "cvc.com.br", "voegol.com.br"],
+    "flow": "checkout"
+  },
+  {
+    "task": "vuelo a cancun",
+    "country": "MX",
+    "hosts": ["despegar.com.mx", "volaris.com", "vivaaerobus.com"],
+    "flow": "checkout"
+  },
+  {
+    "task": "laptop murah",
+    "country": "ID",
+    "hosts": ["tokopedia.com", "shopee.co.id", "blibli.com"],
+    "flow": "checkout"
+  },
+  {
+    "task": "tiket pesawat ke bali",
+    "country": "ID",
+    "hosts": ["traveloka.com", "tiket.com", "agoda.com"],
+    "flow": "checkout"
+  },
+  { "task": "amazon.sa headphones", "country": "SA", "hosts": ["amazon.sa"], "flow": "checkout" },
+  { "task": "careem ride", "country": "AE", "hosts": ["careem.com"], "flow": "checkout" },
+  {
+    "task": "airpods pro",
+    "country": "AE",
+    "hosts": ["uae.sharafdg.com", "amazon.ae", "noon.com"],
+    "flow": "checkout"
+  },
+  { "task": "krisshop perfume", "country": "SG", "hosts": ["krisshop.com"], "flow": "checkout" },
+  {
+    "task": "a smartwatch",
+    "country": "PL",
+    "hosts": ["euro.com.pl", "mediaexpert.pl", "x-kom.pl"],
+    "flow": "checkout"
+  },
+  { "task": "buy a bike", "country": "SE", "hosts": ["amazon.se"], "flow": "checkout" },
+  { "task": "netflix", "country": "NG", "hosts": ["netflix.com"], "flow": "subscription" },
+  {
+    "task": "i want to try audible",
+    "country": "CA",
+    "hosts": ["audible.ca"],
+    "flow": "subscription"
+  },
+  {
+    "task": "Sign up for Netflix",
+    "country": "IN",
+    "hosts": ["netflix.com"],
+    "flow": "subscription"
+  },
+  {
+    "task": "sign up for spotify premium",
+    "country": "IN",
+    "hosts": ["spotify.com"],
+    "flow": "subscription"
+  }
+]

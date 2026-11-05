@@ -1,0 +1,78 @@
+@font-face {
+  font-family: "Geist";
+  src: url("../../web/node_modules/@fontsource-variable/geist/files/geist-latin-wght-normal.woff2")
+    format("woff2");
+  font-weight: 100 900;
+}
+
+@font-face {
+  font-family: "Instrument Serif";
+  src: url("../../web/node_modules/@fontsource/instrument-serif/files/instrument-serif-latin-400-italic.woff2")
+    format("woff2");
+  font-style: italic;
+}
+
+:root {
+  --ink: #0e2a47;
+  --body: #4b5563;
+  --line: #e6e8ec;
+  --peach: #fff2e8;
+  --peach-ink: #c2410c;
+  --mint: #eafbf0;
+  --mint-ink: #15803d;
+  --sky: #eaf4ff;
+  --sky-ink: #1a67c4;
+  --rose: #ffedef;
+  --rose-ink: #be123c;
+  --shadow-card: 0 1px 2px rgb(14 42 71 / 0.06), 0 12px 32px -8px rgb(14 42 71 / 0.14);
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+}
+
+body {
+  background: transparent;
+  color: var(--ink);
+  font-family: "Geist", sans-serif;
+  -webkit-font-smoothing: antialiased;
+}
+
+.brand {
+  display: flex;
+  align-items: center;
+}
+
+.brand img {
+  display: block;
+}
+
+.brand span {
+  font-weight: 600;
+  letter-spacing: -0.02em;
+}
+
+/* The accent word, as on the site's headline. */
+.accent {
+  background: linear-gradient(90deg, #c026d3, #2563eb 45%, #16a34a 80%, #ca8a04);
+  background-clip: text;
+  color: transparent;
+  font-family: "Instrument Serif", serif;
+  font-style: italic;
+  font-weight: 400;
+  padding-right: 0.06em;
+}
+
+/* The evidence sits in a pastel panel, the way the site lays out its features. */
+.panel {
+  background: var(--peach);
+  border-radius: 32px;
+}
+
+.evidence {
+  background: #fff;
+  border-radius: 22px;
+  box-shadow: var(--shadow-card);
+  display: block;
+}
