@@ -1,0 +1,36 @@
+{
+  "name": "aletheia",
+  "version": "0.0.0",
+  "private": true,
+  "description": "Find the dark patterns on any website.",
+  "license": "MIT",
+  "workspaces": [
+    "server",
+    "web"
+  ],
+  "type": "module",
+  "scripts": {
+    "dev": "vp run --parallel -r dev",
+    "build": "vp run web#build",
+    "start": "node server/src/index.ts",
+    "ready": "vp check && vp test && vp run web#build"
+  },
+  "devDependencies": {
+    "@hono/node-server": "^2.1.5",
+    "@playwright/test": "1.64.1",
+    "@types/node": "^26.6.6",
+    "vite": "catalog:",
+    "vite-plus": "catalog:"
+  },
+  "overrides": {
+    "vite": "catalog:"
+  },
+  "engines": {
+    "node": "26.13"
+  },
+  "packageManager": "bun@1.4.4",
+  "catalog": {
+    "vite": "npm:@voidzero-dev/vite-plus-core@1.4.0",
+    "vite-plus": "1.4.0"
+  }
+}

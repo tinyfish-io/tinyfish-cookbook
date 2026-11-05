@@ -1,0 +1,15 @@
+.env
+.env.*
+!.env.example
+
+node_modules/
+dist/
+coverage/
+data/
+
+.vite/
+.vite-temp/
+*.log
+.DS_Store
+test-results/
+playwright-report/

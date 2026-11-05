@@ -1,0 +1,227 @@
+{
+  "run_id": "7948c55a-6aa7-4443-9c92-27d9d75760de",
+  "status": "COMPLETED",
+  "goal": "Navigate to https://www.flipkart.com/search?q=usb+c+cable to complete the goal: You are a mystery shopper auditing this shopping site's checkout flow for hidden costs and pre-selected extras. Complete these steps:\n1. Close any cookie banner, login popup, app-download prompt or notification popup (use the X or \"skip\", never log in).\n2. Open the first non-sponsored USB-C cable in the results. On the product page note the price shown, then click Add to Cart. Add exactly one item.\n3. Go to the cart, read the full price details, then click Place Order and proceed toward checkout as far as possible without logging in, stopping at the page that asks for payment (card, UPI, netbanking choice).\nAt every page, record the page name, URL and the total price shown. Record every fee or charge with its exact name and amount (platform fee, protect promise fee, delivery charge, secured packaging fee, handling fee, taxes, donation). Record every checkbox, toggle or option that was already selected without you choosing it (extended warranty, protection plan, donation, membership, add-on), with its cost. Record any item or charge added to the cart that you did not add. Record any countdown timer, \"only X left\" or pressure message, and the exact wording of any button or link used to decline an extra.\nRules: Never enter payment details, never click Pay, never enter a phone number or email, never request or enter an OTP, never sign up. Do not change any pre-selected option, only record it. If the site requires login, a phone number or an OTP to continue, stop there, set login_required to true and report everything seen so far. If you see a CAPTCHA, access denied page or bot check, stop and set blocked_by_bot_protection to true.",
+  "created_at": "2026-10-29T15:15:29Z",
+  "started_at": "2026-10-29T15:15:34Z",
+  "finished_at": "2026-10-29T15:20:11Z",
+  "num_of_steps": 14,
+  "result": {
+    "fees": [
+      {
+        "name": "Protect Promise Fee",
+        "amount": 9,
+        "first_seen_at_step": 3
+      }
+    ],
+    "steps": [
+      {
+        "url": "https://www.flipkart.com/search?q=usb+c+cable",
+        "note": "Identified first non-sponsored product: Flipkart SmartBuy USB Type C Cable 10 A 1 m 100W/80W/65W/45W at ₹192 (MRP ₹1,899, 89% off). No popups present.",
+        "page": "Search Results",
+        "step": 1,
+        "total_shown": 192
+      },
+      {
+        "url": "https://www.flipkart.com/flipkart-smartbuy-usb-type-c-cable-10-1-m-100w-80w-65w-45w-dart-vooc-superdart-supervooc-realme-oneplus-fast-charging/p/itm74bab5c12adc7",
+        "note": "Product page shows price ₹192 (MRP ₹1,899). Noted '+ ₹9 Protect Promise Fee'. Clicked Add to Cart with quantity 1.",
+        "page": "Product Page",
+        "step": 2,
+        "total_shown": 192
+      },
+      {
+        "url": "https://www.flipkart.com/viewcart",
+        "note": "Cart contents: Flipkart SmartBuy USB Type C Cable × 1. Price details: Price ₹1,899, Discount -₹1,707, Protect Promise Fee ₹9, Total ₹201. Damage Protection Plan offered at ₹69 for 6 Months (not pre-selected, just an Add option). Section 'Items you may have missed' shows cross-sell products. No pre-ticked checkboxes, no pre-selected warranty, no donation. No pressure messages or countdown timers. Clicked Place Order.",
+        "page": "Cart",
+        "step": 3,
+        "total_shown": 201
+      },
+      {
+        "url": "https://www.flipkart.com/viewcart?exploreMode=TRUE&preference=FLIPKART&pageUID=1793287044951",
+        "note": "After clicking Place Order, a modal appeared: 'Log in to complete your shopping' with a phone number input field (+91 prefix). Cannot proceed to payment page without logging in. Task stopped here.",
+        "page": "Login Prompt (Phone Number)",
+        "step": 4,
+        "total_shown": null
+      }
+    ],
+    "currency": "INR",
+    "item_name": "Flipkart SmartBuy USB Type C Cable 10 A 1 m 100W,80W,65W,45W, DART/VOOC/SUPERDART/SUPERVOOC realme/oneplus FAST CHARGING CABLE",
+    "final_price": 201,
+    "login_wall_at": "https://www.flipkart.com/viewcart?exploreMode=TRUE&preference=FLIPKART&pageUID=1793287044951",
+    "login_required": true,
+    "stopped_reason": "Site requires login (phone number) to proceed to payment page after clicking Place Order",
+    "decline_wording": [],
+    "item_listed_price": 1899,
+    "pressure_messages": [],
+    "pre_ticked_options": [],
+    "added_without_asking": [],
+    "reached_payment_page": false,
+    "blocked_by_bot_protection": false
+  },
+  "output_schema": {
+    "type": "object",
+    "required": [
+      "reached_payment_page",
+      "login_required",
+      "login_wall_at",
+      "blocked_by_bot_protection",
+      "stopped_reason",
+      "item_name",
+      "item_listed_price",
+      "currency",
+      "steps",
+      "fees",
+      "pre_ticked_options",
+      "added_without_asking",
+      "pressure_messages",
+      "decline_wording",
+      "final_price"
+    ],
+    "properties": {
+      "fees": {
+        "type": "array",
+        "items": {
+          "type": "object",
+          "required": ["name", "amount", "first_seen_at_step"],
+          "properties": {
+            "name": {
+              "type": "string"
+            },
+            "amount": {
+              "type": "number",
+              "nullable": true
+            },
+            "first_seen_at_step": {
+              "type": "integer"
+            }
+          }
+        }
+      },
+      "steps": {
+        "type": "array",
+        "items": {
+          "type": "object",
+          "required": ["step", "page", "url", "total_shown", "note"],
+          "properties": {
+            "url": {
+              "type": "string",
+              "nullable": true
+            },
+            "note": {
+              "type": "string",
+              "nullable": true
+            },
+            "page": {
+              "type": "string"
+            },
+            "step": {
+              "type": "integer"
+            },
+            "total_shown": {
+              "type": "number",
+              "nullable": true
+            }
+          }
+        }
+      },
+      "currency": {
+        "type": "string"
+      },
+      "item_name": {
+        "type": "string",
+        "nullable": true
+      },
+      "final_price": {
+        "type": "number",
+        "nullable": true
+      },
+      "login_wall_at": {
+        "type": "string",
+        "nullable": true
+      },
+      "login_required": {
+        "type": "boolean"
+      },
+      "stopped_reason": {
+        "type": "string"
+      },
+      "decline_wording": {
+        "type": "array",
+        "items": {
+          "type": "string"
+        }
+      },
+      "item_listed_price": {
+        "type": "number",
+        "nullable": true
+      },
+      "pressure_messages": {
+        "type": "array",
+        "items": {
+          "type": "object",
+          "required": ["text", "seen_at_step"],
+          "properties": {
+            "text": {
+              "type": "string"
+            },
+            "seen_at_step": {
+              "type": "integer"
+            }
+          }
+        }
+      },
+      "pre_ticked_options": {
+        "type": "array",
+        "items": {
+          "type": "object",
+          "required": ["label", "cost", "seen_at_step"],
+          "properties": {
+            "cost": {
+              "type": "number",
+              "nullable": true
+            },
+            "label": {
+              "type": "string"
+            },
+            "seen_at_step": {
+              "type": "integer"
+            }
+          }
+        }
+      },
+      "added_without_asking": {
+        "type": "array",
+        "items": {
+          "type": "object",
+          "required": ["name", "cost", "seen_at_step"],
+          "properties": {
+            "cost": {
+              "type": "number",
+              "nullable": true
+            },
+            "name": {
+              "type": "string"
+            },
+            "seen_at_step": {
+              "type": "integer"
+            }
+          }
+        }
+      },
+      "reached_payment_page": {
+        "type": "boolean"
+      },
+      "blocked_by_bot_protection": {
+        "type": "boolean"
+      }
+    }
+  },
+  "profile_attached": false,
+  "profile_id": null,
+  "error": null,
+  "streaming_url": "https://stream.invalid/live",
+  "browser_config": {
+    "proxy_enabled": true,
+    "proxy_country_code": "IN"
+  }
+}
