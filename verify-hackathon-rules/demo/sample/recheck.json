@@ -1,0 +1,78 @@
+{
+  "schema_version": 1,
+  "event": "Example Sprint 2026 (synthetic)",
+  "mode": "fixture",
+  "checked_at": "2026-10-14T03:02:00+00:00",
+  "display_zone": "Asia/Kolkata",
+  "status": "needs_review",
+  "blockers": [
+    "Fixture replay only: no live API validation",
+    "One or more claims need review"
+  ],
+  "claims": [
+    {
+      "id": "submission-deadline",
+      "kind": "deadline",
+      "value": {
+        "local": "2026-10-15T23:59",
+        "zone": "America/Los_Angeles"
+      },
+      "evidence": [
+        {
+          "source_id": "s1",
+          "quote": "Submissions close October 15, 2026 at 11:59 PM US Pacific Time.",
+          "lines": [
+            2,
+            2
+          ],
+          "url": "https://sprint.example.org/rules"
+        }
+      ],
+      "issues": [],
+      "utc": "2026-10-16T06:59:00+00:00",
+      "local": "2026-10-16T12:29:00+05:30",
+      "hours_remaining": 51.95,
+      "quote_status": "matched"
+    },
+    {
+      "id": "student-status",
+      "kind": "eligibility",
+      "value": "Currently enrolled college students only.",
+      "evidence": [
+        {
+          "source_id": "s1",
+          "quote": "Participants must be currently enrolled college students.",
+          "lines": [
+            3,
+            3
+          ],
+          "url": "https://sprint.example.org/rules"
+        }
+      ],
+      "issues": [],
+      "quote_status": "matched"
+    },
+    {
+      "id": "required-repository",
+      "kind": "deliverable",
+      "value": "Provide a public repository link.",
+      "evidence": [],
+      "issues": [
+        "Quote does not occur verbatim in the fetched source"
+      ],
+      "quote_status": "needs_review"
+    },
+    {
+      "id": "required-demo",
+      "kind": "deliverable",
+      "value": "Provide a two-minute demo video.",
+      "evidence": [],
+      "issues": [
+        "Quote does not occur verbatim in the fetched source"
+      ],
+      "quote_status": "needs_review"
+    }
+  ],
+  "fetch_errors": [],
+  "notice": "Quote matching verifies provenance, not semantic correctness, eligibility, completeness or submission."
+}

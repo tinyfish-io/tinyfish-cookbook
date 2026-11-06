@@ -1,0 +1,4 @@
+interface:
+  display_name: "Verify Hackathon Rules"
+  short_description: "Evidence-backed deadline and submission checks"
+  default_prompt: "Use $verify-hackathon-rules to verify this hackathon deadline and required submission links."

@@ -1,0 +1,13 @@
+VERIFY HACKATHON RULES | OFFLINE FIXTURE REPLAY
+Synthetic Example Sprint 2026; network requests: 0
+Search candidates: 3 -> official unique pages: 1
+Source SHA-256: 323d33cdcd671ed7...
+Deadline (US Pacific): 2026-10-15T23:59
+Deadline (Asia/Kolkata): 2026-10-16T12:29:00+05:30
+Evidence: 4 claims with exact source quotes
+Checklist: repository + demo; both unchecked
+Status: needs_review (fixture is never live proof)
+Changed rule: two-minute -> three-minute demo
+Diff: changed; old deliverable quotes now fail
+Fabricated prize quote: rejected
+No registration, social post, or submission performed.

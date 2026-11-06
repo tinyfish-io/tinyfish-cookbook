@@ -1,0 +1,28 @@
+name: verify-hackathon-rules
+on:
+  pull_request:
+    paths:
+      - "skills/verify-hackathon-rules/**"
+      - "verify-hackathon-rules/**"
+      - ".github/workflows/verify-hackathon-rules.yml"
+  push:
+    branches: [main]
+    paths:
+      - "skills/verify-hackathon-rules/**"
+      - "verify-hackathon-rules/**"
+      - ".github/workflows/verify-hackathon-rules.yml"
+permissions:
+  contents: read
+jobs:
+  offline-tests:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        python-version: ["3.10", "3.12"]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+      - run: python -m unittest discover -s verify-hackathon-rules/tests -v
+      - run: python verify-hackathon-rules/demo/run_demo.py --out /tmp/rules-demo

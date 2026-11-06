@@ -212,6 +212,7 @@ The 12 winning builds from the first Bounty Drop of the [TinyFish Student](https
 | [code-reference-finder](./code-reference-finder) | Find real-world usage examples for any code snippet from GitHub and Stack Overflow |
 | [fast-qa](./fast-qa) | No-code QA testing platform with parallel test execution and live browser previews |
 | [tinyskills](./tinyskills) | Generates comprehensive SKILL.md guides from docs, GitHub, and developer blogs |
+| [verify-hackathon-rules](./verify-hackathon-rules) | Skill for source-quoted rule checks, timezone-safe deadlines, submission checklists and page-change detection |
 
 ### Finance & Decisioning
 
