@@ -220,3 +220,14 @@ tinyfish browser session create --url "https://example.de" --proxy-country DE
 - **Match the user's language**: Respond in whatever language the user writes in.
 - All commands support `--pretty` for human-readable output. Default is JSON.
 - Use `--debug` on the root command or set `TINYFISH_DEBUG=1` to log HTTP requests to stderr.
+
+### Beta features (`tinyfish beta`)
+
+Strict agent mode (`--mode strict`), `--max-steps`, and fetch highlights need the TinyFish beta program. If a request fails with a 403 that mentions the beta program:
+1. Ask the user whether they agree to join; joining opts them into occasional TinyFish product surveys. Wait for a yes.
+2. Only after they agree, run `tinyfish beta join --agree-surveys`. Report the `capabilities` it returns.
+3. Retry the original command.
+
+Never pass `--agree-surveys` without the user's explicit agreement.
+
+`tinyfish beta status` shows enrollment and capabilities without changing anything.
