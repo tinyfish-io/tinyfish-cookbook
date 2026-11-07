@@ -94,8 +94,14 @@ npm run dev              # http://localhost:3000
 | `KENSHO_MODEL` | no | Gemini model to use first (default `gemini-3.8-flash`) |
 | `KENSHO_FALLBACK_MODELS` | no | Models to fall back to when one hits its free-tier quota |
 | `TINYFISH_AGENT_FALLBACK` | no | Set to `off` to never use the metered Agent fallback |
+| `REDIS_URL` or `KV_REST_API_URL` + `KV_REST_API_TOKEN` | no | Redis storage instead of SQLite — needed on serverless hosts (see below) |
 
-Data (searches, papers, generated chapters) is stored in `./data/kensho.db`, created on first run.
+Locally, data (searches, papers, generated chapters) is stored in `./data/kensho.db`, created on first run.
+
+**Deploying to Vercel:** the filesystem there is read-only and every server instance is separate, so add a Redis
+database (Vercel → Storage → Upstash for Redis, free plan works). It sets the variables above and Kensho uses it
+automatically; `/api/home` reports which storage is active. Drawing runs after the response with Next's `after()`
+(the process route allows 300 s). To copy local data into Redis once: `REDIS_URL=… node scripts/seed-redis.mjs`.
 
 ---
 
@@ -131,7 +137,7 @@ Data (searches, papers, generated chapters) is stored in `./data/kensho.db`, cre
 │                  refs dropped, chart numbers must be in a quote)     │
 │  pipeline.ts ─── background job, saved after every stage, chapters   │
 │                  drawn in parallel, failed chapters retryable        │
-│  db.ts ───────── SQLite (node:sqlite)                                │
+│  db.ts ───────── SQLite (node:sqlite) locally, Redis when configured │
 └──────────────────────────────────────────────────────────────────────┘
 ```
 

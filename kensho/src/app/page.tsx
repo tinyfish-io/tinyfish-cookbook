@@ -22,9 +22,8 @@ const FEATURED: { topic: string; jp: string; scene: SceneId }[] = [
   { topic: "How does blockchain consensus work?", jp: "合意形成", scene: "grid" },
 ];
 
-export default function Home() {
-  const searches = recentSearches(8);
-  const drawn = recentlyDrawn(6);
+export default async function Home() {
+  const [searches, drawn] = await Promise.all([recentSearches(8), recentlyDrawn(6)]);
 
   return (
     <>

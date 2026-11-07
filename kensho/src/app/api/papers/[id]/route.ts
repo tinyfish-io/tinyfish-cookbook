@@ -5,7 +5,7 @@ export const dynamic = "force-dynamic";
 
 export async function GET(_req: Request, ctx: { params: Promise<{ id: string }> }) {
   const { id } = await ctx.params;
-  const state = getState(id);
+  const state = await getState(id);
   if (!state) return NextResponse.json({ error: "Paper not found. Search for it first." }, { status: 404 });
   // Full text stays on the server: the client gets section headings plus the short verified
   // quotes inside claims, never the copyrighted body.

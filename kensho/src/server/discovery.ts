@@ -200,9 +200,9 @@ export async function discover(rawQuery: string, opts: { fresh?: boolean; onEven
   const queryKey = query.toLowerCase();
 
   if (!opts.fresh) {
-    const cached = getSearch(queryKey, CACHE_MS);
+    const cached = await getSearch(queryKey, CACHE_MS);
     if (cached) {
-      return { query, papers: getPapers(cached.paperIds), sources: cached.sources, dedupedFrom: cached.dedupedFrom, cached: true };
+      return { query, papers: await getPapers(cached.paperIds), sources: cached.sources, dedupedFrom: cached.dedupedFrom, cached: true };
     }
   }
 
@@ -267,8 +267,8 @@ export async function discover(rawQuery: string, opts: { fresh?: boolean; onEven
 
   if (papers.some((p) => p.arxivId)) emit({ type: "stage", text: "Fetching full abstracts for arXiv papers" });
   await enrichFromArxiv(papers);
-  const stored = papers.map(upsertPaper);
-  saveSearch(queryKey, query, stored.map((p) => p.id), sources, all.length);
+  const stored = await Promise.all(papers.map(upsertPaper));
+  await saveSearch(queryKey, query, stored.map((p) => p.id), sources, all.length);
 
   return { query, papers: stored, sources, dedupedFrom: all.length, cached: false };
 }
@@ -289,5 +289,5 @@ export async function related(paper: Paper): Promise<Paper[]> {
     out.push(p);
   }
   await enrichFromArxiv(out);
-  return out.slice(0, 6).map(upsertPaper);
+  return Promise.all(out.slice(0, 6).map(upsertPaper));
 }

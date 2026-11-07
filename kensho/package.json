@@ -12,6 +12,7 @@
     "page-mascot": "^0.1.0",
     "react": "19.3.0",
     "react-dom": "19.3.0",
+    "redis": "^5.12.1",
     "server-only": "^0.0.1"
   },
   "devDependencies": {
