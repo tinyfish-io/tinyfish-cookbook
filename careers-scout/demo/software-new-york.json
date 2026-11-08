@@ -1,0 +1,230 @@
+{
+  "schema_version": "1.0",
+  "mode": "playground_capture",
+  "status": "ok",
+  "generated_at": "2026-10-16T04:59:38Z",
+  "preferences": {
+    "roles": [
+      "software engineer"
+    ],
+    "location": "New York",
+    "keywords": [
+      "Python"
+    ],
+    "exclude": [],
+    "remote": "any",
+    "require_keywords": false,
+    "country": "US",
+    "language": "en",
+    "providers": [
+      "greenhouse"
+    ]
+  },
+  "tinyfish_endpoints": [
+    "https://api.search.tinyfish.ai",
+    "https://api.fetch.tinyfish.ai"
+  ],
+  "jobs": [
+    {
+      "id": "5209084007",
+      "title": "Senior Software Engineer (Python)",
+      "company": "New York ISO",
+      "employer_board": "nyiso",
+      "provider": "greenhouse",
+      "locations": [
+        "Rensselaer, New York, United States"
+      ],
+      "work_mode": null,
+      "employment_type": null,
+      "salary": null,
+      "application_deadline": null,
+      "posted_at": "2026-08-11T09:35:12-04:00",
+      "updated_at": "2026-09-11T15:46:25-04:00",
+      "apply_url": "https://job-boards.greenhouse.io/nyiso/jobs/5209084007",
+      "canonical_job_url": "https://job-boards.greenhouse.io/nyiso/jobs/5209084007",
+      "source_board_url": "https://job-boards.greenhouse.io/nyiso",
+      "source_feed_url": "https://boards-api.greenhouse.io/v1/boards/nyiso/jobs/5209084007",
+      "observed_at": "2026-10-16T04:43:43.837Z",
+      "availability": "listed_on_public_board",
+      "score": 88,
+      "match_reasons": [
+        "Title matches: software engineer",
+        "Exact role phrase in title",
+        "Listed location matches: New York",
+        "Keywords found: Python"
+      ],
+      "keyword_evidence": [
+        {
+          "keyword": "Python",
+          "excerpt": "Senior Software Engineer (Python) The New York Independent System Operator (NYISO) manages the efficient flow of electricity on more than"
+        }
+      ],
+      "description_excerpt": "The New York Independent System Operator (NYISO) manages the efficient flow of electricity on more than 11,000 circuit-miles of high-voltage transmission lines, dispatching power from hundreds of generating units across the state. The New York Independent System Operator (NYISO) applies cutting-edge technology to opera",
+      "caveats": [
+        "Employer board identifier is preserved; missing company names are not inferred.",
+        "Listed when fetched; availability and eligibility can change."
+      ]
+    },
+    {
+      "id": "8052122",
+      "title": "Software Engineer (C++ or Python) – 2027 Grads",
+      "company": "Hudson River Trading",
+      "employer_board": "wehrtyou",
+      "provider": "greenhouse",
+      "locations": [
+        "Austin, TX, United States; Chicago, Illinois, United States; London, United Kingdom; New York, NY, United States; Singapore"
+      ],
+      "work_mode": null,
+      "employment_type": null,
+      "salary": null,
+      "application_deadline": null,
+      "posted_at": "2026-07-13T11:30:48-04:00",
+      "updated_at": "2026-10-07T13:25:59-04:00",
+      "apply_url": "https://www.hudsonrivertrading.com/careers/job/?gh_jid=8052122",
+      "canonical_job_url": "https://www.hudsonrivertrading.com/careers/job?gh_jid=8052122",
+      "source_board_url": "https://job-boards.greenhouse.io/wehrtyou",
+      "source_feed_url": "https://boards-api.greenhouse.io/v1/boards/wehrtyou/jobs/8052122",
+      "observed_at": "2026-10-16T04:44:34.570Z",
+      "availability": "listed_on_public_board",
+      "score": 88,
+      "match_reasons": [
+        "Title matches: software engineer",
+        "Exact role phrase in title",
+        "Listed location matches: New York",
+        "Keywords found: Python"
+      ],
+      "keyword_evidence": [
+        {
+          "keyword": "Python",
+          "excerpt": "Software Engineer (C++ or Python) – 2027 Grads Hudson River Trading (HRT) is seeking talented Software Engineers to join our teams in New"
+        }
+      ],
+      "description_excerpt": "Hudson River Trading (HRT) is seeking talented Software Engineers to join our teams in New York, London, and Singapore. As a Software Engineer at HRT, the code you write is our business. Our software engineers create and maintain critical technology and infrastructure that is integral to the success of our trading. In ",
+      "caveats": [
+        "Employer board identifier is preserved; missing company names are not inferred.",
+        "Listed when fetched; availability and eligibility can change."
+      ]
+    }
+  ],
+  "coverage": {
+    "boards_discovered": 6,
+    "boards_selected": 2,
+    "boards_attempted": 2,
+    "boards_fetched": 2,
+    "job_records_parsed": 2,
+    "matching_jobs": 2,
+    "jobs_returned": 2,
+    "rejected": {},
+    "scope": "Bounded discovery: prefer one Search-discovered posting per employer. Full Lever boards capped at 100 listings."
+  },
+  "sources": [
+    {
+      "provider": "greenhouse",
+      "employer_board": "nyiso",
+      "board_url": "https://job-boards.greenhouse.io/nyiso",
+      "feed_url": "https://boards-api.greenhouse.io/v1/boards/nyiso/jobs/5209084007",
+      "observed_at": "2026-10-16T04:43:43.837Z",
+      "freshness": "ttl_zero_requested",
+      "records_parsed": 1
+    },
+    {
+      "provider": "greenhouse",
+      "employer_board": "wehrtyou",
+      "board_url": "https://job-boards.greenhouse.io/wehrtyou",
+      "feed_url": "https://boards-api.greenhouse.io/v1/boards/wehrtyou/jobs/8052122",
+      "observed_at": "2026-10-16T04:44:34.570Z",
+      "freshness": "ttl_zero_requested",
+      "records_parsed": 1
+    }
+  ],
+  "discoveries": [
+    {
+      "query": "(\"software engineer\") New York Python (site:job-boards.greenhouse.io OR site:boards.greenhouse.io)",
+      "board": "greenhouse:global:nyiso",
+      "result_url": "https://job-boards.greenhouse.io/nyiso/jobs/5209084007"
+    },
+    {
+      "query": "(\"software engineer\") New York Python (site:job-boards.greenhouse.io OR site:boards.greenhouse.io)",
+      "board": "greenhouse:global:wehrtyou",
+      "result_url": "https://job-boards.greenhouse.io/wehrtyou/jobs/8052122"
+    },
+    {
+      "query": "(\"software engineer\") New York Python (site:job-boards.greenhouse.io OR site:boards.greenhouse.io)",
+      "board": "greenhouse:global:Datadog",
+      "result_url": "https://job-boards.greenhouse.io/Datadog/jobs/3851935"
+    },
+    {
+      "query": "(\"software engineer\") New York Python (site:job-boards.greenhouse.io OR site:boards.greenhouse.io)",
+      "board": "greenhouse:global:databricks",
+      "result_url": "https://job-boards.greenhouse.io/databricks/jobs/8509534002"
+    },
+    {
+      "query": "(\"software engineer\") New York Python (site:job-boards.greenhouse.io OR site:boards.greenhouse.io)",
+      "board": "greenhouse:global:opp-center",
+      "result_url": "https://job-boards.greenhouse.io/opp-center/jobs/7815457"
+    },
+    {
+      "query": "(\"software engineer\") New York Python (site:job-boards.greenhouse.io OR site:boards.greenhouse.io)",
+      "board": "greenhouse:global:evolutioniq",
+      "result_url": "https://job-boards.greenhouse.io/evolutioniq/jobs/6138019004"
+    }
+  ],
+  "errors": [],
+  "api_calls": [
+    {
+      "operation": "search",
+      "transport": "tinyfish-playground",
+      "captured_at": "2026-10-16T04:35:53.674Z",
+      "source": "https://agent.tinyfish.ai/playground/search",
+      "response_sha256": "e8209c3af90c29d336cbf89afeb9ff2b48f66b705408fd4dbbd9423918b035a0",
+      "query": "(\"software engineer\") New York Python (site:job-boards.greenhouse.io OR site:boards.greenhouse.io)",
+      "urls": null,
+      "request": {
+        "country": "US",
+        "language": "en"
+      }
+    },
+    {
+      "operation": "fetch",
+      "transport": "tinyfish-playground",
+      "captured_at": "2026-10-16T04:43:43.837Z",
+      "source": "https://agent.tinyfish.ai/playground/fetch",
+      "response_sha256": "b6afda592195f7e39f02691b06397ebd47115ef0a8e9b890abce5fc6c6d0f652",
+      "query": null,
+      "urls": [
+        "https://boards-api.greenhouse.io/v1/boards/nyiso/jobs/5209084007"
+      ],
+      "request": {
+        "format": "markdown",
+        "ttl": 0,
+        "urls": [
+          "https://boards-api.greenhouse.io/v1/boards/nyiso/jobs/5209084007"
+        ]
+      }
+    },
+    {
+      "operation": "fetch",
+      "transport": "tinyfish-playground",
+      "captured_at": "2026-10-16T04:44:34.570Z",
+      "source": "https://agent.tinyfish.ai/playground/fetch",
+      "response_sha256": "7edd41975efd0c2313611d9604160dca23c428d62f5e40fa7cb5f83fbcf94daf",
+      "query": null,
+      "urls": [
+        "https://boards-api.greenhouse.io/v1/boards/wehrtyou/jobs/8052122"
+      ],
+      "request": {
+        "format": "markdown",
+        "ttl": 0,
+        "urls": [
+          "https://boards-api.greenhouse.io/v1/boards/wehrtyou/jobs/8052122"
+        ]
+      }
+    }
+  ],
+  "notes": [
+    "Only listed public jobs with explicit HTTPS application links are returned.",
+    "Locations are literal, case-insensitive matches; no geographic or visa eligibility is inferred.",
+    "Missing fields are null. Ranking is a transparent keyword heuristic, not a hiring recommendation.",
+    "Imported TinyFish responses: authenticity depends on the supplied capture; Python REST was not exercised. Origin caching may still return older content."
+  ]
+}
