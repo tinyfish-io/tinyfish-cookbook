@@ -204,6 +204,7 @@ The 12 winning builds from the first Bounty Drop of the [TinyFish Student](https
 | [tutor-finder](./tutor-finder) | AI-powered tutor discovery for competitive exams |
 | [summer-school-finder](./summer-school-finder) | Compare summer school programs from universities worldwide |
 | [scholarship-finder](./scholarship-finder) | Scholarship discovery pulling live data from official sources |
+| [openings](./openings) | Job and internship radar for students: live postings from Greenhouse, Lever, Ashby and Workday, ranked with reasons, new since your last scan |
 
 ### Developer Tools
 
