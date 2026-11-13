@@ -1,0 +1,465 @@
+@import "tailwindcss";
+
+/* ─── Kenshō design tokens ─────────────────────────────────────────────
+   Ink on paper. One accent: hanko red, used for stamps, the active state
+   and nothing else. */
+:root {
+  --ink: #0d0d0e;
+  --ink-2: #2a2a2c;
+  --ink-3: #5b5a57;
+  --paper: #f4f1ea;
+  --paper-2: #ebe7dd;
+  --white: #ffffff;
+  --tone: #cfcbc2;
+  --red: #d7261e;
+  --red-ink: #a3150f;
+  --gutter: 10px;
+}
+
+@theme inline {
+  --color-ink: var(--ink);
+  --color-ink-2: var(--ink-2);
+  --color-ink-3: var(--ink-3);
+  --color-paper: var(--paper);
+  --color-paper-2: var(--paper-2);
+  --color-tone: var(--tone);
+  --color-red: var(--red);
+  --font-display: var(--font-dela), "Yu Gothic UI", "Yu Gothic", "Hiragino Kaku Gothic ProN", "Noto Sans JP", "Meiryo", sans-serif;
+  --font-sans: var(--font-zen), "Yu Gothic UI", "Hiragino Sans", "Noto Sans JP", system-ui, sans-serif;
+  --font-letter: var(--font-shantell), "Comic Sans MS", cursive;
+  --font-mono: var(--font-plex-mono), ui-monospace, monospace;
+}
+
+html {
+  background: var(--paper);
+  color: var(--ink);
+}
+
+body {
+  overflow-x: clip;
+  font-family: var(--font-sans);
+  background: var(--paper);
+  color: var(--ink);
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+::selection {
+  background: var(--ink);
+  color: var(--paper);
+}
+
+:focus-visible {
+  outline: 3px solid var(--red);
+  outline-offset: 2px;
+}
+
+/* ─── Screentones ─── */
+.tone-dots {
+  background-image: radial-gradient(var(--ink) 1px, transparent 1.3px);
+  background-size: 6px 6px;
+}
+.tone-dots-lg {
+  background-image: radial-gradient(var(--ink) 1.6px, transparent 1.9px);
+  background-size: 10px 10px;
+}
+.tone-fade {
+  background-image: radial-gradient(var(--ink) 1.2px, transparent 1.5px);
+  background-size: 7px 7px;
+  -webkit-mask-image: linear-gradient(to bottom, #000 0%, transparent 85%);
+  mask-image: linear-gradient(to bottom, #000 0%, transparent 85%);
+}
+.tone-lines {
+  background-image: repeating-linear-gradient(-45deg, var(--ink) 0 1px, transparent 1px 6px);
+}
+.paper-grain {
+  background-color: var(--paper);
+  background-image:
+    radial-gradient(rgba(0, 0, 0, 0.035) 1px, transparent 1px),
+    radial-gradient(rgba(0, 0, 0, 0.025) 1px, transparent 1px);
+  background-size: 3px 3px, 7px 7px;
+  background-position: 0 0, 1px 2px;
+}
+
+/* ─── Ink frames ─── */
+.ink-frame {
+  border: 3px solid var(--ink);
+  background: var(--white);
+}
+.ink-shadow {
+  box-shadow: 6px 6px 0 var(--ink);
+}
+.ink-shadow-sm {
+  box-shadow: 3px 3px 0 var(--ink);
+}
+
+.btn-ink {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  background: var(--ink);
+  color: var(--paper);
+  font-family: var(--font-display);
+  letter-spacing: 0.04em;
+  padding: 0.8rem 1.4rem;
+  border: 3px solid var(--ink);
+  transition: transform 120ms ease, box-shadow 120ms ease, background 120ms ease;
+  box-shadow: 4px 4px 0 var(--red);
+}
+.btn-ink:hover {
+  transform: translate(-2px, -2px);
+  box-shadow: 6px 6px 0 var(--red);
+}
+.btn-ink:active {
+  transform: translate(2px, 2px);
+  box-shadow: 0 0 0 var(--red);
+}
+.btn-ink:disabled {
+  opacity: 0.5;
+  pointer-events: none;
+}
+.btn-line {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  background: var(--white);
+  color: var(--ink);
+  font-weight: 700;
+  padding: 0.55rem 1rem;
+  border: 2.5px solid var(--ink);
+  transition: transform 120ms ease, box-shadow 120ms ease;
+}
+.btn-line:hover {
+  transform: translate(-1px, -1px);
+  box-shadow: 3px 3px 0 var(--ink);
+}
+
+/* ─── Lettering ─── */
+.lettering {
+  font-family: var(--font-letter);
+  font-variation-settings: "INFM" 40, "BNCE" 0;
+  line-height: 1.25;
+}
+
+/* ─── Motion ─── */
+@keyframes ink-in {
+  from {
+    opacity: 0;
+    transform: translateY(8px) scale(0.985);
+    filter: blur(2px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+    filter: none;
+  }
+}
+.ink-in {
+  animation: ink-in 420ms cubic-bezier(0.2, 0.8, 0.2, 1) both;
+}
+@keyframes swim {
+  0%,
+  100% {
+    transform: translate(0, 0) rotate(-4deg);
+  }
+  50% {
+    transform: translate(10px, -8px) rotate(5deg);
+  }
+}
+.swim {
+  animation: swim 2.6s ease-in-out infinite;
+}
+@keyframes bob {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-4px);
+  }
+}
+.bob {
+  animation: bob 3s ease-in-out infinite;
+}
+@keyframes stamp {
+  0% {
+    opacity: 0;
+    transform: scale(1.8) rotate(-18deg);
+  }
+  70% {
+    opacity: 1;
+    transform: scale(0.94) rotate(-8deg);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1) rotate(-8deg);
+  }
+}
+.stamp-in {
+  animation: stamp 380ms cubic-bezier(0.2, 0.9, 0.3, 1.2) both;
+}
+@keyframes dash {
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+@keyframes page-in-next {
+  from {
+    opacity: 0;
+    transform: perspective(1600px) rotateY(-8deg) translateX(40px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+@keyframes page-in-prev {
+  from {
+    opacity: 0;
+    transform: perspective(1600px) rotateY(8deg) translateX(-40px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+.page-in-next {
+  animation: page-in-next 380ms cubic-bezier(0.2, 0.8, 0.2, 1) both;
+}
+.page-in-prev {
+  animation: page-in-prev 380ms cubic-bezier(0.2, 0.8, 0.2, 1) both;
+}
+@keyframes blink {
+  0%,
+  92%,
+  100% {
+    transform: scaleY(1);
+  }
+  95% {
+    transform: scaleY(0.1);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 1ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 1ms !important;
+  }
+}
+
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+.no-scrollbar {
+  scrollbar-width: none;
+}
+
+/* ─── Manga page composition ─── */
+.manga-page {
+  container-type: inline-size;
+  container-name: page;
+}
+.manga-grid {
+  display: grid;
+  grid-template-columns: repeat(12, minmax(0, 1fr));
+  grid-template-rows: repeat(8, minmax(15.5cqw, auto));
+  gap: 1.6cqw 1.4cqw;
+  padding: 3.2cqw 3.2cqw 0;
+}
+.manga-clip {
+  clip-path: var(--clip);
+}
+.frame-mobile {
+  display: none;
+}
+@container page (max-width: 460px) {
+  .manga-grid {
+    grid-template-columns: 1fr;
+    grid-template-rows: none;
+    grid-auto-rows: minmax(52cqw, auto);
+    gap: 3cqw;
+  }
+  .manga-slot {
+    grid-column: 1 / -1 !important;
+    grid-row: auto !important;
+  }
+  .manga-clip {
+    clip-path: var(--clip-m);
+  }
+  .frame-desktop {
+    display: none;
+  }
+  .frame-mobile {
+    display: block;
+  }
+}
+
+/* ─── Motion system ─────────────────────────────────────────────────── */
+:root {
+  --ease-ink: cubic-bezier(0.2, 0.8, 0.2, 1);
+  --ease-slam: cubic-bezier(0.3, 1.4, 0.5, 1);
+}
+
+.reveal {
+  transition: opacity 600ms var(--ease-ink), transform 600ms var(--ease-ink), clip-path 700ms var(--ease-ink);
+}
+.reveal-rise:not(.is-shown) {
+  opacity: 0;
+  transform: translateY(18px);
+}
+/* Opacity only while hidden: a zero-width clip-path would make IntersectionObserver treat it as never visible. */
+.reveal-panel:not(.is-shown) {
+  opacity: 0;
+}
+.reveal-panel.is-shown {
+  animation: wipe-in 760ms var(--ease-ink) both;
+}
+.reveal-slam:not(.is-shown) {
+  opacity: 0;
+  transform: scale(1.25) rotate(-3deg);
+}
+.reveal-slam {
+  transition-timing-function: var(--ease-slam);
+}
+
+.outline-num {
+  color: transparent;
+  -webkit-text-stroke: 2px var(--ink);
+}
+
+.ribbon-track {
+  display: flex;
+  width: max-content;
+  animation: ribbon 38s linear infinite;
+}
+@keyframes ribbon {
+  to {
+    transform: translateX(-50%);
+  }
+}
+
+@keyframes sumi-float {
+  0%,
+  100% {
+    transform: translateY(0) rotate(-2deg);
+  }
+  50% {
+    transform: translateY(-6px) rotate(2deg);
+  }
+}
+.sumi-float {
+  animation: sumi-float 3.2s ease-in-out infinite;
+}
+
+/* Panels ink in one after another when a page appears. */
+.manga-page .manga-slot {
+  animation: panel-in 520ms var(--ease-ink) both;
+}
+.manga-page .manga-slot:nth-child(2) { animation-delay: 90ms; }
+.manga-page .manga-slot:nth-child(3) { animation-delay: 180ms; }
+.manga-page .manga-slot:nth-child(4) { animation-delay: 270ms; }
+.manga-page .manga-slot:nth-child(5) { animation-delay: 360ms; }
+@keyframes panel-in {
+  from {
+    opacity: 0;
+    transform: translateY(10px) scale(0.985);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+/* Chapter title card */
+@keyframes kicker-slam {
+  0% { opacity: 0; transform: scale(2.4) rotate(-8deg); filter: blur(4px); }
+  60% { opacity: 1; transform: scale(0.94) rotate(-3deg); filter: none; }
+  100% { opacity: 1; transform: scale(1) rotate(-3deg); }
+}
+.kicker-slam {
+  animation: kicker-slam 620ms var(--ease-slam) both;
+}
+@keyframes wipe-in {
+  from { clip-path: polygon(0 0, 0 0, -20% 100%, 0 100%); }
+  to { clip-path: polygon(0 0, 120% 0, 100% 100%, 0 100%); }
+}
+.wipe-in {
+  animation: wipe-in 700ms var(--ease-ink) both;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .reveal,
+  .reveal:not(.is-shown) {
+    opacity: 1 !important;
+    transform: none !important;
+    clip-path: none !important;
+  }
+  .ribbon-track,
+  .sumi-float {
+    animation: none !important;
+  }
+}
+
+/* ─── Opening ─── */
+html[data-intro="seen"] .opening {
+  display: none;
+}
+.op-kicker { animation: ink-in 500ms var(--ease-ink) 150ms both; }
+.op-title { animation: wipe-in 800ms var(--ease-ink) 300ms both; }
+.op-kanji { animation: op-kanji 1200ms var(--ease-ink) 200ms both; }
+.op-tag { animation: ink-in 600ms var(--ease-ink) 800ms both; }
+.op-cta { animation: ink-in 600ms var(--ease-ink) 1050ms both; }
+.op-sumi { animation: ink-in 700ms var(--ease-ink) 1300ms both; }
+.op-kanji { translate: -50% -50%; }
+@keyframes op-kanji {
+  from { opacity: 0; scale: 1.3; }
+  to { opacity: 1; scale: 1; }
+}
+@keyframes op-drift { from { transform: scale(1) rotate(0deg); } to { transform: scale(1.06) rotate(1.5deg); } }
+.opening-drift { animation: op-drift 14s ease-in-out infinite alternate; }
+@keyframes op-zoom { to { transform: scale(1.6); opacity: 0.4; } }
+.opening-zoom { animation: op-zoom 1.4s var(--ease-ink) both; }
+@keyframes op-flash { 0% { opacity: 0; } 8% { opacity: 1; } 30% { opacity: 0; } 100% { opacity: 0; } }
+.op-flash { animation: op-flash 700ms linear both; mix-blend-mode: difference; }
+@keyframes op-sfx {
+  0% { opacity: 0; transform: scale(3) rotate(-14deg); }
+  30% { opacity: 1; transform: scale(0.92) rotate(-6deg); }
+  45% { transform: scale(1.04) rotate(-7deg); }
+  80% { opacity: 1; transform: scale(1) rotate(-7deg); }
+  100% { opacity: 0; transform: scale(1.1) rotate(-7deg); }
+}
+.op-sfx { animation: op-sfx 900ms var(--ease-ink) both; }
+@keyframes op-shake {
+  0%, 100% { transform: none; }
+  10% { transform: translate(-8px, 4px); }
+  20% { transform: translate(7px, -5px); }
+  30% { transform: translate(-5px, -3px); }
+  40% { transform: translate(4px, 4px); }
+  50% { transform: none; }
+}
+.opening-shake { animation: op-shake 420ms linear both; }
+@keyframes op-band { from { transform: translateX(-130%); } to { transform: translateX(0); } }
+.op-band { animation: op-band 520ms var(--ease-ink) both; }
+@keyframes op-leave {
+  from { clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%); }
+  to { clip-path: polygon(100% 0, 100% 0, 100% 100%, 120% 100%); }
+}
+.opening-leave { animation: op-leave 700ms cubic-bezier(0.7, 0, 0.2, 1) both; pointer-events: none; }
+@media (prefers-reduced-motion: reduce) {
+  .opening-leave { animation: none; opacity: 0; transition: opacity 200ms; }
+  .opening-drift { animation: none; }
+}
+
+/* ─── Reader transitions ─── */
+@keyframes cover-in {
+  from { clip-path: polygon(0 0, 0 0, -30% 100%, 0 100%); }
+  to { clip-path: polygon(0 0, 130% 0, 100% 100%, 0 100%); }
+}
+.cover-card { animation: cover-in 520ms cubic-bezier(0.7, 0, 0.2, 1) both; }
+@keyframes cover-speed { from { transform: scale(1.15) translateX(-3%); } to { transform: scale(1) translateX(0); } }
+.cover-speed { animation: cover-speed 2.2s var(--ease-ink) both; }
+@keyframes sheet-in { from { transform: translateX(-100%); } to { transform: none; } }
+.sheet-in { animation: sheet-in 320ms var(--ease-ink) both; }
