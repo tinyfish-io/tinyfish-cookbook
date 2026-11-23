@@ -165,6 +165,14 @@ Built for the [Agentic AI Build Week (AABW)](https://aabw.genaifund.ai/) hackath
 
 The 12 winning builds from the first Bounty Drop of the [TinyFish Student](https://tinyfish.ai/students) and [Ambassador](https://tinyfish.ai/ambassadors) Programs: job finders, AI-readiness auditors, brand guide generators and iMessage assistants. See [all the winners](./Bounty_Drop_001_Winners/README.md).
 
+### Bounty Drop 002 Winners
+
+The 13 winning builds from the second Bounty Drop: licence checks at official registers, MCP servers for sites with no API, property dossiers, version histories for the web, and a portal export. See [all the winners](./Bounty_Drop_002_Winners/README.md).
+
+### TinySet + TinyResearch Launch Bounty Winners
+
+The four winning builds from the TinySet and TinyResearch launch bounties: an investor finder and a spreadsheet zombie checker on TinySet, and a claim tracer and a licence comparison tool on TinyResearch. See [all the winners](./TinySet_TinyResearch_Launch_Bounty_Winners/README.md).
+
 ### Shopping & Deals
 
 | Recipe | Description |
