@@ -5,6 +5,17 @@ Written for agents. If you're an AI agent reading this because a user said
 in. If you're a human: paste "read INSTALL.md and install TinyFish for me"
 into your agent, or follow the same steps yourself.
 
+## Multiple agents
+
+If you want TinyFish in more than one coding agent:
+
+```bash
+npx universal-agent-plugins add tinyfish
+```
+
+That installs the same hosted MCP server across the agents on the machine.
+First use still signs in with TinyFish in the browser.
+
 ## Claude Code (no terminal needed)
 
 In the Claude Code chat, run:
