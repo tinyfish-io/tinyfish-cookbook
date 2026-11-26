@@ -1,0 +1,4 @@
+interface:
+  display_name: "Careers Scout"
+  short_description: "Find evidence-backed jobs with TinyFish"
+  default_prompt: "Use $careers-scout to find software engineering jobs in New York that mention Python."

@@ -1,0 +1,131 @@
+{
+  "synthetic_fixture": true,
+  "notice": "ALL EMPLOYERS AND JOBS IN THIS FILE ARE INVENTED TEST FIXTURES. NO LIVE API CALLS.",
+  "search": {
+    "greenhouse": [
+      {
+        "url": "https://job-boards.greenhouse.io/fixture-atlas",
+        "title": "Synthetic fixture employer",
+        "snippet": "Synthetic fixture only"
+      }
+    ],
+    "lever": [
+      {
+        "url": "https://jobs.lever.co/fixture-beacon",
+        "title": "Synthetic fixture employer",
+        "snippet": "Synthetic fixture only"
+      }
+    ],
+    "ashby": [
+      {
+        "url": "https://jobs.ashbyhq.com/fixture-cascade",
+        "title": "Synthetic fixture employer",
+        "snippet": "Synthetic fixture only"
+      }
+    ]
+  },
+  "feeds": {
+    "https://boards-api.greenhouse.io/v1/boards/fixture-atlas/jobs?content=true": {
+      "jobs": [
+        {
+          "id": 1001,
+          "title": "Senior Software Engineer",
+          "company_name": "Fixture Atlas (synthetic)",
+          "location": {
+            "name": "New York, NY"
+          },
+          "absolute_url": "https://job-boards.greenhouse.io/fixture-atlas/jobs/1001?utm_source=demo",
+          "content": "<p>Build Python services for a fictional test company.</p>",
+          "updated_at": "2026-10-01T00:00:00Z"
+        },
+        {
+          "id": 1001,
+          "title": "Senior Software Engineer",
+          "location": {
+            "name": "New York, NY"
+          },
+          "absolute_url": "https://job-boards.greenhouse.io/fixture-atlas/jobs/1001?utm_source=duplicate",
+          "content": "Python duplicate fixture"
+        },
+        {
+          "id": 1002,
+          "title": "Software Engineer",
+          "location": {
+            "name": "London, United Kingdom"
+          },
+          "absolute_url": "https://job-boards.greenhouse.io/fixture-atlas/jobs/1002",
+          "content": "Python, London; should not match New York."
+        },
+        {
+          "id": 1003,
+          "title": "Product Designer",
+          "location": {
+            "name": "London"
+          },
+          "absolute_url": "https://job-boards.greenhouse.io/fixture-atlas/jobs/1003",
+          "content": "Build fictional designs with Figma."
+        }
+      ]
+    },
+    "https://api.lever.co/v0/postings/fixture-beacon?mode=json&limit=100&skip=0": [
+      {
+        "id": "b001",
+        "text": "Software Engineer, Platform",
+        "categories": {
+          "location": "New York, NY",
+          "commitment": "Full-time"
+        },
+        "workplaceType": "hybrid",
+        "hostedUrl": "https://jobs.lever.co/fixture-beacon/b001",
+        "applyUrl": "https://jobs.lever.co/fixture-beacon/b001/apply",
+        "descriptionPlain": "Synthetic Python platform engineering opening."
+      },
+      {
+        "id": "b002",
+        "text": "Senior Product Designer",
+        "categories": {
+          "location": "London, United Kingdom"
+        },
+        "workplaceType": "onsite",
+        "hostedUrl": "https://jobs.lever.co/fixture-beacon/b002",
+        "applyUrl": "https://jobs.lever.co/fixture-beacon/b002/apply",
+        "descriptionPlain": "Figma and design systems. Synthetic example only."
+      }
+    ],
+    "https://api.ashbyhq.com/posting-api/job-board/fixture-cascade?includeCompensation=true": {
+      "jobs": [
+        {
+          "id": "c001",
+          "title": "Software Engineer",
+          "location": "New York, NY",
+          "workplaceType": "Remote",
+          "isRemote": true,
+          "isListed": true,
+          "jobUrl": "https://jobs.ashbyhq.com/fixture-cascade/c001",
+          "applyUrl": "https://jobs.ashbyhq.com/fixture-cascade/c001/application",
+          "descriptionPlain": "Work on Python APIs. Remote within New York only. Fictional job.",
+          "employmentType": "FullTime"
+        },
+        {
+          "id": "c002",
+          "title": "Software Engineer",
+          "location": "Remote",
+          "isRemote": true,
+          "isListed": true,
+          "jobUrl": "https://jobs.ashbyhq.com/fixture-cascade/c002",
+          "applyUrl": "https://jobs.ashbyhq.com/fixture-cascade/c002/application",
+          "descriptionPlain": "Synthetic global claim not made; location is unknown."
+        },
+        {
+          "id": "c003",
+          "title": "Software Engineer",
+          "location": "New York",
+          "isListed": false,
+          "jobUrl": "https://jobs.ashbyhq.com/fixture-cascade/c003",
+          "applyUrl": "https://jobs.ashbyhq.com/fixture-cascade/c003/application",
+          "descriptionPlain": "Unlisted synthetic opening, must be excluded."
+        }
+      ]
+    }
+  }
+}
