@@ -1,0 +1,116 @@
+@import "tailwindcss";
+
+/* Upstream design tokens — extracted from the locked Claude Design handoff
+   (docs/design-handoff/*.dc.html, spec: docs/DESIGN.md). Single source of truth. */
+@theme {
+  /* color */
+  --color-paper: #f5efe3;      /* page */
+  --color-panel: #fcf9f1;      /* cards, tiles */
+  --color-hairline: #ddd3c0;   /* default 1px borders */
+  --color-hairline-inner: #eee5d2; /* tile footers */
+  --color-ink: #201b13;        /* text, strong rules, neutral chart line */
+  --color-muted: #7a7060;
+  --color-rust: #a8402a;       /* THE accent: signal, live, links, negative deltas */
+  --color-ok: #47694f;         /* completed agents only */
+  --color-track: #e9e0cd;      /* score bar track */
+
+  /* type (families wired to next/font variables in layout.tsx) */
+  --font-serif: var(--font-newsreader), "Newsreader", georgia, serif;
+  --font-sans: var(--font-plex-sans), "IBM Plex Sans", system-ui, sans-serif;
+
+  /* the design has exactly one radius: none */
+  --radius-none: 0px;
+}
+
+body {
+  background: var(--color-paper);
+  color: var(--color-ink);
+  font-family: var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+}
+
+a { color: var(--color-rust); text-decoration: none; }
+a:hover { text-decoration: underline; }
+
+/* ── signature primitives (used verbatim across screens) ── */
+
+/* 11px letterspaced uppercase section label */
+.eyebrow {
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+
+/* numbers always align */
+.tnum { font-variant-numeric: tabular-nums; }
+
+/* section headers underline in ink, not gray */
+.rule-ink { border-bottom: 1px solid var(--color-ink); }
+.rule-hairline { border-bottom: 1px solid var(--color-hairline); }
+
+/* live/working indicator dot */
+.pulse-dot {
+  display: inline-block;
+  width: 7px; height: 7px;
+  border-radius: 50%;
+  background: var(--color-rust);
+  animation: pulse 2s infinite;
+}
+.pulse-dot--fast { animation-duration: 1.4s; }
+.pulse-dot--ok { background: var(--color-ok); animation: none; }
+
+@keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.2; } }
+@keyframes caret { 0%, 49% { opacity: 1; } 50%, 100% { opacity: 0; } }
+
+.caret-blink { animation: caret 1.1s infinite; }
+
+@media (prefers-reduced-motion: reduce) {
+  .pulse-dot, .caret-blink { animation: none; }
+}
+
+/* ── component classes: JSX slaps one of these on, not utility soup ── */
+
+/* panel card: signal tiles, scan source cards, score panel */
+.card {
+  background: var(--color-panel);
+  border: 1px solid var(--color-hairline);
+  padding: 20px 22px;
+}
+.card--working { border-color: var(--color-rust); }
+.card--queued { background: transparent; border-style: dashed; }
+
+/* muted footer line inside a card */
+.card-footer {
+  font-size: 11px;
+  color: var(--color-muted);
+  margin-top: 12px;
+  border-top: 1px solid var(--color-hairline-inner);
+  padding-top: 9px;
+}
+
+/* score component bar */
+.score-track { height: 8px; background: var(--color-track); }
+.score-fill { height: 100%; background: var(--color-ink); }
+.score-fill--rust { background: var(--color-rust); }
+
+/* top nav link */
+.nav-link { color: var(--color-ink); font-size: 13px; font-weight: 500; }
+.nav-link--active {
+  color: var(--color-rust);
+  border-bottom: 2px solid var(--color-rust);
+  padding-bottom: 2px;
+}
+
+/* verbatim evidence quote */
+.quote {
+  font-family: var(--font-serif);
+  font-style: italic;
+  font-size: 16.5px;
+  line-height: 1.4;
+}
+
+/* adverse delta */
+.delta-bad { color: var(--color-rust); font-weight: 600; }
+
+:focus-visible { outline: 2px solid var(--color-rust); outline-offset: 2px; }
