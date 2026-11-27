@@ -12,13 +12,7 @@ import {
   Check,
   X,
   Clock,
-  ExternalLink,
 } from "lucide-react";
-import {
-  Tooltip,
-  TooltipContent,
-  TooltipTrigger,
-} from "@/components/ui/tooltip";
 
 const icons: Record<SourceType, React.ReactNode> = {
   docs: <FileText className="h-4 w-4" />,
@@ -58,7 +52,7 @@ export function SourceProgress({ progress }: SourceProgressProps) {
 }
 
 function SourceProgressCard({ progress }: { progress: ScrapeProgress }) {
-  const { source, status, steps, wordCount, error, streamingUrl } = progress;
+  const { source, status, steps, wordCount, error } = progress;
   const type = source.type;
   const config = SOURCE_CONFIG[type];
 
@@ -102,21 +96,6 @@ function SourceProgressCard({ progress }: { progress: ScrapeProgress }) {
         </div>
 
         <div className="flex items-center gap-1">
-          {streamingUrl && status === "scraping" && (
-            <Tooltip>
-              <TooltipTrigger asChild>
-                <a
-                  href={streamingUrl}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="rounded p-1 text-muted-foreground hover:bg-secondary hover:text-foreground"
-                >
-                  <ExternalLink className="h-3.5 w-3.5" />
-                </a>
-              </TooltipTrigger>
-              <TooltipContent>Watch live</TooltipContent>
-            </Tooltip>
-          )}
           <StatusIcon />
         </div>
       </div>
