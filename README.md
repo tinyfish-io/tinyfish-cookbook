@@ -218,6 +218,7 @@ The four winning builds from the TinySet and TinyResearch launch bounties: an in
 | Recipe | Description |
 |--------|-------------|
 | [code-reference-finder](./code-reference-finder) | Find real-world usage examples for any code snippet from GitHub and Stack Overflow |
+| [docs-drift-radar](./docs-drift-radar) | Watch docs and changelog URLs with TinyFish Fetch and report what changed since the last run (Python recipe) |
 | [fast-qa](./fast-qa) | No-code QA testing platform with parallel test execution and live browser previews |
 | [tinyskills](./tinyskills) | Generates comprehensive SKILL.md guides from docs, GitHub, and developer blogs |
 
