@@ -24,7 +24,7 @@ Snyk, Dependabot, and `npm audit` all use cached vulnerability databases that ar
 
 ## Requirements
 
-- TinyFish CLI: `npm install -g tinyfish`
+- TinyFish CLI: `npm install -g @tiny-fish/cli`
 - Authenticated: `tinyfish auth login`
 
 ## Install
