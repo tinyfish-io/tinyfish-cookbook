@@ -54,7 +54,8 @@ export default function Home() {
   const handleSelect = (index: number, selected: boolean) => {
     setSelectedIndices((prev) => {
       const next = new Set(prev);
-      selected ? next.add(index) : next.delete(index);
+      if (selected) next.add(index);
+      else next.delete(index);
       return next;
     });
   };
