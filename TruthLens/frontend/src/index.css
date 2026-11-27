@@ -1,0 +1,53 @@
+@import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@500;600&display=swap");
+@import "tailwindcss";
+
+/* ===== Theme: cream on near-black ===== */
+:root {
+  color-scheme: dark;
+  --bg: #030303;
+  --surface-0: #0a0a0a;
+  --surface: #0f0f0f;
+  --surface-2: #141414;
+  --glass: rgba(20, 20, 20, 0.6);
+  --border: rgba(255, 255, 255, 0.08);
+  --border-strong: rgba(255, 255, 255, 0.14);
+
+  --text: #ededed;
+  --text-2: #a1a1aa;
+  --text-3: #8b8b94;
+
+  --cream: #eee9e1;
+  --cream-soft: rgba(238, 233, 225, 0.1);
+  --cream-line: rgba(238, 233, 225, 0.35);
+
+  --green: #10b981;
+  --red: #ef4444;
+  --amber: #f59e0b;
+
+  --font: "Inter", -apple-system, "Segoe UI", sans-serif;
+  --mono: "JetBrains Mono", "Consolas", monospace;
+  --radius: 16px;
+
+  font-family: var(--font);
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+}
+
+* { box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+
+body {
+  margin: 0;
+  min-width: 320px;
+  min-height: 100vh;
+  background: var(--bg);
+  color: var(--text);
+}
+
+#root { min-height: 100vh; }
+
+button, textarea { font: inherit; color: inherit; }
+button { cursor: pointer; }
+
+:focus-visible { outline: 2px solid var(--cream-line); outline-offset: 3px; }

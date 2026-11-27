@@ -1,0 +1,37 @@
+
+# Environment variables and secrets
+.env
+.env.*
+!.env.example
+
+# Python virtual environments
+.venv/
+backend/.venv/
+
+# Python cache and tests
+__pycache__/
+*.py[cod]
+.pytest_cache/
+
+# Frontend dependencies and builds
+node_modules/
+dist/
+
+# IDE and operating system
+.vscode/
+.DS_Store
+Thumbs.db
+
+
+# Logs and error reports
+*.log
+gemini_error.txt
+
+# IDE and test coverage
+.idea/
+.coverage
+htmlcov/
+
+# Dev-only scripts and test data (not part of the deployed app)
+backend/scripts/
+backend/tests/
