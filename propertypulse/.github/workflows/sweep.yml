@@ -1,0 +1,27 @@
+name: PropertyPulse sweep
+
+on:
+  schedule:
+    # 11:30 AM Vietnam time (UTC+7) daily = 04:30 UTC. Vietnam has no DST.
+    # Only searches that are actually due (48h+ since last check, or brand
+    # new) get processed each run — see runSweep()'s due-check.
+    - cron: "30 4 * * *"
+  workflow_dispatch: {}
+
+jobs:
+  sweep:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+      - name: Install dependencies
+        run: npm install --no-audit --no-fund
+      - name: Run sweep
+        run: npx tsx scripts/sweep.ts
+        env:
+          TINYFISH_API_KEY: ${{ secrets.TINYFISH_API_KEY }}
+          UPSTASH_REDIS_REST_URL: ${{ secrets.UPSTASH_REDIS_REST_URL }}
+          UPSTASH_REDIS_REST_TOKEN: ${{ secrets.UPSTASH_REDIS_REST_TOKEN }}
