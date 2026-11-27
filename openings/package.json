@@ -1,0 +1,34 @@
+{
+  "name": "job-portal-career-finders",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "eslint",
+    "spike": "tsx --env-file=.env.local scripts/spike.ts",
+    "test": "tsx --test 'src/**/*.test.ts'",
+    "pipeline": "tsx --env-file=.env.local scripts/run.ts"
+  },
+  "dependencies": {
+    "@tiny-fish/sdk": "^0.7.0",
+    "ai": "^7.0.122",
+    "next": "16.3.6",
+    "react": "19.2.8",
+    "react-dom": "19.2.8",
+    "zod": "^4.6.5"
+  },
+  "devDependencies": {
+    "@tailwindcss/postcss": "^4",
+    "@types/node": "^20",
+    "@types/react": "^19",
+    "@types/react-dom": "^19",
+    "eslint": "^9",
+    "eslint-config-next": "16.3.6",
+    "tailwindcss": "^4",
+    "tsx": "^4.23.15",
+    "typescript": "^5"
+  },
+  "type": "module"
+}
