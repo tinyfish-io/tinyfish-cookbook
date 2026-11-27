@@ -128,6 +128,12 @@ RETURN JSON ONLY (no markdown):
             enqueue({ type: "SCREENSHOT", data: { streamingUrl: event.streaming_url } });
           }
 
+          // The client renders this as the current action. Without it, progress
+          // text stays on the initial message for the whole run.
+          if (event.type === EventType.PROGRESS) {
+            enqueue({ type: "STATUS", message: event.purpose });
+          }
+
           if (event.type === EventType.COMPLETE && event.status === RunStatus.COMPLETED) {
             const raw = typeof event.result === "string" ? JSON.parse(event.result) : event.result;
             const analysis = parseResearchResult(raw as Record<string, unknown>, area, city);
