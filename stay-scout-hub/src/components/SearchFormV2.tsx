@@ -76,7 +76,7 @@ export function SearchFormV2({ onSearch, isSearching }: SearchFormV2Props) {
       >
         <label className="text-sm font-medium text-muted-foreground flex items-center gap-2 mb-4">
           <Sparkles className="w-4 h-4 text-primary" />
-          What's the purpose of your stay?
+          What&apos;s the purpose of your stay?
         </label>
         
         <PurposeSelector
