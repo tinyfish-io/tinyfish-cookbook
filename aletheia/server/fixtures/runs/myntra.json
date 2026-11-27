@@ -1,0 +1,227 @@
+{
+  "run_id": "4f726ae8-8c2f-41eb-94c3-a93d47aa5965",
+  "status": "COMPLETED",
+  "goal": "Navigate to https://www.myntra.com/men-tshirts to complete the goal: You are a mystery shopper auditing this site's checkout flow for hidden costs and pre-selected extras. Complete these steps:\n1. Close any cookie banner, login popup, app-download prompt or notification popup (use the X or \"skip\", never log in).\n2. Open the first men's T-shirt in the listing, pick any available size, and click Add to Bag. Add exactly one item.\n3. Go to the bag and proceed toward checkout (Place Order) as far as possible without logging in, stopping at the page that asks for payment (card, UPI, netbanking choice).\nAt every page, record the page name, URL and the total price shown. Record every fee or charge with its exact name and amount (convenience fee, platform fee, delivery fee, gift wrap, donation, taxes). Record every checkbox, toggle or option that was already selected without you choosing it (donation, membership, gift wrap, add-on), with its cost. Record any item or charge added to the bag that you did not add. Record any countdown timer, \"only X left\" or pressure message, and the exact wording of any button or link used to decline an extra.\nRules: Never enter payment details, never click Pay, never enter a phone number, never request or enter an OTP, never sign up. Do not change any pre-selected option, only record it. If the site requires login, a phone number or an OTP to continue, stop there, set login_required to true and report everything seen so far. If you see a CAPTCHA, access denied page or bot check, stop and set blocked_by_bot_protection to true.",
+  "created_at": "2026-10-29T14:56:22Z",
+  "started_at": "2026-10-29T14:56:26Z",
+  "finished_at": "2026-10-29T15:01:16Z",
+  "num_of_steps": 17,
+  "result": {
+    "fees": [
+      {
+        "name": "Platform Fee",
+        "amount": 23,
+        "first_seen_at_step": 3
+      }
+    ],
+    "steps": [
+      {
+        "url": "https://www.myntra.com/men-tshirts",
+        "note": "No popups/banners to dismiss. First non-ad item selected: Jockey t-shirt.",
+        "page": "Men's T-Shirts Listing",
+        "step": 1,
+        "total_shown": 599
+      },
+      {
+        "url": "https://www.myntra.com/tshirts/jockey/jockey-combed-cotton-rich-round-neck-half-sleeve-tshirt-2714/11444004/buy",
+        "note": "Selected Size S. ADD TO BAG clicked. Item added.",
+        "page": "Product Detail Page",
+        "step": 2,
+        "total_shown": 599
+      },
+      {
+        "url": "https://www.myntra.com/checkout/cart",
+        "note": "Cart summary: 1 item (Jockey T-shirt, Size S) @ ₹599. Platform Fee: ₹23. Total to pay: ₹622. Gift packaging option available at ₹35 (not pre-ticked). Donation section with options ₹10, ₹20, ₹50, ₹100 (none pre-ticked). No pre-ticked checkboxes or toggles detected. '1/1 ITEMS SELECTED' shown. Clicked PLACE ORDER.",
+        "page": "Shopping Bag / Cart",
+        "step": 3,
+        "total_shown": 622
+      },
+      {
+        "url": "https://www.myntra.com/login?referer=/checkout/cart",
+        "note": "Login wall encountered. Page requires mobile number input (+91 | Mobile Number*) to continue. Message: 'By continuing, I agree to the Terms of Use & Privacy Policy and I am above 18 years old.' No OTP field visible yet - requires phone number first. Cannot proceed without authentication.",
+        "page": "Login / Signup Page",
+        "step": 4,
+        "total_shown": null
+      }
+    ],
+    "currency": "INR",
+    "item_name": "Jockey Combed Cotton Rich Round Neck Half Sleeve Tshirt-2714",
+    "final_price": null,
+    "login_wall_at": "https://www.myntra.com/login?referer=/checkout/cart",
+    "login_required": true,
+    "stopped_reason": "Login wall - Myntra requires mobile number input to proceed past checkout cart. No payment page was reached.",
+    "decline_wording": [],
+    "item_listed_price": 599,
+    "pressure_messages": [],
+    "pre_ticked_options": [],
+    "added_without_asking": [],
+    "reached_payment_page": false,
+    "blocked_by_bot_protection": false
+  },
+  "output_schema": {
+    "type": "object",
+    "required": [
+      "reached_payment_page",
+      "login_required",
+      "login_wall_at",
+      "blocked_by_bot_protection",
+      "stopped_reason",
+      "item_name",
+      "item_listed_price",
+      "currency",
+      "steps",
+      "fees",
+      "pre_ticked_options",
+      "added_without_asking",
+      "pressure_messages",
+      "decline_wording",
+      "final_price"
+    ],
+    "properties": {
+      "fees": {
+        "type": "array",
+        "items": {
+          "type": "object",
+          "required": ["name", "amount", "first_seen_at_step"],
+          "properties": {
+            "name": {
+              "type": "string"
+            },
+            "amount": {
+              "type": "number",
+              "nullable": true
+            },
+            "first_seen_at_step": {
+              "type": "integer"
+            }
+          }
+        }
+      },
+      "steps": {
+        "type": "array",
+        "items": {
+          "type": "object",
+          "required": ["step", "page", "url", "total_shown", "note"],
+          "properties": {
+            "url": {
+              "type": "string",
+              "nullable": true
+            },
+            "note": {
+              "type": "string",
+              "nullable": true
+            },
+            "page": {
+              "type": "string"
+            },
+            "step": {
+              "type": "integer"
+            },
+            "total_shown": {
+              "type": "number",
+              "nullable": true
+            }
+          }
+        }
+      },
+      "currency": {
+        "type": "string"
+      },
+      "item_name": {
+        "type": "string",
+        "nullable": true
+      },
+      "final_price": {
+        "type": "number",
+        "nullable": true
+      },
+      "login_wall_at": {
+        "type": "string",
+        "nullable": true
+      },
+      "login_required": {
+        "type": "boolean"
+      },
+      "stopped_reason": {
+        "type": "string"
+      },
+      "decline_wording": {
+        "type": "array",
+        "items": {
+          "type": "string"
+        }
+      },
+      "item_listed_price": {
+        "type": "number",
+        "nullable": true
+      },
+      "pressure_messages": {
+        "type": "array",
+        "items": {
+          "type": "object",
+          "required": ["text", "seen_at_step"],
+          "properties": {
+            "text": {
+              "type": "string"
+            },
+            "seen_at_step": {
+              "type": "integer"
+            }
+          }
+        }
+      },
+      "pre_ticked_options": {
+        "type": "array",
+        "items": {
+          "type": "object",
+          "required": ["label", "cost", "seen_at_step"],
+          "properties": {
+            "cost": {
+              "type": "number",
+              "nullable": true
+            },
+            "label": {
+              "type": "string"
+            },
+            "seen_at_step": {
+              "type": "integer"
+            }
+          }
+        }
+      },
+      "added_without_asking": {
+        "type": "array",
+        "items": {
+          "type": "object",
+          "required": ["name", "cost", "seen_at_step"],
+          "properties": {
+            "cost": {
+              "type": "number",
+              "nullable": true
+            },
+            "name": {
+              "type": "string"
+            },
+            "seen_at_step": {
+              "type": "integer"
+            }
+          }
+        }
+      },
+      "reached_payment_page": {
+        "type": "boolean"
+      },
+      "blocked_by_bot_protection": {
+        "type": "boolean"
+      }
+    }
+  },
+  "profile_attached": false,
+  "profile_id": null,
+  "error": null,
+  "streaming_url": "https://stream.invalid/live",
+  "browser_config": {
+    "proxy_enabled": true,
+    "proxy_country_code": "IN"
+  }
+}

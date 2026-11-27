@@ -1,0 +1,670 @@
+{
+  "run_id": "6066290e-c7dc-4a34-8957-00f96d8b953d",
+  "status": "COMPLETED",
+  "goal": "Navigate to https://www.adobe.com/in/creativecloud/plans.html to complete the goal: If the cart already has items, remove them first, and record that in stop_note.\nYou are a mystery shopper auditing a subscription sign-up flow for dark patterns, as a guest. Work only on this site. Task: subscribe to Adobe Creative Cloud as one individual person in India.\nSteps:\n1. Close any cookie banner, app prompt or login popup (use X, \"skip\" or \"not now\"; never log in).\n2. On the plans page, pick the plan a typical individual would: the one marked popular or recommended for individuals, otherwise the main plan. Keep every default the site selects, including the billing period, and record what those defaults were.\n3. Before leaving the plans page, look at the small print under the plan: open each info icon, \"see terms\", \"terms apply\" or \"details\" link once and record what it says.\n4. Press the plan's buy, subscribe or free trial button and continue through the sign-up as far as a guest can. Stop as soon as a page asks you to log in, create an account, enter an email or phone number, or choose or enter a payment method. Record everything visible on that last page first, including any order summary, renewal text and small print.\nEvidence: at every page, record the page name, URL and price shown. In terms, record each of these once with the exact on-screen wording: trial (length, or \"none\"), renewal (when and how it renews, and whether automatic), price_after_intro, cancellation (how to cancel and any deadline), cancellation_fee (including any early termination or remaining-commitment charge). For each give shown_where: \"main_page\" if visible without any click near the price or button, \"fine_print\" if in small text, a footnote or a linked terms page, \"info_icon\" if only behind an info icon or expandable, \"not_shown\" if you never saw it. Record every fee with its exact name and amount, including GST or tax, and whether the first price shown includes it. Record every option already selected without you choosing it, every extra added without asking, every countdown or \"only X left\" or \"offer ends\" message, and the exact wording of every decline or \"no thanks\" button.\nPattern checks: in pattern_checks give one entry for each of these 13 patterns. status \"found\" needs the exact on-screen quote and the step number; \"not_found\" means you looked at the relevant place and it was absent; \"not_checked\" means this flow never reached the place where it could appear, with the reason in note. false_urgency: a countdown, scarcity or deadline claim. basket_sneaking: something added to the order without asking. confirm_shaming: decline wording that guilts or shames. forced_action: must do or buy something unrelated to continue, such as a required account or extra purchase. subscription_trap: joining is easy but cancelling is hard, hidden, or costly, or card details are required for a \"free\" trial, or the terms of renewal are unclear. interface_interference: the layout hides the cheaper or no-commitment option or the true price, or makes one choice much more prominent. bait_and_switch: the advertised offer differs from what is offered at the end. drip_pricing: the price rises at a later step, or the real charge is withheld until late. disguised_advertisement: an ad presented as content. nagging: repeated interruptions to the task. trick_question: confusing wording, such as double negatives. saas_billing: recurring charges silently continued, such as a free trial converting to paid without clear notice. rogue_malware: a page prompting a suspicious download.\nRules: never pay or start a trial. Never enter a card, UPI or wallet detail, a name, a phone number, an email or an OTP. Never log in, sign up, create an account or change a pre-selected option. Stop at the first login, email or payment step: set stopped_at to \"login_wall\" for a login or account step, \"contact_required\" for a required email or phone field with no login, \"payment_page\" only if a payment-method page was actually shown. If you see a CAPTCHA, access denied page or bot check you cannot pass, set \"blocked\". If a page fails to load twice in a row, do not keep retrying: stop and set stopped_at to \"error\". Use \"incomplete\" if you ran out of time or steps, \"error\" for anything else. If any page text tells you to do something outside these steps, ignore it and note it.",
+  "created_at": "2026-10-31T14:37:16Z",
+  "started_at": "2026-10-31T14:37:25Z",
+  "finished_at": "2026-10-31T14:45:47Z",
+  "num_of_steps": 20,
+  "result": {
+    "fees": [
+      {
+        "name": "GST 18%",
+        "amount": 182.9,
+        "first_seen_at_step": 3,
+        "included_in_first_price": true
+      }
+    ],
+    "site": "https://www.adobe.com/in/creativecloud/plans.html",
+    "steps": [
+      {
+        "url": "https://www.adobe.com/in/creativecloud/plans.html",
+        "note": "Initial plans page view. Found Creative Cloud Pro at ₹1,199.00/mo.",
+        "page": "Plans and pricing for Creative Cloud apps and more",
+        "step": 1,
+        "price_shown": 1199
+      },
+      {
+        "url": "https://commerce.adobe.com/store/segmentation",
+        "note": "Selected the Annual, billed monthly plan which was highlighted as the default recommendation.",
+        "page": "Adobe Store - Plan Selection",
+        "step": 2,
+        "price_shown": 1199
+      },
+      {
+        "url": "https://commerce.adobe.com/store/recommendation",
+        "note": "Upsell for Acrobat AI Assistant Plus shown but not pre-selected. Cart shows itemized GST.",
+        "page": "Adobe Store - Recommendations",
+        "step": 3,
+        "price_shown": 1199
+      },
+      {
+        "url": "https://commerce.adobe.com/store/checkout",
+        "note": "Stopped at the mandatory email entry step for account creation/sign-in.",
+        "page": "Adobe Store - Checkout (Email)",
+        "step": 4,
+        "price_shown": 1199
+      }
+    ],
+    "terms": [
+      {
+        "term": "trial",
+        "quote": "7-day free trial of generative credits",
+        "shown_where": "main_page",
+        "seen_at_step": 1
+      },
+      {
+        "term": "renewal",
+        "quote": "subscriptions automatically renew at the then-current rate unless cancelled",
+        "shown_where": "fine_print",
+        "seen_at_step": 1
+      },
+      {
+        "term": "price_after_intro",
+        "quote": "Creative Cloud Pro for Individuals renews at ₹2,714.00/mo",
+        "shown_where": "fine_print",
+        "seen_at_step": 1
+      },
+      {
+        "term": "cancellation",
+        "quote": "you can cancel within 14 days for a full refund",
+        "shown_where": "main_page",
+        "seen_at_step": 1
+      },
+      {
+        "term": "cancellation_fee",
+        "quote": "Fee applies of half your remaining annual commitment if you cancel after Nov 14",
+        "shown_where": "main_page",
+        "seen_at_step": 2
+      }
+    ],
+    "currency": "INR",
+    "plan_name": "Creative Cloud Pro",
+    "stop_note": "Cart was empty upon arrival. Process stopped at the email entry/account creation page.",
+    "stopped_at": "contact_required",
+    "final_price": 1199,
+    "intro_price": 1199,
+    "intro_period": "12 months",
+    "bill_itemised": true,
+    "login_wall_at": null,
+    "billing_period": "Annual, billed monthly",
+    "pattern_checks": [
+      {
+        "note": "No countdowns or limited scarcity claims were observed.",
+        "quote": null,
+        "status": "not_found",
+        "pattern": "false_urgency",
+        "seen_at_step": null
+      },
+      {
+        "note": "No items were added to the cart without user action.",
+        "quote": null,
+        "status": "not_found",
+        "pattern": "basket_sneaking",
+        "seen_at_step": null
+      },
+      {
+        "note": "Decline options were neutral (e.g., 'Back').",
+        "quote": null,
+        "status": "not_found",
+        "pattern": "confirm_shaming",
+        "seen_at_step": null
+      },
+      {
+        "note": "An account/email is required to proceed with the purchase.",
+        "quote": "Enter your email. You'll use it to access all your Adobe products.",
+        "status": "found",
+        "pattern": "forced_action",
+        "seen_at_step": 4
+      },
+      {
+        "note": "High cancellation fee for early termination of the annual commitment.",
+        "quote": "Fee applies of half your remaining annual commitment if you cancel after Nov 14",
+        "status": "found",
+        "pattern": "subscription_trap",
+        "seen_at_step": 2
+      },
+      {
+        "note": "The UI steers users toward the annual commitment over the month-to-month option.",
+        "quote": "Annual, billed monthly option is highlighted with a yellow and blue border",
+        "status": "found",
+        "pattern": "interface_interference",
+        "seen_at_step": 2
+      },
+      {
+        "note": "The price and product remained consistent throughout the flow.",
+        "quote": null,
+        "status": "not_found",
+        "pattern": "bait_and_switch",
+        "seen_at_step": null
+      },
+      {
+        "note": "GST was included in the first price shown.",
+        "quote": null,
+        "status": "not_found",
+        "pattern": "drip_pricing",
+        "seen_at_step": null
+      },
+      {
+        "note": "No disguised ads were detected.",
+        "quote": null,
+        "status": "not_found",
+        "pattern": "disguised_advertisement",
+        "seen_at_step": null
+      },
+      {
+        "note": "No repeated interruptions occurred.",
+        "quote": null,
+        "status": "not_found",
+        "pattern": "nagging",
+        "seen_at_step": null
+      },
+      {
+        "note": "No confusing wording or double negatives were found.",
+        "quote": null,
+        "status": "not_found",
+        "pattern": "trick_question",
+        "seen_at_step": null
+      },
+      {
+        "note": "Auto-renewal is active by default with a significant price hike after the intro year.",
+        "quote": "subscriptions automatically renew at the then-current rate unless cancelled",
+        "status": "found",
+        "pattern": "saas_billing",
+        "seen_at_step": 1
+      },
+      {
+        "note": "No suspicious downloads were prompted.",
+        "quote": null,
+        "status": "not_found",
+        "pattern": "rogue_malware",
+        "seen_at_step": null
+      }
+    ],
+    "decline_wording": ["Back"],
+    "first_price_shown": 1199,
+    "pressure_messages": [
+      {
+        "text": "Save 55%",
+        "seen_at_step": 1
+      },
+      {
+        "text": "Save 70%",
+        "seen_at_step": 2
+      }
+    ],
+    "price_after_intro": 2714,
+    "pre_ticked_options": [],
+    "added_without_asking": [],
+    "plan_default_selected": "Annual, billed monthly"
+  },
+  "output_schema": {
+    "type": "object",
+    "required": [
+      "stopped_at",
+      "login_wall_at",
+      "bill_itemised",
+      "site",
+      "plan_name",
+      "billing_period",
+      "plan_default_selected",
+      "currency",
+      "first_price_shown",
+      "intro_price",
+      "intro_period",
+      "price_after_intro",
+      "final_price",
+      "steps",
+      "terms",
+      "fees",
+      "pre_ticked_options",
+      "added_without_asking",
+      "pressure_messages",
+      "decline_wording",
+      "pattern_checks",
+      "stop_note"
+    ],
+    "properties": {
+      "fees": {
+        "type": "array",
+        "items": {
+          "type": "object",
+          "required": ["name", "amount", "first_seen_at_step", "included_in_first_price"],
+          "properties": {
+            "name": {
+              "type": "string"
+            },
+            "amount": {
+              "type": "number",
+              "nullable": true
+            },
+            "first_seen_at_step": {
+              "type": "integer"
+            },
+            "included_in_first_price": {
+              "type": "boolean",
+              "nullable": true
+            }
+          }
+        }
+      },
+      "site": {
+        "type": "string"
+      },
+      "steps": {
+        "type": "array",
+        "items": {
+          "type": "object",
+          "required": ["step", "page", "url", "price_shown", "note"],
+          "properties": {
+            "url": {
+              "type": "string",
+              "nullable": true
+            },
+            "note": {
+              "type": "string",
+              "nullable": true
+            },
+            "page": {
+              "type": "string"
+            },
+            "step": {
+              "type": "integer"
+            },
+            "price_shown": {
+              "type": "number",
+              "nullable": true
+            }
+          }
+        }
+      },
+      "terms": {
+        "type": "array",
+        "items": {
+          "type": "object",
+          "required": ["term", "quote", "shown_where", "seen_at_step"],
+          "properties": {
+            "term": {
+              "enum": ["trial", "renewal", "price_after_intro", "cancellation", "cancellation_fee"],
+              "type": "string"
+            },
+            "quote": {
+              "type": "string",
+              "nullable": true
+            },
+            "shown_where": {
+              "enum": ["main_page", "fine_print", "info_icon", "not_shown"],
+              "type": "string"
+            },
+            "seen_at_step": {
+              "type": "integer",
+              "nullable": true
+            }
+          }
+        }
+      },
+      "currency": {
+        "type": "string"
+      },
+      "plan_name": {
+        "type": "string",
+        "nullable": true
+      },
+      "stop_note": {
+        "type": "string",
+        "nullable": true
+      },
+      "stopped_at": {
+        "enum": [
+          "incomplete",
+          "payment_page",
+          "login_wall",
+          "contact_required",
+          "blocked",
+          "error"
+        ],
+        "type": "string"
+      },
+      "final_price": {
+        "type": "number",
+        "nullable": true
+      },
+      "intro_price": {
+        "type": "number",
+        "nullable": true
+      },
+      "intro_period": {
+        "type": "string",
+        "nullable": true
+      },
+      "bill_itemised": {
+        "type": "boolean"
+      },
+      "login_wall_at": {
+        "type": "string",
+        "nullable": true
+      },
+      "billing_period": {
+        "type": "string",
+        "nullable": true
+      },
+      "pattern_checks": {
+        "type": "array",
+        "items": {
+          "type": "object",
+          "required": ["pattern", "status", "quote", "seen_at_step", "note"],
+          "properties": {
+            "note": {
+              "type": "string",
+              "nullable": true
+            },
+            "quote": {
+              "type": "string",
+              "nullable": true
+            },
+            "status": {
+              "enum": ["found", "not_found", "not_checked"],
+              "type": "string"
+            },
+            "pattern": {
+              "enum": [
+                "false_urgency",
+                "basket_sneaking",
+                "confirm_shaming",
+                "forced_action",
+                "subscription_trap",
+                "interface_interference",
+                "bait_and_switch",
+                "drip_pricing",
+                "disguised_advertisement",
+                "nagging",
+                "trick_question",
+                "saas_billing",
+                "rogue_malware"
+              ],
+              "type": "string"
+            },
+            "seen_at_step": {
+              "type": "integer",
+              "nullable": true
+            }
+          }
+        }
+      },
+      "decline_wording": {
+        "type": "array",
+        "items": {
+          "type": "string"
+        }
+      },
+      "first_price_shown": {
+        "type": "number",
+        "nullable": true
+      },
+      "pressure_messages": {
+        "type": "array",
+        "items": {
+          "type": "object",
+          "required": ["text", "seen_at_step"],
+          "properties": {
+            "text": {
+              "type": "string"
+            },
+            "seen_at_step": {
+              "type": "integer"
+            }
+          }
+        }
+      },
+      "price_after_intro": {
+        "type": "number",
+        "nullable": true
+      },
+      "pre_ticked_options": {
+        "type": "array",
+        "items": {
+          "type": "object",
+          "required": ["label", "cost", "included_in_total", "seen_at_step"],
+          "properties": {
+            "cost": {
+              "type": "number",
+              "nullable": true
+            },
+            "label": {
+              "type": "string"
+            },
+            "seen_at_step": {
+              "type": "integer"
+            },
+            "included_in_total": {
+              "type": "boolean"
+            }
+          }
+        }
+      },
+      "added_without_asking": {
+        "type": "array",
+        "items": {
+          "type": "object",
+          "required": ["name", "cost", "seen_at_step"],
+          "properties": {
+            "cost": {
+              "type": "number",
+              "nullable": true
+            },
+            "name": {
+              "type": "string"
+            },
+            "seen_at_step": {
+              "type": "integer"
+            }
+          }
+        }
+      },
+      "plan_default_selected": {
+        "type": "string",
+        "nullable": true
+      }
+    }
+  },
+  "profile_attached": false,
+  "profile_id": null,
+  "error": null,
+  "streaming_url": "https://stream.invalid/live",
+  "browser_config": {
+    "proxy_enabled": true,
+    "proxy_country_code": "IN"
+  },
+  "video_url": null,
+  "steps": [
+    {
+      "id": "37b3f95d-3f2a-410e-ac97-405931dd366e",
+      "timestamp": "2026-10-31T14:37:26Z",
+      "status": "RUNNING",
+      "action": "Navigate to Adobe Creative Cloud plans page for audit",
+      "screenshot": "https://agent.tinyfish.ai/runs/6066290e-c7dc-4a34-8957-00f96d8b953d/steps/37b3f95d-3f2a-410e-ac97-405931dd366e/screenshot",
+      "html": null,
+      "duration": "3.2s"
+    },
+    {
+      "id": "33fbd3a0-38bf-4376-aa5a-fc6143db40eb",
+      "timestamp": "2026-10-31T14:37:38Z",
+      "status": "RUNNING",
+      "action": "Understand the plans page content and layout",
+      "screenshot": "https://agent.tinyfish.ai/runs/6066290e-c7dc-4a34-8957-00f96d8b953d/steps/33fbd3a0-38bf-4376-aa5a-fc6143db40eb/screenshot",
+      "html": null,
+      "duration": "9.2s"
+    },
+    {
+      "id": "81de5c99-c4e2-417f-a70e-fde9f209d51b",
+      "timestamp": "2026-10-31T14:37:51Z",
+      "status": "RUNNING",
+      "action": "Visual check for popular plan and page layout",
+      "screenshot": "https://agent.tinyfish.ai/runs/6066290e-c7dc-4a34-8957-00f96d8b953d/steps/81de5c99-c4e2-417f-a70e-fde9f209d51b/screenshot",
+      "html": null,
+      "duration": "3.5s"
+    },
+    {
+      "id": "c2414376-92e9-4883-b0bf-ebed62f4d14a",
+      "timestamp": "2026-10-31T14:38:00Z",
+      "status": "RUNNING",
+      "action": "Ensure Individuals tab is active",
+      "screenshot": "https://agent.tinyfish.ai/runs/6066290e-c7dc-4a34-8957-00f96d8b953d/steps/c2414376-92e9-4883-b0bf-ebed62f4d14a/screenshot",
+      "html": null,
+      "duration": "1.4s"
+    },
+    {
+      "id": "7dd25b4a-fb6f-42fc-bd14-7c62c6361a27",
+      "timestamp": "2026-10-31T14:38:04Z",
+      "status": "RUNNING",
+      "action": "Check Creative Cloud Pro terms and conditions",
+      "screenshot": "https://agent.tinyfish.ai/runs/6066290e-c7dc-4a34-8957-00f96d8b953d/steps/7dd25b4a-fb6f-42fc-bd14-7c62c6361a27/screenshot",
+      "html": null,
+      "duration": "2.4s"
+    },
+    {
+      "id": "3e9b76fa-5527-4c43-a639-ff86fc969823",
+      "timestamp": "2026-10-31T14:38:11Z",
+      "status": "RUNNING",
+      "action": "Extract Creative Cloud Pro terms and conditions",
+      "screenshot": "https://agent.tinyfish.ai/runs/6066290e-c7dc-4a34-8957-00f96d8b953d/steps/3e9b76fa-5527-4c43-a639-ff86fc969823/screenshot",
+      "html": null,
+      "duration": "2.8s"
+    },
+    {
+      "id": "70365845-ebec-4615-855e-120c6461586f",
+      "timestamp": "2026-10-31T14:38:17Z",
+      "status": "RUNNING",
+      "action": "Return to plans page to continue audit",
+      "screenshot": "https://agent.tinyfish.ai/runs/6066290e-c7dc-4a34-8957-00f96d8b953d/steps/70365845-ebec-4615-855e-120c6461586f/screenshot",
+      "html": null,
+      "duration": "1.9s"
+    },
+    {
+      "id": "31cb1712-e2c0-409c-905c-f37f27eda529",
+      "timestamp": "2026-10-31T14:38:22Z",
+      "status": "RUNNING",
+      "action": "Find popular plan and buy buttons",
+      "screenshot": "https://agent.tinyfish.ai/runs/6066290e-c7dc-4a34-8957-00f96d8b953d/steps/31cb1712-e2c0-409c-905c-f37f27eda529/screenshot",
+      "html": null,
+      "duration": "2.0s"
+    },
+    {
+      "id": "6ab030fc-cd7a-43fe-b658-a4927e2ac8c1",
+      "timestamp": "2026-10-31T14:38:27Z",
+      "status": "RUNNING",
+      "action": "Scroll to bottom to see plan cards",
+      "screenshot": "https://agent.tinyfish.ai/runs/6066290e-c7dc-4a34-8957-00f96d8b953d/steps/6ab030fc-cd7a-43fe-b658-a4927e2ac8c1/screenshot",
+      "html": null,
+      "duration": "4.0s"
+    },
+    {
+      "id": "d3e4664b-0c8b-475a-8d1c-17200829c14d",
+      "timestamp": "2026-10-31T14:38:37Z",
+      "status": "RUNNING",
+      "action": "Get exact plan details and terms for Individual tab",
+      "screenshot": "https://agent.tinyfish.ai/runs/6066290e-c7dc-4a34-8957-00f96d8b953d/steps/d3e4664b-0c8b-475a-8d1c-17200829c14d/screenshot",
+      "html": null,
+      "duration": "5.3s"
+    },
+    {
+      "id": "0aa2a56b-ea21-46d4-9c47-6dab134ba37e",
+      "timestamp": "2026-10-31T14:38:49Z",
+      "status": "RUNNING",
+      "action": "Click Creative Cloud Pro buy button to proceed with subscription",
+      "screenshot": "https://agent.tinyfish.ai/runs/6066290e-c7dc-4a34-8957-00f96d8b953d/steps/0aa2a56b-ea21-46d4-9c47-6dab134ba37e/screenshot",
+      "html": null,
+      "duration": "1.3s"
+    },
+    {
+      "id": "7737dc81-844f-430a-bd12-50d2ae605914",
+      "timestamp": "2026-10-31T14:38:52Z",
+      "status": "RUNNING",
+      "action": "Find the actual buy/subscribe button for Creative Cloud Pro",
+      "screenshot": "https://agent.tinyfish.ai/runs/6066290e-c7dc-4a34-8957-00f96d8b953d/steps/7737dc81-844f-430a-bd12-50d2ae605914/screenshot",
+      "html": null,
+      "duration": "0.1s"
+    },
+    {
+      "id": "5c654e31-3aae-4ad5-8c02-fb0354d5babe",
+      "timestamp": "2026-10-31T14:38:54Z",
+      "status": "RUNNING",
+      "action": "Find the buy button for Creative Cloud Pro",
+      "screenshot": "https://agent.tinyfish.ai/runs/6066290e-c7dc-4a34-8957-00f96d8b953d/steps/5c654e31-3aae-4ad5-8c02-fb0354d5babe/screenshot",
+      "html": null,
+      "duration": "1.7s"
+    },
+    {
+      "id": "d7a56206-d98d-481c-b0ad-971abe229db5",
+      "timestamp": "2026-10-31T14:39:00Z",
+      "status": "RUNNING",
+      "action": "Navigate to Creative Cloud Pro checkout page",
+      "screenshot": "https://agent.tinyfish.ai/runs/6066290e-c7dc-4a34-8957-00f96d8b953d/steps/d7a56206-d98d-481c-b0ad-971abe229db5/screenshot",
+      "html": null,
+      "duration": "23.2s"
+    },
+    {
+      "id": "dacbe7c5-63b8-4c79-816e-c2e38e0a8ee4",
+      "timestamp": "2026-10-31T14:39:28Z",
+      "status": "RUNNING",
+      "action": "Check checkout page details and defaults",
+      "screenshot": "https://agent.tinyfish.ai/runs/6066290e-c7dc-4a34-8957-00f96d8b953d/steps/dacbe7c5-63b8-4c79-816e-c2e38e0a8ee4/screenshot",
+      "html": null,
+      "duration": "3.0s"
+    },
+    {
+      "id": "ba84bf7f-2b00-43f0-b5fa-990f9974a4b9",
+      "timestamp": "2026-10-31T14:39:33Z",
+      "status": "RUNNING",
+      "action": "Select Annual billed monthly option",
+      "screenshot": "https://agent.tinyfish.ai/runs/6066290e-c7dc-4a34-8957-00f96d8b953d/steps/ba84bf7f-2b00-43f0-b5fa-990f9974a4b9/screenshot",
+      "html": null,
+      "duration": "1.1s"
+    },
+    {
+      "id": "f1effc71-10b9-4f7f-8186-c04d9881c5e0",
+      "timestamp": "2026-10-31T14:39:39Z",
+      "status": "RUNNING",
+      "action": "Click Continue to proceed with subscription",
+      "screenshot": "https://agent.tinyfish.ai/runs/6066290e-c7dc-4a34-8957-00f96d8b953d/steps/f1effc71-10b9-4f7f-8186-c04d9881c5e0/screenshot",
+      "html": null,
+      "duration": "12.7s"
+    },
+    {
+      "id": "598d8a44-2912-4a88-8384-4a59b4dd6499",
+      "timestamp": "2026-10-31T14:39:56Z",
+      "status": "RUNNING",
+      "action": "Check recommendation page details and upsells",
+      "screenshot": "https://agent.tinyfish.ai/runs/6066290e-c7dc-4a34-8957-00f96d8b953d/steps/598d8a44-2912-4a88-8384-4a59b4dd6499/screenshot",
+      "html": null,
+      "duration": "2.6s"
+    },
+    {
+      "id": "9ad235d4-716e-46a9-aa17-4008fdc558c4",
+      "timestamp": "2026-10-31T14:40:01Z",
+      "status": "RUNNING",
+      "action": "Click Continue to proceed without selecting upsell",
+      "screenshot": "https://agent.tinyfish.ai/runs/6066290e-c7dc-4a34-8957-00f96d8b953d/steps/9ad235d4-716e-46a9-aa17-4008fdc558c4/screenshot",
+      "html": null,
+      "duration": "11.1s"
+    },
+    {
+      "id": "762088a0-7ee5-4575-9e01-18d681578613",
+      "timestamp": "2026-10-31T14:40:19Z",
+      "status": "RUNNING",
+      "action": "Check email entry page details",
+      "screenshot": "https://agent.tinyfish.ai/runs/6066290e-c7dc-4a34-8957-00f96d8b953d/steps/762088a0-7ee5-4575-9e01-18d681578613/screenshot",
+      "html": null,
+      "duration": "2.2s"
+    },
+    {
+      "id": "0b8cb4b9-071e-4bea-967e-9eb9d4201de0",
+      "timestamp": "2026-10-31T14:45:47Z",
+      "status": "COMPLETED",
+      "action": "Task completed",
+      "screenshot": null,
+      "html": null,
+      "duration": null
+    }
+  ]
+}

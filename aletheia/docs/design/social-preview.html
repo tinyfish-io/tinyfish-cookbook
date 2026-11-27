@@ -1,0 +1,72 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>Aletheia social preview</title>
+    <link rel="stylesheet" href="portrait.css" />
+    <style>
+      body {
+        background:
+          radial-gradient(520px 380px at 0% 0%, #ffeaf4 0%, transparent 100%),
+          radial-gradient(480px 300px at 42% 0%, #e9fbf0 0%, transparent 100%),
+          radial-gradient(560px 340px at 28% 100%, #e6f1ff 0%, transparent 100%), #fff;
+        height: 640px;
+        overflow: hidden;
+        width: 1280px;
+      }
+
+      main {
+        align-items: center;
+        display: grid;
+        gap: 44px;
+        grid-template-columns: 1fr 620px;
+        height: 100%;
+        padding: 40px 48px 40px 64px;
+      }
+
+      .brand {
+        gap: 16px;
+        margin-bottom: 30px;
+      }
+
+      .brand span {
+        font-size: 38px;
+      }
+
+      h1 {
+        font-size: 66px;
+        font-weight: 600;
+        letter-spacing: -0.03em;
+        line-height: 1.08;
+      }
+
+      .panel {
+        padding: 44px 30px;
+      }
+
+      .evidence {
+        width: 100%;
+      }
+    </style>
+  </head>
+  <body>
+    <main>
+      <section>
+        <div class="brand">
+          <img src="../../web/public/favicon.svg" alt="" width="60" height="60" />
+          <span>Aletheia</span>
+        </div>
+        <h1>Find the dark patterns on <em class="accent">any</em> website.</h1>
+      </section>
+      <section class="panel">
+        <img
+          class="evidence"
+          src="finding.png"
+          alt="A forced marketing consent finding, with its quote, step and screenshot"
+          width="560"
+          height="308"
+        />
+      </section>
+    </main>
+  </body>
+</html>

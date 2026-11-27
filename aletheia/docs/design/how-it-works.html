@@ -1,0 +1,164 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>How Aletheia works</title>
+    <link rel="stylesheet" href="portrait.css" />
+    <style>
+      /* A white card with its own background reads the same on light and dark GitHub. */
+      .sheet {
+        background:
+          radial-gradient(420px 300px at 6% 0%, #ffeef5 0%, transparent 100%),
+          radial-gradient(420px 280px at 44% 100%, #eaf6ff 0%, transparent 100%), #fff;
+        border: 1px solid var(--line);
+        border-radius: 36px;
+        display: grid;
+        gap: 44px;
+        grid-template-columns: 1fr 620px;
+        overflow: hidden;
+        padding: 44px;
+        width: 1200px;
+      }
+
+      .brand {
+        gap: 12px;
+        margin-bottom: 34px;
+      }
+
+      .brand span {
+        font-size: 26px;
+      }
+
+      ol {
+        display: grid;
+        gap: 26px;
+        list-style: none;
+        padding: 0;
+      }
+
+      li {
+        align-items: center;
+        display: grid;
+        gap: 18px;
+        grid-template-columns: 58px 1fr;
+      }
+
+      .icon {
+        align-items: center;
+        border-radius: 17px;
+        display: flex;
+        height: 58px;
+        justify-content: center;
+        width: 58px;
+      }
+
+      .icon svg {
+        fill: none;
+        height: 30px;
+        stroke: currentColor;
+        stroke-linecap: round;
+        stroke-linejoin: round;
+        stroke-width: 2;
+        width: 30px;
+      }
+
+      h2 {
+        font-size: 25px;
+        font-weight: 600;
+        letter-spacing: -0.02em;
+        line-height: 1.2;
+      }
+
+      p {
+        color: var(--body);
+        font-size: 19px;
+        line-height: 1.35;
+        margin-top: 3px;
+      }
+
+      .panel {
+        align-items: center;
+        display: flex;
+        justify-content: center;
+        padding: 30px;
+      }
+
+      .evidence {
+        width: 100%;
+      }
+    </style>
+  </head>
+  <body>
+    <main class="sheet">
+      <section>
+        <div class="brand">
+          <img src="../../web/public/favicon.svg" alt="" width="44" height="44" />
+          <span>Aletheia</span>
+        </div>
+        <ol>
+          <li>
+            <div class="icon" style="background: var(--sky); color: var(--sky-ink)">
+              <svg viewBox="0 0 24 24" aria-hidden="true">
+                <path
+                  d="M4 5.500A1.500 1.500 0 0 1 5.500 4h13A1.500 1.500 0 0 1 20 5.500v9a1.500 1.500 0 0 1-1.500 1.500H10l-4 4v-4h-.5A1.500 1.500 0 0 1 4 14.500z"
+                />
+                <path d="M8 8.500h8M8 12h5" />
+              </svg>
+            </div>
+            <div>
+              <h2>Describe a flow</h2>
+              <p>Say what you would buy or sign up for.</p>
+            </div>
+          </li>
+          <li>
+            <div class="icon" style="background: var(--mint); color: var(--mint-ink)">
+              <svg viewBox="0 0 24 24" aria-hidden="true">
+                <rect x="3" y="4" width="18" height="16" rx="2.500" />
+                <path d="M3 9h18M6.500 6.500h.01M9.500 6.500h.01" />
+                <path d="m10 12 5 2.300-2.100.8-.8 2.100z" />
+              </svg>
+            </div>
+            <div>
+              <h2>Agents walk the site</h2>
+              <p>Each site gets its own cloud browser.</p>
+            </div>
+          </li>
+          <li>
+            <div class="icon" style="background: var(--rose); color: var(--rose-ink)">
+              <svg viewBox="0 0 24 24" aria-hidden="true">
+                <rect x="3" y="5.500" width="18" height="13" rx="2.500" />
+                <path d="M3 10h18" />
+                <path d="m4 3.500 16 17" />
+              </svg>
+            </div>
+            <div>
+              <h2>They stop before payment</h2>
+              <p>Each run ends before the pay step.</p>
+            </div>
+          </li>
+          <li>
+            <div class="icon" style="background: var(--peach); color: var(--peach-ink)">
+              <svg viewBox="0 0 24 24" aria-hidden="true">
+                <circle cx="10.500" cy="10.500" r="6.500" />
+                <path d="m20 20-4.800-4.800" />
+              </svg>
+            </div>
+            <div>
+              <h2>Findings appear</h2>
+              <p>Each with its quote, step and screenshot.</p>
+            </div>
+          </li>
+        </ol>
+      </section>
+      <section class="panel">
+        <img
+          class="evidence"
+          src="finding.png"
+          alt="A forced marketing consent finding, with its quote, step and screenshot"
+          width="560"
+          height="308"
+        />
+      </section>
+    </main>
+  </body>
+</html>
