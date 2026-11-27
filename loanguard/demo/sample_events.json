@@ -1,0 +1,126 @@
+{
+  "_note": "SAMPLE DATA — DEMONSTRATION MODE. Not live verification. Used when DEMO_MODE=1. The investigated app 'SampleLoan Demo' is fictional and is not associated with any real loan app brand.",
+  "app_name": "SampleLoan Demo",
+  "site": "https://demo.sampleloan.example",
+  "search": {
+    "ok": true,
+    "queries": [
+      {
+        "query": "SampleLoan Demo loan app complaints",
+        "total": 8420,
+        "results": [
+          {"title": "SampleLoan Demo app harassment recovery complaints - ConsumerForum", "url": "https://consumerforum.example.org/sampleloan-demo-harassment", "snippet": "Users report threatening calls and harassment from recovery agents after missing payments.", "illustrative": true},
+          {"title": "SampleLoan Demo fake loan app warning - CyberCell", "url": "https://cybercell.example.in/sampleloan-demo-warning", "snippet": "Advisory: SampleLoan Demo not listed as a regulated lending app; borrowers report unauthorized access to contacts.", "illustrative": true}
+        ]
+      },
+      {
+        "query": "SampleLoan Demo loan app harassment recovery agent",
+        "total": 3110,
+        "results": [
+          {"title": "SampleLoan Demo recovery agents abuse borrowers - NewsDaily", "url": "https://newsdaily.example.com/sampleloan-demo-abuse", "snippet": "Multiple borrowers report abusive recovery practices and morphed photos used as blackmail.", "illustrative": true}
+        ]
+      },
+      {
+        "query": "SampleLoan Demo lending partner NBFC bank",
+        "total": 540,
+        "results": [
+          {"title": "Is SampleLoan Demo backed by an NBFC? - FactCheck", "url": "https://factcheck.example.org/sampleloan-demo-nbfc", "snippet": "No clearly named RBI-registered NBFC or bank lending partner could be identified for SampleLoan Demo.", "illustrative": true}
+        ]
+      },
+      {
+        "query": "RBI digital lending apps deployed by regulated entities directory",
+        "total": 12,
+        "results": [
+          {"title": "DLAs deployed by Regulated Entities - RBI", "url": "https://www.rbi.org.in/", "snippet": "Reserve Bank of India public directory of digital lending apps deployed by regulated entities.", "official": true}
+        ]
+      }
+    ],
+    "results": [
+      {"title": "SampleLoan Demo app harassment recovery complaints - ConsumerForum", "url": "https://consumerforum.example.org/sampleloan-demo-harassment", "snippet": "Users report threatening calls and harassment from recovery agents after missing payments.", "illustrative": true},
+      {"title": "SampleLoan Demo fake loan app warning - CyberCell", "url": "https://cybercell.example.in/sampleloan-demo-warning", "snippet": "Advisory: SampleLoan Demo not listed as a regulated lending app; borrowers report unauthorized access to contacts.", "illustrative": true},
+      {"title": "SampleLoan Demo recovery agents abuse borrowers - NewsDaily", "url": "https://newsdaily.example.com/sampleloan-demo-abuse", "snippet": "Multiple borrowers report abusive recovery practices and morphed photos used as blackmail.", "illustrative": true},
+      {"title": "Is SampleLoan Demo backed by an NBFC? - FactCheck", "url": "https://factcheck.example.org/sampleloan-demo-nbfc", "snippet": "No clearly named RBI-registered NBFC or bank lending partner could be identified for SampleLoan Demo.", "illustrative": true},
+      {"title": "DLAs deployed by Regulated Entities - RBI", "url": "https://www.rbi.org.in/", "snippet": "Reserve Bank of India public directory of digital lending apps deployed by regulated entities.", "official": true}
+    ]
+  },
+  "rbi": {
+    "ok": true,
+    "checked": true,
+    "found": false,
+    "status": "SIMULATED RBI RESULT — SAMPLE DATA",
+    "explanation": "This fictional demonstration scenario represents an application not listed in the sample directory data. No live RBI verification was performed.",
+    "matched_name": "",
+    "lending_entity": "",
+    "evidence": "",
+    "failure_reason": "",
+    "raw_status": "COMPLETED",
+    "num_of_steps": 23
+  },
+  "fetch": {
+    "ok": true,
+    "results": [
+      {"url": "https://demo.sampleloan.example", "final_url": "https://demo.sampleloan.example", "title": "SampleLoan Demo - Instant Personal Loan", "description": "Get instant cash in minutes.", "text_len": 1240, "links": [], "illustrative": true},
+      {"url": "https://consumerforum.example.org/sampleloan-demo-harassment", "final_url": "https://consumerforum.example.org/sampleloan-demo-harassment", "title": "SampleLoan Demo harassment complaints", "description": null, "text_len": 3120, "links": [], "illustrative": true}
+    ],
+    "errors": [],
+    "indicators": {
+      "grievance_found": false,
+      "lending_partner_found": false,
+      "address_found": false,
+      "interest_rate_found": false,
+      "contact_found": true,
+      "complaint_count": 9,
+      "complaint_keywords": {"harass": 4, "threat": 2, "blackmail": 1, "morph": 1, "extort": 0, "abuse": 1, "scam": 0, "fraud": 0, "fake": 0, "illegal": 0},
+      "complaint_sources": [
+        {"url": "https://consumerforum.example.org/sampleloan-demo-harassment", "count": 7, "illustrative": true},
+        {"url": "https://cybercell.example.in/sampleloan-demo-warning", "count": 2, "illustrative": true}
+      ]
+    }
+  },
+  "browser": {
+    "ok": true,
+    "screenshot_url": "/static/evidence/sample_demo_screenshot.svg",
+    "screenshot_path": "static/evidence/sample_demo_screenshot.svg",
+    "session_id": "demo-session",
+    "cdp_url": "wss://demo.example/cdp",
+    "error": null
+  },
+  "research": {
+    "ok": true,
+    "status": "completed",
+    "report": "## SAMPLE RESEARCH REPORT — DEMONSTRATION MODE\n\nThe application 'SampleLoan Demo' is fictional and is not associated with any real loan app brand. All non-RBI sources below are illustrative placeholders (example.org / example.in / example.com), not real citations.\n\n### Who operates SampleLoan Demo?\nPublic sources do not clearly identify a registered business entity operating the SampleLoan Demo application. No RBI-registered NBFC or bank is named as a lending partner in the inspected pages.\n\n### RBI directory (Simulated)\nSIMULATED RBI RESULT — SAMPLE DATA: This fictional demonstration scenario represents an application not listed in the sample directory data. No live RBI verification was performed. Absence from the directory is a risk indicator, not proof of illegality. (The RBI source rbi.org.in is a real official source; all other sources in this sample are illustrative.)\n\n### Public complaint signals\nConsumer forums and cyber advisories reference harassment, threatening recovery calls, alleged morphed photos used as blackmail, and unauthorized access to contacts. The complaint keyword signal count is high (9 across inspected sources). These sources are illustrative placeholders.\n\n### Missing transparency\nNo grievance redressal officer, no named lending partner, no registered address, and no interest-rate disclosure were found in inspected sources.\n\n### How a borrower can independently verify\nCheck the RBI digital lending apps directory directly on rbi.org.in, confirm the named NBFC/bank lending partner with the regulator, and verify a grievance officer and interest-rate disclosure before borrowing.",
+    "citations": [
+      {"title": "SampleLoan Demo harassment complaints - ConsumerForum", "url": "https://consumerforum.example.org/sampleloan-demo-harassment", "illustrative": true},
+      {"title": "SampleLoan Demo fake loan app warning - CyberCell", "url": "https://cybercell.example.in/sampleloan-demo-warning", "illustrative": true},
+      {"title": "DLAs deployed by Regulated Entities - RBI", "url": "https://www.rbi.org.in/", "official": true}
+    ]
+  },
+  "monitor": {
+    "ok": true,
+    "monitor_id": "demo-monitor-001",
+    "status": "created",
+    "message": "SIMULATED MONITOR — SAMPLE DATA."
+  },
+  "indicators": {
+    "rbi_checked": true,
+    "rbi_found": false,
+    "grievance_found": false,
+    "lending_partner_found": false,
+    "address_found": false,
+    "interest_rate_found": false,
+    "complaint_count": 9
+  },
+  "score": {
+    "score": 0,
+    "verdict": "HIGH RISK",
+    "deductions": [
+      {"reason": "Application not found in sample directory (simulated demonstration deduction)", "points": 40},
+      {"reason": "No grievance redressal details found in inspected sources", "points": 10},
+      {"reason": "No named lending partner (NBFC / bank) found in inspected sources", "points": 15},
+      {"reason": "No registered business address found in inspected sources", "points": 5},
+      {"reason": "No interest-rate disclosure found in inspected sources", "points": 10},
+      {"reason": "High complaint signal count (9 complaint-related keywords)", "points": 25}
+    ]
+  },
+  "disclaimer": "LoanGuard provides preliminary risk indicators based on publicly available information. It is not an RBI service, legal opinion or guarantee of lender legitimacy. RBI's directory is based on information submitted by regulated entities and is not independently validated by RBI. Always verify directly with the regulated lender before borrowing."
+}

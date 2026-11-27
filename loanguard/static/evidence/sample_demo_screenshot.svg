@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1280" height="720" viewBox="0 0 1280 720">
+  <rect width="1280" height="720" fill="#f1f5f9"/>
+  <rect x="0" y="0" width="1280" height="92" fill="#0f172a"/>
+  <text x="40" y="58" font-family="Georgia, 'Times New Roman', serif" font-size="30" fill="#f8fafc">SampleLoan Demo — Instant Personal Loan</text>
+  <text x="40" y="80" font-family="Arial, sans-serif" font-size="13" fill="#94a3b8">demo.sampleloan.example</text>
+  <rect x="40" y="120" width="1200" height="90" rx="8" fill="#ffffff" stroke="#e2e8f0"/>
+  <text x="64" y="158" font-family="Arial, sans-serif" font-size="16" fill="#0f172a" font-weight="bold">Get instant cash in minutes</text>
+  <text x="64" y="184" font-family="Arial, sans-serif" font-size="13" fill="#64748b">No grievance officer listed. No lending partner named. No interest-rate disclosure.</text>
+  <rect x="40" y="230" width="1200" height="120" rx="8" fill="#fef2f2" stroke="#fecaca"/>
+  <text x="64" y="266" font-family="Arial, sans-serif" font-size="16" fill="#b91c1c" font-weight="bold">Public complaint signals detected</text>
+  <text x="64" y="292" font-family="Arial, sans-serif" font-size="13" fill="#7f1d1d">Harassment · threats · morphed photos · unauthorized contact access</text>
+  <text x="64" y="314" font-family="Arial, sans-serif" font-size="12" fill="#991b1b">9 complaint-related keywords across inspected public sources</text>
+  <rect x="40" y="370" width="1200" height="70" rx="8" fill="#fffbeb" stroke="#fde68a"/>
+  <text x="64" y="406" font-family="Arial, sans-serif" font-size="15" fill="#92400e" font-weight="bold">SIMULATED RBI RESULT — SAMPLE DATA</text>
+  <text x="64" y="428" font-family="Arial, sans-serif" font-size="12" fill="#78350f">This fictional demonstration scenario represents an application not listed in the sample directory data. No live RBI verification was performed.</text>
+  <text x="640" y="700" text-anchor="middle" font-family="Arial, sans-serif" font-size="14" fill="#dc2626" font-weight="bold">SAMPLE DATA — DEMONSTRATION MODE (not a live capture)</text>
+</svg>

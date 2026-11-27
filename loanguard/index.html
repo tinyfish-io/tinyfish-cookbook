@@ -1,0 +1,706 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>LoanGuard — Check before you borrow</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&family=Hind:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --navy:#0f172a; --navy-2:#1e293b; --ink:#0f172a; --muted:#64748b;
+    --bg:#f1f5f9; --card:#ffffff; --border:#e2e8f0; --shadow:0 1px 3px rgba(15,23,42,.06),0 1px 2px rgba(15,23,42,.04);
+    --green:#16a34a; --amber:#d97706; --red:#dc2626; --soft-green:#dcfce7; --soft-amber:#fef3c7; --soft-red:#fee2e2;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{font-family:'Hind',Arial,sans-serif;background:var(--bg);color:var(--ink);line-height:1.5}
+  h1,h2,h3,.serif{font-family:'Fraunces',Georgia,serif}
+  a{color:#1d4ed8;text-decoration:none}
+  a:hover{text-decoration:underline}
+  .wrap{max-width:1080px;margin:0 auto;padding:0 20px}
+
+  header{background:var(--navy);color:#f8fafc;padding:16px 0}
+  .header-inner{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px}
+  .logo{display:flex;align-items:center;gap:10px}
+  .logo-mark{width:38px;height:38px;border-radius:9px;background:linear-gradient(135deg,#3b82f6,#22d3ee);display:flex;align-items:center;justify-content:center;font-family:'Fraunces',serif;font-weight:700;font-size:20px;color:#fff}
+  .logo h1{font-size:20px;font-weight:600;letter-spacing:.2px}
+  .tagline{font-size:13px;color:#94a3b8}
+  .tinyfish-pill{font-size:11px;font-weight:600;color:#cbd5e1;border:1px solid #334155;padding:5px 10px;border-radius:999px;display:inline-flex;align-items:center;gap:6px}
+  .tinyfish-pill::before{content:"";width:7px;height:7px;border-radius:50%;background:#22d3ee}
+
+  .hero{padding:54px 0 30px;text-align:center}
+  .hero h2{font-size:clamp(28px,5vw,44px);line-height:1.12;font-weight:600;max-width:760px;margin:0 auto}
+  .hero p.sub{margin:16px auto 0;max-width:620px;color:var(--muted);font-size:17px}
+  .hero .priv{margin-top:14px;font-size:13px;color:var(--muted)}
+
+  .form-card{background:var(--card);border:1px solid var(--border);border-radius:16px;box-shadow:var(--shadow);padding:24px;margin:30px auto 0;max-width:680px}
+  .form-row{display:flex;gap:12px;flex-wrap:wrap}
+  .field{flex:1;min-width:180px;text-align:left}
+  .field label{display:block;font-size:12px;font-weight:600;color:var(--muted);margin-bottom:6px;text-transform:uppercase;letter-spacing:.5px}
+  .field input{width:100%;padding:13px 14px;border:1px solid var(--border);border-radius:10px;font-family:inherit;font-size:15px;color:var(--ink);background:#fff}
+  .field input:focus{outline:none;border-color:#3b82f6;box-shadow:0 0 0 3px rgba(59,130,246,.12)}
+  .btn{font-family:inherit;font-weight:600;font-size:15px;border:none;border-radius:10px;padding:13px 26px;cursor:pointer;transition:.15s}
+  .btn-primary{background:var(--navy);color:#fff}
+  .btn-primary:hover{background:var(--navy-2)}
+  .btn-primary:disabled{opacity:.55;cursor:not-allowed}
+  .btn-ghost{background:#fff;color:var(--navy);border:1px solid var(--border)}
+  .btn-ghost:hover{background:#f8fafc}
+  .submit-wrap{display:flex;align-items:flex-end}
+
+  section{margin-top:34px}
+  .section-title{font-size:13px;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:.8px;margin-bottom:14px}
+  .timeline{display:grid;grid-template-columns:repeat(6,1fr);gap:12px}
+  .step{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:16px 12px;box-shadow:var(--shadow);position:relative;overflow:hidden}
+  .step .ico{font-size:22px;margin-bottom:6px}
+  .step .nm{font-weight:600;font-size:13px;letter-spacing:.4px;color:var(--navy)}
+  .step .exp{font-size:12px;color:var(--muted);margin-top:4px;min-height:30px}
+  .step .badge{display:inline-block;font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;padding:3px 8px;border-radius:999px;margin-top:8px}
+  .st-pending{background:#f1f5f9;color:#64748b}
+  .st-queued{background:#e2e8f0;color:#475569}
+  .st-running{background:#dbeafe;color:#1d4ed8}
+  .st-completed{background:var(--soft-green);color:#15803d}
+  .st-failed{background:var(--soft-red);color:#b91c1c}
+  .st-unavailable{background:#fef3c7;color:#92400e}
+  .st-timed_out{background:#ffedd5;color:#9a3412}
+  .st-cancelled{background:#fef3c7;color:#92400e}
+  .st-active{background:var(--soft-green);color:#15803d}
+  .step .bar{position:absolute;left:0;bottom:0;height:3px;width:0;background:#3b82f6;transition:width .4s}
+  .step.running .bar{width:70%;animation:pulse 1.2s infinite}
+  .step.queued .bar{width:35%;background:#64748b}
+  .step.completed .bar{width:100%;background:var(--green)}
+  .step.failed .bar{width:100%;background:var(--red)}
+  .step.unavailable .bar{width:100%;background:var(--amber)}
+  .step.timed_out .bar{width:100%;background:var(--amber)}
+  .step.active .bar{width:100%;background:var(--green)}
+  @keyframes pulse{0%{width:20%}50%{width:80%}100%{width:30%}}
+
+  .results{display:none;margin-top:30px}
+  .results.show{display:block}
+  .grid{display:grid;gap:16px}
+  .g-2{grid-template-columns:1fr 1fr}
+  .g-3{grid-template-columns:repeat(3,1fr)}
+  .card{background:var(--card);border:1px solid var(--border);border-radius:14px;box-shadow:var(--shadow);padding:20px}
+  .card h3{font-size:15px;font-weight:600;margin-bottom:12px;color:var(--navy)}
+
+  .score-card{display:flex;align-items:center;gap:24px;flex-wrap:wrap}
+  .gauge{position:relative;width:160px;height:160px;flex-shrink:0}
+  .gauge svg{transform:rotate(-90deg)}
+  .gauge .val{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center}
+  .gauge .num{font-family:'Fraunces',serif;font-size:46px;font-weight:600;line-height:1}
+  .gauge .lbl{font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:.8px;margin-top:4px}
+  .verdict{display:inline-block;font-family:'Fraunces',serif;font-size:18px;font-weight:600;padding:7px 16px;border-radius:999px;margin-top:8px}
+  .v-low{background:var(--soft-green);color:var(--green)}
+  .v-unclear{background:var(--soft-amber);color:var(--amber)}
+  .v-high{background:var(--soft-red);color:var(--red)}
+
+  .deduct li{display:flex;justify-content:space-between;gap:10px;padding:9px 0;border-bottom:1px solid #f1f5f9;font-size:14px}
+  .deduct li:last-child{border-bottom:none}
+  .deduct .pts{color:var(--red);font-weight:600;white-space:nowrap}
+
+  .chk{display:flex;align-items:center;gap:9px;padding:8px 0;font-size:14px;border-bottom:1px solid #f1f5f9}
+  .chk:last-child{border-bottom:none}
+  .chk .dot{width:20px;height:20px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:12px;flex-shrink:0}
+  .ok{background:var(--soft-green);color:var(--green)}
+  .no{background:var(--soft-red);color:var(--red)}
+
+  .src-link{font-size:13px;color:var(--muted);word-break:break-all}
+  .src-link a{color:#1d4ed8}
+  .keyword-chips{display:flex;flex-wrap:wrap;gap:6px;margin-top:10px}
+  .chip{font-size:11px;background:#f1f5f9;border:1px solid var(--border);padding:3px 8px;border-radius:6px}
+  .src-mark{display:inline-block;font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:.3px;padding:2px 6px;border-radius:5px;margin-left:6px;vertical-align:middle}
+  .mark-illus{background:#fef3c7;color:#92400e;border:1px solid #fde68a}
+  .mark-official{background:#dcfce7;color:#15803d;border:1px solid #bbf7d0}
+  .demo-score-note{display:block;margin-top:10px;font-size:12px;font-weight:600;color:#92400e;background:#fffbeb;border:1px solid #fde68a;padding:8px 10px;border-radius:8px}
+  .report{white-space:pre-wrap;font-size:14px;color:#334155;background:#f8fafc;border:1px solid var(--border);border-radius:10px;padding:16px;max-height:380px;overflow:auto}
+  .citations{margin-top:12px;font-size:13px}
+  .citations li{margin:5px 0}
+  .screenshot{width:100%;border:1px solid var(--border);border-radius:10px}
+  .no-shot{padding:40px;text-align:center;color:var(--muted);background:#f8fafc;border:1px dashed var(--border);border-radius:10px}
+  .actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:18px}
+  .demo-banner{background:#fffbeb;border:1px solid #fde68a;color:#92400e;font-size:13px;font-weight:600;padding:9px 14px;border-radius:8px;margin-bottom:14px;text-align:center}
+  .live-banner{background:#ecfdf5;border:1px solid #a7f3d0;color:#065f46;font-size:13px;font-weight:700;padding:9px 14px;border-radius:8px;margin-bottom:14px;text-align:center;letter-spacing:.3px}
+  .disclaimer{font-size:12px;color:var(--muted);background:#f8fafc;border:1px solid var(--border);border-radius:10px;padding:14px;margin-top:14px}
+  .error-note{color:var(--red);font-size:13px;margin-top:6px}
+  .mode-pill{font-size:11px;font-weight:700;padding:5px 12px;border-radius:999px;letter-spacing:.5px;text-transform:uppercase}
+  .mode-demo{background:#fef3c7;color:#92400e;border:1px solid #fde68a}
+  .mode-live{background:#dcfce7;color:#15803d;border:1px solid #86efac}
+  footer{margin:40px 0 30px;text-align:center;font-size:12px;color:var(--muted)}
+  @media(max-width:820px){.timeline{grid-template-columns:repeat(3,1fr)}.g-2,.g-3{grid-template-columns:1fr}}
+  @media(max-width:520px){.timeline{grid-template-columns:repeat(2,1fr)}.score-card{justify-content:center}}
+  .hidden{display:none}
+</style>
+</head>
+<body>
+<header>
+  <div class="wrap header-inner">
+    <div class="logo">
+      <div class="logo-mark">L</div>
+      <div>
+        <h1>LoanGuard</h1>
+        <div class="tagline">Check before you borrow.</div>
+      </div>
+    </div>
+    <div style="display:flex;align-items:center;gap:10px">
+      <span id="mode-badge" class="mode-pill mode-demo">CHECKING MODE…</span>
+      <span class="tinyfish-pill">Powered by TinyFish</span>
+    </div>
+  </div>
+</header>
+
+<div class="wrap">
+  <div class="hero">
+    <h2>Before you borrow, know what you're getting into.</h2>
+    <p class="sub">Investigate public risk indicators associated with instant-loan apps using regulatory information, public websites and web intelligence.</p>
+    <p class="priv">We inspect public information only. Never enter personal financial details.</p>
+  </div>
+
+  <div class="form-card">
+    <div class="form-row">
+      <div class="field">
+        <label for="name">Loan app name</label>
+        <input id="name" type="text" placeholder="e.g. KreditBee" autocomplete="off" />
+      </div>
+      <div class="field">
+        <label for="site">Official website (optional)</label>
+        <input id="site" type="text" placeholder="https://example.com" autocomplete="off" />
+      </div>
+      <div class="submit-wrap">
+        <button id="investigate" class="btn btn-primary">INVESTIGATE</button>
+      </div>
+    </div>
+  </div>
+
+  <section>
+    <div class="section-title">Live investigation timeline</div>
+    <div class="timeline" id="timeline"></div>
+  </section>
+
+  <div class="results" id="results"></div>
+  <footer>
+    LoanGuard provides preliminary risk indicators from publicly available information. Not an RBI service or legal opinion.
+    <span id="mode-tag"></span>
+  </footer>
+</div>
+
+<script>
+const STEPS = [
+  {key:'search',  icon:'🔍', name:'SEARCH',  exp:'Discovering public evidence.'},
+  {key:'agent',   icon:'🧭', name:'AGENT',   exp:'Checking the RBI directory.'},
+  {key:'fetch',   icon:'📄', name:'FETCH',   exp:'Inspecting public websites.'},
+  {key:'browser', icon:'🖥️', name:'BROWSER', exp:'Capturing visual evidence.'},
+  {key:'research',icon:'🔬', name:'RESEARCH',exp:'Preparing cited findings.'},
+  {key:'monitor', icon:'📡', name:'MONITOR', exp:'Setting up future monitoring.'},
+];
+const STEP_MAP = Object.fromEntries(STEPS.map(s=>[s.key,s]));
+let es = null;
+let collected = {demo:false};
+let receivedTerminalEvent = false;
+const activePolls = new Set();
+const storedRunIds = JSON.parse(localStorage.getItem('loanguard_run_ids') || '{}');
+const API_BASE_URL = (() => {
+  const configured = 'https://loanguard-sqcb.onrender.com';
+  return ['localhost', '127.0.0.1'].includes(window.location.hostname) ? '' : configured;
+})();
+function apiUrl(path){
+  return `${API_BASE_URL}${path}`;
+}
+
+function renderTimeline(){
+  document.getElementById('timeline').innerHTML = STEPS.map(s=>`
+    <div class="step" id="step-${s.key}">
+      <div class="ico">${s.icon}</div>
+      <div class="nm">${s.name}</div>
+      <div class="exp">${s.exp}</div>
+      <span class="badge st-pending">Pending</span>
+      <div class="bar"></div>
+    </div>`).join('');
+}
+function setStep(key, status, msg){
+  const el = document.getElementById('step-'+key);
+  if(!el) return;
+  el.classList.remove('queued','running','completed','failed','unavailable','timed_out','cancelled','active');
+  const normalizedStatus = (status||'pending').toLowerCase().replace(/\s+/g,'_');
+  el.classList.add(normalizedStatus);
+  const b = el.querySelector('.badge');
+  const labelMap = {
+    pending: 'Pending',
+    queued: 'Queued',
+    running: 'Running',
+    completed: 'Completed',
+    failed: 'Failed',
+    unavailable: 'Unavailable',
+    timed_out: 'Timed Out',
+    cancelled: 'Cancelled',
+    available: 'Available',
+    not_started: 'Not Started'
+  };
+  const label = labelMap[normalizedStatus] || (status ? status.toUpperCase() : 'PENDING');
+  b.className = 'badge st-'+normalizedStatus;
+  b.textContent = label;
+  if(msg) el.querySelector('.exp').textContent = msg;
+}
+function resetSteps(){
+  collected = {demo:false};
+  receivedTerminalEvent = false;
+  localStorage.removeItem('loanguard_run_ids');
+  STEPS.forEach(s=>setStep(s.key,'pending',STEP_MAP[s.key].exp));
+  document.getElementById('results').classList.remove('show');
+}
+
+function gauge(score){
+  const r=68, c=2*Math.PI*r, off=c*(1-score/100);
+  return `<svg width="160" height="160"><circle cx="80" cy="80" r="${r}" stroke="#e2e8f0" stroke-width="14" fill="none"/><circle cx="80" cy="80" r="${r}" stroke="${scoreColor(score)}" stroke-width="14" fill="none" stroke-linecap="round" stroke-dasharray="${c}" stroke-dashoffset="${off}"/></svg>`;
+}
+function scoreColor(s){return s>=70?'#16a34a':s>=45?'#d97706':'#dc2626'}
+function verdictClass(v){return v.indexOf('HIGH')>=0?'v-high':v.indexOf('LOWER')>=0?'v-low':'v-unclear';}
+function esc(s){return (s||'').toString().replace(/[&<>]/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;'}[m]));}
+function renderSourceLink(item, fallbackText){
+  if(!item) return esc(fallbackText || '');
+  const url = item.url || '';
+  const title = item.title || fallbackText || url;
+  const isIllustrative = Boolean(item.illustrative || /example\.(org|in|com)|\.example\b/.test(url));
+  const isOfficial = Boolean(item.official || url.indexOf('rbi.org.in') >= 0);
+
+  if (isIllustrative) {
+    // Master Rule: Never use example.org or example.in as clickable evidence.
+    return `<span class="src-link" style="color:#0f172a;font-weight:600">${esc(title)}</span> <span class="src-mark mark-illus">Illustrative sample source — not a real citation</span>`;
+  }
+  if (isOfficial) {
+    return `<a href="${esc(url)}" target="_blank" rel="noopener">${esc(title)}</a> <span class="src-mark mark-official">Official RBI source</span>`;
+  }
+  if (url && url !== '#') {
+    return `<a href="${esc(url)}" target="_blank" rel="noopener">${esc(title)}</a>`;
+  }
+  return `<span class="src-link">${esc(title)}</span>`;
+}
+
+function fmtList(arr, fn){return (arr||[]).map(fn).join('');}
+
+function renderResults(report){
+  const r=report, d=r.demo;
+  const banner = d
+    ? '<div class="demo-banner">SAMPLE DATA — DEMONSTRATION MODE</div>'
+    : '<div class="live-banner">LIVE INVESTIGATION — REAL-TIME TINYFISH INTELLIGENCE</div>';
+  const ind = r.indicators||{};
+  const fetchInd = (r.fetch&&r.fetch.indicators)||{};
+  const rbi = r.rbi||{};
+  const rs = r.research||{};
+  const score = r.score||{score:0,verdict:'UNCLEAR',deductions:[]};
+
+  let rbiHtml;
+  if(d){
+    rbiHtml = `
+      <div style="margin-bottom:8px"><span class="badge" style="background:#fee2e2;color:#dc2626;font-weight:700">SIMULATED RBI RESULT — SAMPLE DATA</span></div>
+      <div class="chk"><span class="dot no">✕</span><div><b>Simulated RBI directory check</b><br><span class="src-link">This fictional demonstration scenario represents an application not listed in the sample directory data. No live RBI verification was performed.</span></div></div>
+      <p style="margin-top:8px;font-size:12px;color:var(--muted)">Simulated sample scoring deduction: 40 points applied to demonstrate high-risk scoring logic.</p>`;
+  } else if(!rbi.checked){
+    const rbiStatus = String(rbi.status||'unavailable').toLowerCase().replace(/\s+/g,'_');
+    const rbiStatusLabel = rbiStatus === 'timed_out' ? 'TIMED OUT'
+      : rbiStatus === 'queued' ? 'QUEUED'
+      : rbiStatus === 'running' ? 'RUNNING'
+      : rbiStatus === 'failed' ? 'FAILED'
+      : 'UNAVAILABLE';
+    const rbiMessage = rbiStatus === 'timed_out'
+      ? 'RBI directory verification could not be completed. This does not indicate that the app is absent from the directory.'
+      : (rbi.failure_reason||rbi.error||'Directory lookup did not complete or was unreachable.');
+    rbiHtml = `
+      <div style="margin-bottom:8px"><span class="badge" style="background:#fef3c7;color:#92400e;font-weight:700">${rbiStatusLabel}</span></div>
+      <div class="chk"><span class="dot no">!</span><div><b>RBI directory lookup</b><br><span class="src-link">${esc(rbiMessage)}</span></div></div>
+      <p style="margin-top:8px;font-size:12px;color:var(--muted)">Safety rule: A failed lookup is NOT treated as absence. A 15-point uncertainty deduction is applied instead of 40.</p>`;
+  } else if(rbi.found){
+    rbiHtml = `
+      <div style="margin-bottom:8px"><span class="badge" style="background:#dcfce7;color:#15803d;font-weight:700">FOUND IN DIRECTORY</span></div>
+      <div class="chk"><span class="dot ok">✓</span><div><b>${esc(rbi.matched_name||'Application listed')}</b><br>Regulated lending partner: <b>${esc(rbi.lending_entity||'NBFC/Bank identified')}</b></div></div>
+      <div class="src-link" style="margin-top:8px;background:#f8fafc;padding:8px;border-radius:6px;border:1px solid #e2e8f0"><b>Directory evidence:</b> ${esc(rbi.evidence||'Listed in official public directory.')}</div>
+      <p style="margin-top:8px;font-size:12px;color:var(--muted)">Regulatory context: Presence indicates regulatory submission by the entity, not an official RBI product endorsement.</p>`;
+  } else {
+    rbiHtml = `
+      <div style="margin-bottom:8px"><span class="badge" style="background:#fee2e2;color:#dc2626;font-weight:700">NOT FOUND AFTER SUCCESSFUL CHECK</span></div>
+      <div class="chk"><span class="dot no">✕</span><div><b>Not found in RBI directory</b><br><span class="src-link">Directory was reached and searched, but "${esc(r.app_name)}" was not found in the public DLA list.</span></div></div>
+      <p style="margin-top:8px;font-size:12px;color:var(--muted)">Risk deduction applied: 40 points. Absence from the public directory is a significant risk indicator, but not legal proof of illegality.</p>`;
+  }
+
+  const chk = (label, found) => `<div class="chk"><span class="dot ${found?'ok':'no'}">${found?'✓':'✕'}</span>${label}</div>`;
+  const researchSourceNote = rs.report
+    ? '<div class="src-link" style="margin-top:8px">Research is a separate evidence source. It may identify a regulated entity even when the inspected website pages did not name one.</div>'
+    : '';
+  const transHtml = [
+    chk('Website sources: grievance redressal details', ind.grievance_found),
+    chk('Website sources: named lending partner (NBFC/bank)', ind.lending_partner_found),
+    chk('Registered business address', ind.address_found),
+    chk('Interest-rate disclosure', ind.interest_rate_found),
+    chk('Contact information', fetchInd.contact_found),
+  ].join('') + researchSourceNote;
+
+  const kw = fetchInd.complaint_keywords||{};
+  const kwChips = Object.entries(kw).filter(([,v])=>v>0).map(([k,v])=>`<span class="chip">${esc(k)}: ${v}</span>`).join('');
+  const compSources = fmtList(fetchInd.complaint_sources, s=>`<li class="src-link" style="margin-bottom:8px">${renderSourceLink(s, s.url)} <span class="chip" style="font-size:10px;margin-left:4px">${s.count} mentions</span></li>`);
+  const compHtml = `<div style="font-size:14px"><b>${ind.complaint_count||0}</b> complaint-related keywords across inspected sources.</div>
+    <div class="keyword-chips">${kwChips||'<span class="chip">none</span>'}</div>
+    <ul style="margin-top:10px;list-style:none">${compSources||'<li class="src-link">No specific complaint sources.</li>'}</ul>`;
+
+  const searchRes = fmtList((r.search&&r.search.results)||[], (x,i)=>i<6?`<li class="src-link" style="margin-bottom:12px">${renderSourceLink(x)}<br><span style="color:#475569">${esc(x.snippet||'')}</span></li>`:'');
+
+  const br = r.browser||{};
+  const shotHtml = br.ok && br.screenshot_url
+    ? `<img class="screenshot" src="${esc(br.screenshot_url)}" alt="Visual evidence screenshot" onerror="this.parentNode.innerHTML='<div class=\\'no-shot\\'>Screenshot unavailable.</div>'" />`
+    : `<div class="no-shot">${d ? 'No screenshot captured.' : 'Visual evidence capture unavailable: '}${esc(br.error||'Capture could not complete.')}</div>`;
+
+  let reportHtml;
+  if(rs.report){
+    reportHtml = `<div class="report"><b>COMPLETED</b><br>${esc(rs.report)}</div>`;
+  } else {
+    const researchStatus = String(rs.status||'unavailable').toLowerCase().replace(/\s+/g,'_');
+    const researchLabel = researchStatus === 'queued' ? 'QUEUED' : researchStatus === 'running' ? 'RUNNING'
+      : researchStatus === 'failed' ? 'FAILED' : researchStatus === 'cancelled' ? 'CANCELLED'
+      : researchStatus === 'timed_out' ? 'TIMED OUT' : 'UNAVAILABLE';
+    reportHtml = `<div class="no-shot" style="text-align:left;line-height:1.6">
+      <b style="color:var(--navy)">Research ${researchLabel}.</b> Preliminary evidence summary is based on completed Search and Fetch results.
+      <p style="margin-top:8px;font-size:12px;color:var(--muted)">${esc(rs.error || 'Deep research runs asynchronously and does not block the report.')}</p>
+    </div>`;
+  }
+  const cites = fmtList(rs.citations||[], c=>`<li class="src-link" style="margin-bottom:6px">${renderSourceLink(c)}</li>`);
+
+  const mon = r.monitor||{};
+  const monStatusInitial = d
+    ? '<span class="src-mark mark-illus">SIMULATED MONITOR — SAMPLE DATA</span>'
+    : (mon.message || 'Monitoring available on demand.');
+  const monHtml = `<div style="font-size:14px">${monStatusInitial}</div>
+    <div class="actions" style="margin-top:12px"><button id="monitor-btn" class="btn btn-ghost" onclick="doMonitor()">Monitor RBI directory</button><span id="mon-status" class="src-link" style="margin-left:10px;display:inline-flex;align-items:center"></span></div>`;
+
+  const deductions = fmtList(score.deductions||[], item => {
+    let reason = item.reason;
+    if (d && item.points === 40) {
+      reason = "Application not found in sample directory (simulated sample scoring deduction)";
+    }
+    return `<li><span>${esc(reason)}</span><span class="pts">-${item.points}</span></li>`;
+  });
+
+  document.getElementById('results').innerHTML = `
+    ${banner}
+    <div class="section-title">Risk assessment</div>
+    <div class="grid g-2">
+      <div class="card score-card">
+        <div class="gauge">${gauge(score.score)}<div class="val"><div class="num" style="color:${scoreColor(score.score)}">${score.score}</div><div class="lbl">out of 100</div></div></div>
+        <div>
+          <div class="section-title" style="margin:0">Verdict</div>
+          <span class="verdict ${verdictClass(score.verdict)}">${esc(score.verdict)}</span>
+          <p style="margin-top:8px;color:var(--muted);font-size:13px">Verification confidence: <b>${esc(score.confidence||'limited').toUpperCase()}</b></p>
+          <p style="margin-top:12px;color:var(--muted);font-size:13px">Preliminary assessment from public signals. Not an official RBI rating.</p>
+          ${d
+            ? '<span class="demo-score-note">Fictional demonstration assessment. No real lender has been assessed.</span>'
+            : '<span style="display:inline-block;margin-top:10px;font-size:12px;color:#166534;background:#f0fdf4;border:1px solid #bbf7d0;padding:6px 10px;border-radius:8px;font-weight:600">LIVE INVESTIGATION GROUND TRUTH</span>'}
+        </div>
+      </div>
+      <div class="card">
+        <h3>Why this score</h3>
+        <ul class="deduct">${deductions||'<li class="src-link">No deductions.</li>'}</ul>
+      </div>
+    </div>
+
+    <div class="grid g-3" style="margin-top:16px">
+      <div class="card">
+        <h3>RBI directory result</h3>
+        ${rbiHtml}
+      </div>
+      <div class="card">
+        <h3>Website transparency</h3>
+        ${transHtml}
+      </div>
+      <div class="card">
+        <h3>Complaint signals</h3>
+        ${compHtml}
+      </div>
+    </div>
+
+    <div class="grid g-2" style="margin-top:16px">
+      <div class="card">
+        <h3>Public evidence (search)</h3>
+        <ul style="list-style:none">${searchRes||'<li class="src-link">No results.</li>'}</ul>
+      </div>
+      <div class="card">
+        <h3>Visual evidence</h3>
+        ${shotHtml}
+      </div>
+    </div>
+
+    <div class="grid g-2" style="margin-top:16px">
+      <div class="card">
+        <h3>Research report</h3>
+        ${reportHtml}
+        ${cites.length?`<div class="citations"><b>Citations</b><ul style="list-style:none;margin-top:6px">${cites}</ul></div>`:''}
+      </div>
+      <div class="card">
+        <h3>Monitoring</h3>
+        ${monHtml}
+      </div>
+    </div>
+
+    <div class="actions" style="margin-top:18px">
+      <button class="btn btn-ghost" onclick="downloadReport()">Download report (JSON)</button>
+      <button class="btn btn-ghost" onclick="anotherApp()">Check another app</button>
+    </div>
+    <div class="disclaimer">${esc(r.disclaimer||'')}</div>
+    ${r.unverified_findings&&r.unverified_findings.length?`<div class="disclaimer"><b>Unverified checks and limitations</b><ul style="margin:8px 0 0 18px">${r.unverified_findings.map(x=>`<li>${esc(x)}</li>`).join('')}</ul></div>`:''}
+  `;
+  document.getElementById('results').classList.add('show');
+  window.__lastReport = r;
+  const monitorButton = document.getElementById('monitor-btn');
+  if (monitorButton && r.monitor && ['active','paused'].includes(String(r.monitor.status).toLowerCase())) {
+    monitorButton.disabled = true;
+  }
+}
+
+function reconcileReportScore(report){
+  const ind = report.indicators || {};
+  const rbiChecked = Boolean(ind.rbi_checked);
+  const rbiFound = Boolean(ind.rbi_found);
+  const fetchChecked = Boolean(ind.fetch_checked);
+  let score = 100;
+  const deductions = [];
+  if(rbiChecked && !rbiFound){
+    score -= 40;
+    deductions.push({reason:'Application not found in the RBI digital lending apps directory', points:40});
+  } else if(!rbiChecked){
+    score -= 15;
+    deductions.push({reason:'RBI directory could not be checked (lookup failed or unavailable)', points:15});
+  }
+  if(fetchChecked){
+    const fields = [
+      ['grievance_found','No grievance redressal details found in inspected sources',10],
+      ['lending_partner_found','No named lending partner (NBFC / bank) found in inspected sources',15],
+      ['address_found','No registered business address found in inspected sources',5],
+      ['interest_rate_found','No interest-rate disclosure found in inspected sources',10]
+    ];
+    for(const [key, reason, points] of fields){
+      if(!ind[key]){ score -= points; deductions.push({reason, points}); }
+    }
+  }
+  const complaints = Number(ind.complaint_count || 0);
+  if(complaints >= 8){
+    score -= 25;
+    deductions.push({reason:`High complaint signal count (${complaints} complaint-related keywords)`, points:25});
+  } else if(complaints >= 3){
+    score -= 12;
+    deductions.push({reason:`Moderate complaint signal count (${complaints} complaint-related keywords)`, points:12});
+  }
+  score = Math.max(0, Math.min(100, score));
+  report.score = {
+    score,
+    verdict: score >= 70 && rbiChecked ? 'LOWER RISK' : score >= 45 ? 'UNCLEAR' : 'HIGH RISK',
+    confidence: rbiChecked && fetchChecked ? 'high' : 'limited',
+    unverified: [
+      ...(!rbiChecked ? ['RBI directory verification was not completed'] : []),
+      ...(!fetchChecked ? ['Public website inspection was not completed'] : [])
+    ],
+    deductions
+  };
+  const limitations = [...report.score.unverified];
+  if(!report.rbi.checked){
+    limitations.push(report.rbi.failure_reason || report.rbi.error || 'RBI directory verification was unavailable.');
+  }
+  if(!report.fetch.ok){
+    limitations.push(report.fetch.error || 'Public website inspection was unavailable.');
+  }
+  if(report.research.status !== 'completed'){
+    limitations.push(report.research.notice || report.research.error || 'Research did not complete.');
+  }
+  report.unverified_findings = [...new Set(limitations)];
+  report.limitations = report.unverified_findings;
+  return report;
+}
+
+function pollService(step, runId){
+  if(!runId) return;
+  const pollKey = `${step}:${runId}`;
+  if(activePolls.has(pollKey)) return;
+  activePolls.add(pollKey);
+  storedRunIds[step] = runId;
+  localStorage.setItem('loanguard_run_ids', JSON.stringify(storedRunIds));
+  const endpoint = step === 'agent' ? '/api/agent/status' : '/api/research/status';
+  let attempts = 0;
+  const poll = async () => {
+    if(attempts++ >= 360){
+      activePolls.delete(pollKey);
+      setStep(step, 'unavailable', 'Polling window ended; the remote run was not confirmed complete.');
+      return;
+    }
+    try {
+      const res = await fetch(apiUrl(`${endpoint}?run_id=${encodeURIComponent(runId)}`), {cache:'no-store'});
+      const data = await res.json();
+      const status = (data.status || 'unavailable').toLowerCase();
+      const message = status === 'timed_out' && step === 'agent'
+        ? 'RBI directory verification could not be completed. This does not indicate that the app is absent from the directory.'
+        : (status === 'completed' ? 'Result received.' : (data.error || `TinyFish status: ${status}.`));
+      setStep(step, status, message);
+      collected[step] = {step, status, data};
+      if(window.__lastReport){
+        const key = step === 'agent' ? 'rbi' : 'research';
+        window.__lastReport[key] = {...window.__lastReport[key], ...data};
+        if(step === 'agent'){
+          window.__lastReport.indicators.rbi_checked = Boolean(data.checked);
+          window.__lastReport.indicators.rbi_found = Boolean(data.found);
+        }
+        window.__lastReport.service_statuses[step] = status;
+        reconcileReportScore(window.__lastReport);
+        if(status === 'completed' || ['failed','cancelled','timed_out','unavailable'].includes(status)){
+          renderResults(window.__lastReport);
+        }
+      }
+      if(status === 'completed' || ['failed','cancelled','timed_out','unavailable'].includes(status)){
+        activePolls.delete(pollKey);
+        delete storedRunIds[step];
+        localStorage.setItem('loanguard_run_ids', JSON.stringify(storedRunIds));
+        return;
+      }
+    } catch(err) {
+      console.error(`${step} status polling failed`, err);
+    }
+    setTimeout(poll, 5000);
+  };
+  setTimeout(poll, 1000);
+}
+
+function handleEvent(data){
+  const step = data.step;
+  if(step==='start'){ collected.demo=!!data.demo; setModeTag(data.demo); return; }
+  if(step==='error'){ setStep('search','failed'); document.getElementById('results').classList.remove('show');
+    document.getElementById('results').innerHTML=`<div class="card error-note">${esc(data.message||'Investigation error.')}</div>`;
+    document.getElementById('results').classList.add('show'); return; }
+  if(step==='final'){
+    receivedTerminalEvent = data.status === 'completed';
+    if(data.report){
+      const report = data.report;
+      for(const service of ['agent','research']){
+        const latest = collected[service] && collected[service].data;
+        if(latest && report[service === 'agent' ? 'rbi' : 'research']){
+          const key = service === 'agent' ? 'rbi' : 'research';
+          report[key] = {...report[key], ...latest};
+          report.service_statuses[service] = latest.status || report.service_statuses[service];
+        }
+      }
+      renderResults(report);
+    }
+    return;
+  }
+  if(step==='monitor'){ setStep('monitor', data.status||'not_started', data.message); return; }
+  if(STEP_MAP[step]){
+    const st = data.status;
+    if(st==='started'){ setStep(step,'running', data.message); }
+    else if(st==='completed'){ setStep(step,'completed', data.message); }
+    else if(st==='failed' || st==='running'){ setStep(step, st==='running'?'running':'failed', data.message); }
+    else { setStep(step, st||'pending', data.message); }
+    collected[step]=data;
+  }
+}
+function setModeTag(demo){
+  const el = document.getElementById('mode-tag');
+  if(el) el.textContent = demo ? ' · DEMO MODE' : ' · LIVE INVESTIGATION';
+  const badge = document.getElementById('mode-badge');
+  if(badge){
+    badge.className = 'mode-pill ' + (demo ? 'mode-demo' : 'mode-live');
+    badge.textContent = demo ? 'DEMO MODE (Sample Data)' : 'LIVE INVESTIGATION (TinyFish)';
+  }
+  const nameInput = document.getElementById('name');
+  if (nameInput && !nameInput.value) {
+    nameInput.placeholder = demo ? 'e.g. SampleLoan Demo (Demo Mode)' : 'e.g. KreditBee';
+  }
+}
+
+function investigate(){
+  const name=document.getElementById('name').value.trim();
+  const site=document.getElementById('site').value.trim();
+  if(!name){ alert('Please enter a loan application name.'); return; }
+  resetSteps();
+  const btn=document.getElementById('investigate');
+  btn.disabled=true; btn.textContent='INVESTIGATING…';
+  const url=apiUrl(`/api/investigate?name=${encodeURIComponent(name)}&site=${encodeURIComponent(site)}`);
+  es=new EventSource(url);
+  es.onmessage=e=>{
+    try{
+      const data = JSON.parse(e.data);
+      handleEvent(data);
+      if(data.step === 'agent' && data.data && data.data.run_id) pollService('agent', data.data.run_id);
+      if(data.step === 'research' && data.data && (data.data.research_run_id || data.data.run_id)) pollService('research', data.data.research_run_id || data.data.run_id);
+      if(data.step === 'final' || data.step === 'error'){
+        btn.disabled=false;
+        btn.textContent='INVESTIGATE';
+      }
+    }catch(err){console.error(err);}
+  };
+  es.onerror=()=>{
+    es.close();
+    btn.disabled=false;
+    btn.textContent='INVESTIGATE';
+    if(!receivedTerminalEvent){
+      document.getElementById('results').innerHTML=`<div class="card error-note">Investigation stream ended before a final result was received. The backend may be unavailable, still waking up, or the connection may have been interrupted. Please retry.</div>`;
+      document.getElementById('results').classList.add('show');
+    }
+  };
+}
+
+function downloadReport(){
+  if(!window.__lastReport) return;
+  const blob=new Blob([JSON.stringify(window.__lastReport,null,2)],{type:'application/json'});
+  const a=document.createElement('a');
+  a.href=URL.createObjectURL(blob);
+  a.download=`loanguard_${(window.__lastReport.app_name||'report').replace(/\s+/g,'_')}.json`;
+  a.click();
+}
+function anotherApp(){
+  document.getElementById('results').classList.remove('show');
+  document.getElementById('name').value='';
+  document.getElementById('site').value='';
+  document.getElementById('name').focus();
+  resetSteps();
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+async function doMonitor(){
+  const st=document.getElementById('mon-status');
+  const button=document.getElementById('monitor-btn');
+  if(button && button.disabled) return;
+  if(button) button.disabled=true;
+  st.innerHTML='<span style="color:#3b82f6;font-size:13px">Creating monitor…</span>';
+  try{
+    const res=await fetch(apiUrl('/api/watch'),{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({})});
+    const d=await res.json();
+    if(d.demo) {
+      st.innerHTML='<span class="badge" style="background:#fef3c7;color:#92400e">SIMULATED MONITOR — SAMPLE DATA</span> <span style="font-size:13px;color:#64748b;margin-left:6px">Monitoring the RBI directory (simulated).</span>';
+      setStep('monitor','active','Simulated monitor active (ID: demo-monitor-001).');
+    } else if(d.ok) {
+      st.innerHTML=`<span class="badge" style="background:#dcfce7;color:#15803d">MONITOR ACTIVE</span> <span style="font-size:13px;color:#15803d;margin-left:6px">${esc(d.message || 'Monitor created')} (ID: ${esc(d.monitor_id||'')})</span>`;
+      setStep('monitor','active',`Monitor active (ID: ${d.monitor_id||'unknown'}).`);
+      if(window.__lastReport) {
+        window.__lastReport.monitor = {...window.__lastReport.monitor, ...d, status:'active'};
+        window.__lastReport.service_statuses.monitor = 'active';
+      }
+    } else {
+      if(button) button.disabled=false;
+      st.innerHTML=`<span class="badge" style="background:#fee2e2;color:#dc2626">MONITOR UNAVAILABLE</span> <span style="font-size:13px;color:#dc2626;margin-left:6px">${esc(d.message||d.error||'Creation failed')}</span>`;
+    }
+  }catch(e){
+    if(button) button.disabled=false;
+    st.innerHTML='<span style="color:#dc2626;font-size:13px">Monitor request failed.</span>';
+  }
+}
+
+document.getElementById('investigate').addEventListener('click',investigate);
+document.getElementById('name').addEventListener('keydown',e=>{if(e.key==='Enter')investigate();});
+renderTimeline();
+for(const step of ['agent','research']){
+  if(storedRunIds[step]) pollService(step, storedRunIds[step]);
+}
+fetch(apiUrl('/api/health')).then(r=>{
+  if(!r.ok) throw new Error(`Backend health returned ${r.status}`);
+  return r.json();
+}).then(h=>{
+  if(h.status !== 'ok') throw new Error('Backend health response was not healthy');
+  setModeTag(h.demo_mode);
+}).catch(()=>{
+  const badge = document.getElementById('mode-badge');
+  if(badge) badge.textContent = 'BACKEND UNAVAILABLE';
+});
+</script>
+</body>
+</html>
