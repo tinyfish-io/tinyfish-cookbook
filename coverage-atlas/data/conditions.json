@@ -1,0 +1,35 @@
+[
+  {
+    "slug": "obesity_weight_management_glp_1_receptor_agonist",
+    "userInput": "GLP-1 drugs for weight loss",
+    "name": "Obesity/Weight Management",
+    "treatmentClass": "GLP-1 Receptor Agonists",
+    "treatments": [
+      "Wegovy",
+      "Semaglutide",
+      "Zepbound",
+      "Tirzepatide",
+      "Saxenda",
+      "Liraglutide",
+      "Ozempic",
+      "Mounjaro"
+    ],
+    "policyLever": "Anti-obesity medication coverage is an optional Medicaid benefit under federal law (obesity drugs are not among the protected classes and are excluded from mandatory coverage under Section 1927), so states individually decide whether to cover GLP-1s for weight loss, often requiring BMI thresholds, prior authorization, or excluding the indication entirely even while covering the same drugs for diabetes.",
+    "searchTerms": [
+      "glp-1",
+      "semaglutide",
+      "wegovy",
+      "tirzepatide",
+      "zepbound",
+      "liraglutide",
+      "saxenda",
+      "ozempic",
+      "weight loss",
+      "obesity management",
+      "anti-obesity medication",
+      "weight management drugs"
+    ],
+    "createdAt": "2026-08-24T02:21:25.275Z",
+    "builtIn": false
+  }
+]
