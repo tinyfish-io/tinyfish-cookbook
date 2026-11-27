@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import {
   Dialog,
   DialogContent,
@@ -33,14 +33,6 @@ export function ProjectDialog({
   const [websiteUrl, setWebsiteUrl] = useState(project?.websiteUrl || '');
   const [description, setDescription] = useState(project?.description || '');
   const [urlError, setUrlError] = useState<string | null>(null);
-
-  // Sync form state when project prop changes
-  useEffect(() => {
-    setName(project?.name || '');
-    setWebsiteUrl(project?.websiteUrl || '');
-    setDescription(project?.description || '');
-    setUrlError(null);
-  }, [project]);
 
   const handleSave = () => {
     // Validate URL
