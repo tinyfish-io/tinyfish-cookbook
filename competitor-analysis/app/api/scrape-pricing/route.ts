@@ -1,6 +1,6 @@
 import { NextRequest } from 'next/server';
 import type { DetailLevel, PricingTier, CompetitorPricing } from '@/types';
-import { TinyFish } from '@tiny-fish/sdk';
+import { TinyFish, EventType, RunStatus } from '@tiny-fish/sdk';
 
 interface Competitor {
   id: string;
@@ -361,14 +361,11 @@ async function scrapePricingPage(
       browser_profile: 'lite',
     });
 
-    for await (const rawEvent of stream) {
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      const event: any = rawEvent;
-
+    for await (const event of stream) {
       // Capture streaming URL and send update
-      if (event.streamingUrl && !streamingUrl) {
-        streamingUrl = event.streamingUrl;
-        console.log(`[Scrape] ${competitor.name} got streamingUrl:`, streamingUrl);
+      if (event.type === EventType.STREAMING_URL && !streamingUrl) {
+        streamingUrl = event.streaming_url;
+        console.log(`[Scrape] ${competitor.name} got streaming_url:`, streamingUrl);
         await sendEvent({
           type: 'competitor_streaming',
           competitor: competitor.name,
@@ -378,24 +375,26 @@ async function scrapePricingPage(
         });
       }
 
-      // Forward step updates (keep old heuristics)
-      if (event.type === 'STEP' || event.purpose || event.action) {
-        const stepMessage = event.purpose || event.action || event.message || 'Processing...';
+      // Forward step updates
+      if (event.type === EventType.PROGRESS) {
         await sendEvent({
           type: 'competitor_step',
           competitor: competitor.name,
           id: competitor.id,
-          step: stepMessage,
+          step: event.purpose,
           timestamp: Date.now(),
         });
       }
 
-      // Handle completion
-      if (event.type === 'COMPLETE' && event.status === 'COMPLETED') {
-        const rawResult = event.resultJson ?? event.result ?? {};
+      // Handle completion. A failed run arrives as COMPLETE with a non-COMPLETED
+      // status; there is no separate error event.
+      if (event.type === EventType.COMPLETE) {
+        if (event.status !== RunStatus.COMPLETED) {
+          throw new Error(event.error?.message || 'Extraction failed');
+        }
 
         // Transform to new schema
-        const transformedData = transformToNewSchema(rawResult, competitor.name, competitor.url);
+        const transformedData = transformToNewSchema(event.result ?? {}, competitor.name, competitor.url);
 
         finalResult = {
           company: competitor.name,
@@ -413,11 +412,6 @@ async function scrapePricingPage(
           timestamp: Date.now(),
         });
         break;
-      }
-
-      // Handle errors
-      if (event.type === 'ERROR' || event.status === 'FAILED') {
-        throw new Error(event.message || 'Extraction failed');
       }
     }
 
